@@ -4341,7 +4341,7 @@ section {
 }
 
 .table-data {
-    height: 472px;
+    height: 70vh;
     overflow-y: auto;
 }
 

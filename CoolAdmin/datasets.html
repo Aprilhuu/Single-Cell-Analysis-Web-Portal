@@ -27,6 +27,7 @@
 
   <!-- Main CSS-->
   <link href="static/css/theme.css" rel="stylesheet" media="all">
+  <link href="static/css/custom.css" rel="stylesheet" media="all">
 
 </head>
 
@@ -193,7 +194,7 @@
               </div>
               <div class="col-lg-12 m-t-25" id="new_dataset" style="display: none;">
                 <div class="card">
-                  <div class="card-header bg-secondary text-white">
+                  <div class="card-header bg-dark text-white">
                     Data Uploader
                   </div>
                   <form id="form-dataset">
@@ -287,14 +288,14 @@
                       <i class="fa fa-dot-circle-o"></i> Submit
                     </button>
                     <button class="btn btn-danger btn-sm" onclick="resetDatasetForm()">
-                      <i class="fa fa-ban"></i>Cancel
+                      <i class="fa fa-ban"></i> Cancel
                     </button>
                   </div>
                 </div>
               </div>
             </div>
             <div class="row m-t-30">
-              <div class="col-md-12">
+              <div class="col">
                 <!-- DATA TABLE-->
                 <div class="table-responsive table--no-card m-b-40">
                   <table class="table table-borderless table-striped table-earning">
@@ -303,58 +304,37 @@
                         <th>Name</th>
                         <th>Description</th>
                         <th>Status</th>
-                        <th>price</th>
+                        <th>Source</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
-                        <td>Mobile</td>
-                        <td>iPhone X 64Gb Grey</td>
-                        <td class="process">Processed</td>
-                        <td>$999.00</td>
+                        <td>pbmc3k</td>
+                        <td>The data consists in 3k PBMCs from a Healthy Donor and is freely available from 10x Genomics</td>
+                        <td class="data-uploading"></td>
+                        <td>
+                          upload
+                        </td>
                       </tr>
                       <tr>
-
-                        <td>Mobile</td>
-                        <td>Samsung S8 Black</td>
-                        <td class="process">Processed</td>
-                        <td>$756.00</td>
+                        <td>pbmc3k</td>
+                        <td>The data consists in 3k PBMCs from a Healthy Donor and is freely available from 10x Genomics</td>
+                        <td class="data-ready"></td>
+                        <td>
+                          <a href="https://support.10xgenomics.com/single-cell-gene-expression/datasets/1.1.0/pbmc3k">
+                            scanpy
+                          </a>
+                        </td>
                       </tr>
                       <tr>
-                        <td>Game</td>
-                        <td>Game Console Controller</td>
-                        <td class="denied">Denied</td>
-                        <td>$22.00</td>
-                      </tr>
-                      <tr>
-                        <td>Mobile</td>
-                        <td>iPhone X 256Gb Black</td>
-                        <td class="denied">Denied</td>
-                        <td>$1199.00</td>
-                      </tr>
-                      <tr>
-                        <td>Accessories</td>
-                        <td>USB 3.0 Cable</td>
-                        <td class="process">Processed</td>
-                        <td>$10.00</td>
-                      </tr>
-                      <tr>
-                        <td>Accesories</td>
-                        <td>Smartwatch 4.0 LTE Wifi</td>
-                        <td class="denied">Denied</td>
-                        <td>$199.00</td>
-                      </tr>
-                      <tr>
-                        <td>Camera</td>
-                        <td>Camera C430W 4k</td>
-                        <td class="process">Processed</td>
-                        <td>$699.00</td>
-                      </tr>
-                      <tr>
-                        <td>Computer</td>
-                        <td>Macbook Pro Retina 2017</td>
-                        <td class="process">Processed</td>
-                        <td>$10.00</td>
+                        <td>pbmc3k</td>
+                        <td>The data consists in 3k PBMCs from a Healthy Donor and is freely available from 10x Genomics</td>
+                        <td class="data-error"></td>
+                        <td>
+                          <a href="https://support.10xgenomics.com/single-cell-gene-expression/datasets/1.1.0/pbmc3k">
+                            scanpy
+                          </a>
+                        </td>
                       </tr>
                     </tbody>
                   </table>

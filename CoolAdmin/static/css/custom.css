@@ -1,0 +1,27 @@
+.data-uploading {
+  color: #5bc0de !important;
+  font-weight: 500;
+}
+.data-uploading:before {
+   content: "Uploading";
+}
+
+.data-ready {
+  color: green !important;
+  font-weight: 500;
+}
+.data-ready:before {
+   content: "Ready";
+}
+
+.data-error {
+  color: red !important;
+  font-weight: 500;
+}
+.data-error:before {
+   content: "Error";
+}
+
+.d-add-preprocesses {
+  cursor: pointer;
+}
