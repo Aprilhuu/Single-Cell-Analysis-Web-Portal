@@ -1,4 +1,4 @@
 const resetDatasetForm = () => {
-  $('#form-dataset').trigger('reset');
+  $('#form-dataset').trigger('fadeOut');
   $('#new_dataset').hide()
 }

@@ -186,7 +186,7 @@
               <div class="col-md-12">
                 <div class="overview-wrap">
                   <h2 class="title-1">Datasets</h2>
-                  <button class="au-btn au-btn-icon au-btn--blue" onclick="$('#new_dataset').show()">
+                  <button class="au-btn au-btn-icon au-btn--blue" onclick="$('#new_dataset').fadeIn()">
                     <i class="zmdi zmdi-plus"></i>Upload New Datasets
                   </button>
                 </div>
@@ -197,91 +197,91 @@
                     Data Uploader
                   </div>
                   <form id="form-dataset">
-                  <div class="card-body card-block">
+                    <div class="card-body card-block">
 
-                    <div class="row form-group">
+                      <div class="row form-group">
                         <div class="col col-md-4">
-                            <label for="r_name_text" class=" form-control-label">Name</label>
+                          <label for="r_name_text" class=" form-control-label">Name</label>
                         </div>
                         <div class="col-12 col-md-8">
-                            <input type="text" id="r_name_text" name="text-input" class="form-control">
+                          <input type="text" id="r_name_text" name="text-input" class="form-control">
                         </div>
-                    </div>
-                    <div class="row form-group">
+                      </div>
+                      <div class="row form-group">
                         <div class="col col-md-4">
-                            <label for="r_description_text" class=" form-control-label">Description</label>
+                          <label for="r_description_text" class=" form-control-label">Description</label>
                         </div>
                         <div class="col-12 col-md-8">
-                            <textarea name="textarea-input" id="r_description_text" rows="2" class="form-control"></textarea>
+                          <textarea name="textarea-input" id="r_description_text" rows="2" class="form-control"></textarea>
                         </div>
-                    </div>
-                    <div class="row form-group">
+                      </div>
+                      <div class="row form-group">
                         <div class="col col-md-4">
-                            <label class=" form-control-label">Select Data Format</label>
+                          <label class=" form-control-label">Select Data Format</label>
                         </div>
                         <div class="col col-md-8">
-                            <div class="form-check">
-                              <div class="radio">
-                                <label for="r_10x_h5" class="form-check-label">
-                                    <input type="radio" id="r_10x_h5" name="read_option" value="read_10x_h5" class="form-check-input" checked>
-                                    10x hdf5
-                                </label>
-                              </div>
-                              <div class="radio">
-                                <label for="r_10x_mtx" class="form-check-label">
-                                    <input type="radio" id="r_10x_mtx" name="read_option" value="read_10x_mtx" class="form-check-input">
-                                    10x mtx directory
-                                </label>
-                              </div>
-                              <div class="radio">
-                                <label for="r_h5ad" class="form-check-label">
-                                    <input type="radio" id="r_h5ad" name="read_option" value="read_h5ad" class="form-check-input">
-                                    h5ad
-                                </label>
-                              </div>
-                              <div class="radio">
-                                <label for="r_csv" class="form-check-label">
-                                    <input type="radio" id="r_csv" name="read_option" value="read_csv" class="form-check-input">
-                                    csv
-                                </label>
-                              </div>
-                              <div class="radio">
-                                <label for="r_excel" class="form-check-label">
-                                    <input type="radio" id="r_excel" name="read_option" value="read_excel" class="form-check-input">
-                                    xlsx
-                                </label>
-                              </div>
-                              <div class="radio">
-                                <label for="r_hdf" class="form-check-label">
-                                    <input type="radio" id="r_hdf" name="read_option" value="read_hdf" class="form-check-input">
-                                    h5
-                                </label>
-                              </div>
-                              <div class="radio">
-                                <label for="r_loom" class="form-check-label">
-                                    <input type="radio" id="r_loom" name="read_option" value="read_loom" class="form-check-input">
-                                    loom
-                                </label>
-                              </div>
-                              <div class="radio">
-                                <label for="r_mtx" class="form-check-label">
-                                    <input type="radio" id="r_mtx" name="read_option" value="read_mtx" class="form-check-input">
-                                    mtx
-                                </label>
-                              </div>
+                          <div class="form-check">
+                            <div class="radio">
+                              <label for="r_10x_h5" class="form-check-label">
+                                <input type="radio" id="r_10x_h5" name="read_option" value="read_10x_h5" class="form-check-input" checked>
+                                10x hdf5
+                              </label>
                             </div>
+                            <div class="radio">
+                              <label for="r_10x_mtx" class="form-check-label">
+                                <input type="radio" id="r_10x_mtx" name="read_option" value="read_10x_mtx" class="form-check-input">
+                                10x mtx directory
+                              </label>
+                            </div>
+                            <div class="radio">
+                              <label for="r_h5ad" class="form-check-label">
+                                <input type="radio" id="r_h5ad" name="read_option" value="read_h5ad" class="form-check-input">
+                                h5ad
+                              </label>
+                            </div>
+                            <div class="radio">
+                              <label for="r_csv" class="form-check-label">
+                                <input type="radio" id="r_csv" name="read_option" value="read_csv" class="form-check-input">
+                                csv
+                              </label>
+                            </div>
+                            <div class="radio">
+                              <label for="r_excel" class="form-check-label">
+                                <input type="radio" id="r_excel" name="read_option" value="read_excel" class="form-check-input">
+                                xlsx
+                              </label>
+                            </div>
+                            <div class="radio">
+                              <label for="r_hdf" class="form-check-label">
+                                <input type="radio" id="r_hdf" name="read_option" value="read_hdf" class="form-check-input">
+                                h5
+                              </label>
+                            </div>
+                            <div class="radio">
+                              <label for="r_loom" class="form-check-label">
+                                <input type="radio" id="r_loom" name="read_option" value="read_loom" class="form-check-input">
+                                loom
+                              </label>
+                            </div>
+                            <div class="radio">
+                              <label for="r_mtx" class="form-check-label">
+                                <input type="radio" id="r_mtx" name="read_option" value="read_mtx" class="form-check-input">
+                                mtx
+                              </label>
+                            </div>
+                          </div>
                         </div>
-                    </div>
-                    <div class="row form-group">
+                      </div>
+                      <div class="row form-group">
                         <div class="col col-md-3">
-                            <label for="file-input" class=" form-control-label">Choose files</label>
+                          <label for="file-input" class=" form-control-label">Choose files</label>
                         </div>
                         <div class="col-12 col-md-9">
-                            <input type="file" id="file-input" name="file-input" multiple="" class="form-control-file">
+                          <input type="file" id="file-input" name="file-input" multiple="" class="form-control-file">
                         </div>
+                      </div>
                     </div>
-                  </div>
-                </form>
+                  </form>
                   <div class="card-footer">
                     <button type="submit" class="btn btn-primary btn-sm">
                       <i class="fa fa-dot-circle-o"></i> Submit
@@ -293,9 +293,79 @@
                 </div>
               </div>
             </div>
+            <div class="row m-t-30">
+              <div class="col-md-12">
+                <!-- DATA TABLE-->
+                <div class="table-responsive table--no-card m-b-40">
+                  <table class="table table-borderless table-striped table-earning">
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>price</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Mobile</td>
+                        <td>iPhone X 64Gb Grey</td>
+                        <td class="process">Processed</td>
+                        <td>$999.00</td>
+                      </tr>
+                      <tr>
+
+                        <td>Mobile</td>
+                        <td>Samsung S8 Black</td>
+                        <td class="process">Processed</td>
+                        <td>$756.00</td>
+                      </tr>
+                      <tr>
+                        <td>Game</td>
+                        <td>Game Console Controller</td>
+                        <td class="denied">Denied</td>
+                        <td>$22.00</td>
+                      </tr>
+                      <tr>
+                        <td>Mobile</td>
+                        <td>iPhone X 256Gb Black</td>
+                        <td class="denied">Denied</td>
+                        <td>$1199.00</td>
+                      </tr>
+                      <tr>
+                        <td>Accessories</td>
+                        <td>USB 3.0 Cable</td>
+                        <td class="process">Processed</td>
+                        <td>$10.00</td>
+                      </tr>
+                      <tr>
+                        <td>Accesories</td>
+                        <td>Smartwatch 4.0 LTE Wifi</td>
+                        <td class="denied">Denied</td>
+                        <td>$199.00</td>
+                      </tr>
+                      <tr>
+                        <td>Camera</td>
+                        <td>Camera C430W 4k</td>
+                        <td class="process">Processed</td>
+                        <td>$699.00</td>
+                      </tr>
+                      <tr>
+                        <td>Computer</td>
+                        <td>Macbook Pro Retina 2017</td>
+                        <td class="process">Processed</td>
+                        <td>$10.00</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <!-- END DATA TABLE-->
+              </div>
+            </div>
           </div>
         </div>
       </div>
+
       <!-- END MAIN CONTENT-->
       <!-- END PAGE CONTAINER-->
     </div>
