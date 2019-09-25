@@ -25,3 +25,8 @@
 .d-add-preprocesses {
   cursor: pointer;
 }
+
+.process-card {
+  cursor: pointer;
+  height: 150px;
+}

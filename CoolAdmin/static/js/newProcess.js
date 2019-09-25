@@ -19,3 +19,21 @@ const toggleDataset = (condition) => {
     $(".processes").hide()
   }
 }
+
+$(".process-card").click((e) => {
+  target = $(e.target)
+  while (!target.hasClass("process-card")){
+    target = target.parent()
+  }
+  target = $(target.children()[0])
+  if (target.hasClass("bg-success")) {
+    target.removeClass("bg-success");
+    target.addClass("bg-secondary")
+  } else if (target.hasClass("bg-secondary")) {
+    target.removeClass("bg-secondary");
+    target.addClass("bg-success")
+  }
+})
+
+$("#sortable").sortable()
+$( "#sortable" ).disableSelection();
