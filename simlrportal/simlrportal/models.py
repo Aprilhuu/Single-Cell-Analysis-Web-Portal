@@ -2,13 +2,12 @@ from simlrportal import db
 
 class DataFile(db.Model):
     __tablename__ = "datafiles"
-    id = db.Column(db.Integer, primary_key=True)
-    filename = db.Column(db.String(64))
+    id = db.Column(db.String(21), primary_key=True)
+    path = db.Column(db.String(64), primary_key=True)
     name = db.Column(db.String(64))
-    description = db.Column(db.Text)
     owner = db.Column(db.String(64))
-    created = db.Column(db.DateTime, index=False, unique=False, nullable=False)
+    description = db.Column(db.Text)
     modified = db.Column(db.DateTime, index=False, unique=False, nullable=False)
 
     def __repr__(self):
-        return '<file:  {}>'.format(self.filename)
+        return '<file:  {}, path: {}>'.format(self.id, self.path)

@@ -9,6 +9,9 @@
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
  */
 
+.modal {
+  z-index: 3000 !important
+}
 .border-primary {
   border-color: #3f6ad8
 }
