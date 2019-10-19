@@ -20,81 +20,22 @@
     </div>
     <div class="row">
       <div class="col">
-      <div class="main-card mb-3 card">
-        <div class="card-body">
-          <h5 class="card-title">Installed Datasets</h5>
+        <div id="dataset-table">
           <table class="mb-0 table table-hover">
-            <thead>
+            <thead class="thead-dark">
               <tr>
-                <th>#</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Username</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Owner</th>
+                <th>Last Modified</th>
+                <th>Actions</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Larry</td>
-                <td>the Bird</td>
-                <td>@twitter</td>
-              </tr>
+            <tbody class="list">
             </tbody>
           </table>
         </div>
       </div>
-    </div>
-    </div>
-    <div class="row">
-      <div class="col">
-      <div class="main-card mb-3 card">
-        <div class="card-body">
-          <h5 class="card-title">Download Datasets From Cloud</h5>
-          <table class="mb-0 table table-hover">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Username</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Larry</td>
-                <td>the Bird</td>
-                <td>@twitter</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
     </div>
   </div>
 </div>
@@ -102,5 +43,6 @@
 
 {% endblock %}
 {% block js %}
+<script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
 <script type="text/javascript" src="/static/scripts/dataset.js"></script>
 {% endblock %}

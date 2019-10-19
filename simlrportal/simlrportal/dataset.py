@@ -1,4 +1,4 @@
-from flask import render_template, request
+from flask import render_template, request, jsonify
 from werkzeug.utils import secure_filename
 from simlrportal import app, db
 import os
@@ -17,6 +17,11 @@ def allowed_file(filename):
 @app.route('/dataupload.html')
 def render_dataupload():
     return render_template("dataupload.html", allowed_file=", ".join(ALLOWED_EXTENSIONS))
+
+@app.route('/datasets.html')
+def render_datasets():
+    return render_template("datasets.html")
+
 
 @app.route('/dataupload', methods=['POST'])
 def dataupload():
@@ -37,6 +42,7 @@ def dataupload():
         hashname = form.get("name", "") + "_" + hex(int(time()))
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], hashname + "." +ext))
         datafile = DataFile(id=hashname,
+                            source="local",
                             name=form.get("name", ""),
                             owner=form.get("owner", "update"),
                             description=form.get("description", ""),
@@ -45,6 +51,10 @@ def dataupload():
         db.session.commit()
         return "success"
 
-@app.route('/datasets.html')
-def render_datasets():
-    return render_template("datasets.html")
+
+@app.route('/datasets/', methods=['GET'])
+def get_all_datasets():
+    limit = request.args.get("limit")
+    offset = request.args.get("offset")
+    result = DataFile.query.limit(limit).offset(offset).all()
+    return jsonify([d.to_dict() for d in result])

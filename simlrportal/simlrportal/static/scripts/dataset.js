@@ -1,6 +1,9 @@
+/**
+JS Code for uploading
+**/
+
 const allowed_file = $("#allowed_file").text().split(", ")
 
-const files = $("#file")[0].files;
 $("#file").change(() => {
   if ($("#file")[0].files.length == 0) {
     return;
@@ -24,7 +27,7 @@ const resetForm = () => {
 
 const uploadFile = () => {
   const file = $("#file")[0].files[0];
-  if (! file) {
+  if (!file) {
     return;
   }
   const file_ext = file.name.substring(file.name.lastIndexOf(".") + 1, file.name.length);
@@ -48,3 +51,33 @@ const uploadFile = () => {
     }
   });
 }
+
+/**
+JS Code for Listing
+**/
+
+const table_option = {
+  item: `<tr>
+    <td class="name"></td>
+    <td class="description"></td>
+    <td class="owner"></td>
+    <td class="modified"></td>
+    <td>
+      <button class="btn btn-danger text-white source id"><i class="fas fa-times"></i></button>
+      <button class="btn btn-secondary text-white source id"><i class="fas fa-cog"></i></button>
+    </td>
+  </tr>`,
+  valueNames: ['name', 'description', 'owner', 'modified',
+    {
+      name: 'source',
+      attr: 'data-source'
+    }, {
+      name: 'id',
+      attr: 'data-id'
+    }
+  ]
+}
+
+$.get( "datasets/", {limit: 10, offset: 0}, data => {
+  const table = new List('dataset-table', table_option, data);
+});
