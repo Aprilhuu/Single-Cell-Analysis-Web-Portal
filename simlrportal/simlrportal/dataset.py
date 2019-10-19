@@ -33,16 +33,16 @@ def dataupload():
 
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
-        datafile = DataFile(id=form.get("name", "") + "_" + hex(int(time())),
-                            path=filename,
+        ext = filename.rsplit('.', 1)[1].lower()
+        hashname = form.get("name", "") + "_" + hex(int(time()))
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], hashname + "." +ext))
+        datafile = DataFile(id=hashname,
                             name=form.get("name", ""),
                             owner=form.get("owner", "update"),
                             description=form.get("description", ""),
                             modified=datetime.now())
         db.session.add(datafile)
         db.session.commit()
-        print(DataFile.query.all())
-        # file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         return "success"
 
 @app.route('/datasets.html')

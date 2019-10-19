@@ -3,7 +3,6 @@ from simlrportal import db
 class DataFile(db.Model):
     __tablename__ = "datafiles"
     id = db.Column(db.String(21), primary_key=True)
-    path = db.Column(db.String(64), primary_key=True)
     name = db.Column(db.String(64))
     owner = db.Column(db.String(64))
     description = db.Column(db.Text)

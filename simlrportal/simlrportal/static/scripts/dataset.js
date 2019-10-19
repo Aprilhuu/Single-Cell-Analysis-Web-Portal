@@ -24,6 +24,9 @@ const resetForm = () => {
 
 const uploadFile = () => {
   const file = $("#file")[0].files[0];
+  if (! file) {
+    return;
+  }
   const file_ext = file.name.substring(file.name.lastIndexOf(".") + 1, file.name.length);
   if (!allowed_file.includes(file_ext)) {
     $("#model_warning .modal-title").text("Incompatible file Extension")
