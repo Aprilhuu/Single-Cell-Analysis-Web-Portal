@@ -3,9 +3,9 @@ from simlrportal import db
 class DataFile(db.Model):
     __tablename__ = "datafiles"
     id = db.Column(db.String(64), primary_key=True)
+    path = db.Column(db.String(64))
     source = db.Column(db.String(10))
     name = db.Column(db.String(64))
-    owner = db.Column(db.String(64))
     description = db.Column(db.Text)
     modified = db.Column(db.DateTime, index=False, unique=False, nullable=False)
 
@@ -17,7 +17,7 @@ class DataFile(db.Model):
             'id': self.id,
             'source': self.source,
             'name': self.name,
-            'owner': self.owner,
+            'path': self.path,
             'description': self.description,
             'modified':self.modified.strftime("%m/%d/%Y %H:%M:%S")
         }

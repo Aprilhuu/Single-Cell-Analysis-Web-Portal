@@ -45,4 +45,38 @@
 {% block js %}
 <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
 <script type="text/javascript" src="/static/scripts/dataset.js"></script>
+<script>
+  const table_option = {
+    item: `<tr>
+      <td class="name"></td>
+      <td class="description"></td>
+      <td class="owner"></td>
+      <td class="modified"></td>
+      <td>
+        <button class="btn btn-danger text-white source id"><i class="fas fa-times"></i></button>
+        <button class="btn btn-secondary text-white source id"><i class="fas fa-cog"></i></button>
+      </td>
+    </tr>`,
+    valueNames: ['name', 'description', 'owner', 'modified',
+      {
+        name: 'source',
+        attr: 'data-source'
+      }, {
+        name: 'id',
+        attr: 'data-id'
+      }
+    ]
+  }
+
+
+  const table = new List('dataset-table', table_option, {});
+
+  $.get("datasets/", {
+    limit: 10,
+    offset: 0
+  }, data => {
+    table.clear();
+    table.add(data);
+  });
+</script>
 {% endblock %}

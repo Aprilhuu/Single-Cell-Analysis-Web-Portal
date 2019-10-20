@@ -56,28 +56,26 @@ const uploadFile = () => {
 JS Code for Listing
 **/
 
-const table_option = {
-  item: `<tr>
-    <td class="name"></td>
-    <td class="description"></td>
-    <td class="owner"></td>
-    <td class="modified"></td>
-    <td>
-      <button class="btn btn-danger text-white source id"><i class="fas fa-times"></i></button>
-      <button class="btn btn-secondary text-white source id"><i class="fas fa-cog"></i></button>
-    </td>
-  </tr>`,
-  valueNames: ['name', 'description', 'owner', 'modified',
-    {
-      name: 'source',
-      attr: 'data-source'
-    }, {
-      name: 'id',
-      attr: 'data-id'
-    }
-  ]
+const removeDataset = (id) => {
+  $.ajax({
+    url: "datasets",
+    method: "DELETE",
+    data: {
+      'id': id
+    },
+  }).done(function(data) {
+    table.remove('id', data.id);
+  });
 }
 
-$.get( "datasets/", {limit: 10, offset: 0}, data => {
-  const table = new List('dataset-table', table_option, data);
-});
+$("#dataset-table").click(e => {
+  if (!e.target) {
+    return;
+  }
+  const classes = $(e.target).attr("class")
+  if (classes.includes("btn-danger")) {
+    removeDataset($(e.target).data("id"))
+  } else if (classes.includes("fa-times")) {
+    removeDataset($(e.target).parent().data("id"))
+  }
+})
