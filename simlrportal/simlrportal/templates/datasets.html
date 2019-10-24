@@ -71,7 +71,7 @@
 
   const table = new List('dataset-table', table_option, {});
 
-  $.get("datasets/", {
+  $.get("/datasets", {
     limit: 10,
     offset: 0
   }, data => {

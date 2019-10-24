@@ -10,14 +10,15 @@ from shutil import unpack_archive, get_archive_formats, rmtree
 
 
 ALLOWED_EXTENSIONS = set(['h5ad', 'csv', 'h5', 'loom', 'mtx', 'txt'] + [x[0] for x in get_archive_formats()])
+
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@app.route('/dataupload.html')
+@app.route('/dataupload.html', methods=['GET'])
 def render_dataupload():
     return render_template("dataupload.html", allowed_file=", ".join(ALLOWED_EXTENSIONS))
 
-@app.route('/datasets.html')
+@app.route('/datasets.html', methods=['GET'])
 def render_datasets():
     return render_template("datasets.html")
 
@@ -37,12 +38,15 @@ def dataupload():
 
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
-        ext = filename.rsplit('.', 1)[1].lower()
+        file_ori, ext = filename.rsplit('.', 1)
+        ext = ext.lower()
         hashname = form.get("name", "") + "_" + hex(int(time()))
         path = os.path.join(app.config['UPLOAD_FOLDER'], hashname + "." +ext)
         file.save(path)
         if ext in [x[0] for x in get_archive_formats()]:
-            unpack_archive(path, os.path.join(app.config['UPLOAD_FOLDER'], hashname))
+            unpack_archive(path, os.path.join(app.config['UPLOAD_FOLDER']))
+            os.rename(os.path.join(app.config['UPLOAD_FOLDER'] + file_ori),
+                      os.path.join(app.config['UPLOAD_FOLDER'] + hashname))
             os.remove(path)
             path = os.path.join(app.config['UPLOAD_FOLDER'], hashname)
         try:
@@ -60,7 +64,7 @@ def dataupload():
         return "success"
 
 
-@app.route('/datasets/', methods=['GET', 'DELETE'])
+@app.route('/datasets', methods=['GET', 'DELETE'])
 def get_all_datasets():
     if request.method == 'GET':
         limit = request.args.get("limit")

@@ -22,40 +22,38 @@
       <div class="col">
         <div class="mb-3 card">
           <div class="card-body">
-            <form id="form-upload" enctype=multipart/form-data>
-
-              <div class="position-relative row form-group">
-                <label for="file" class="col-sm-2 col-form-label">File</label>
-                <div class="col-sm-10"><input name="file" id="file" type="file" class="form-control-file">
-                  <small class="form-text text-muted" id="file-text">For .mtx, please upload the directory as a zip file</small>
-                </div>
+            <form id="form-upload" enctype=multipart/form-data> <div class="position-relative row form-group">
+              <label for="file" class="col-sm-2 col-form-label">File</label>
+              <div class="col-sm-10"><input name="file" id="file" type="file" class="form-control-file">
+                <small class="form-text text-muted" id="file-text">For .mtx, please upload the directory as a zip file</small>
               </div>
-
-              <div class="position-relative row form-group"><label for="ext" class="col-sm-2 col-form-label">Extension</label>
-                <div class="col-sm-6"><input name="ext" id="ext" placeholder="Extension that indicates the file type. If None, uses extension of filename" type="text" class="form-control"></div>
-              </div>
-
-              <div class="position-relative row form-group"><label for="name" class="col-sm-2 col-form-label">Dataset Name</label>
-                <div class="col-sm-6"><input name="name" id="name" placeholder="Name of the dataset" type="text" class="form-control"></div>
-              </div>
-
-              <div class="position-relative row form-group"><label for="owner" class="col-sm-2 col-form-label">Owner</label>
-                <div class="col-sm-6"><input name="owner" id="owner" placeholder="Owner of the dataset" type="text" class="form-control" value="Upload"></div>
-              </div>
-
-              <div class="position-relative row form-group"><label for="description" class="col-sm-2 col-form-label">Description</label>
-                <div class="col-sm-10"><textarea name="description" id="description" placeholder="Short description of the dataset" class="form-control"></textarea></div>
-              </div>
-            </form>
           </div>
-          <div class="card-footer">
-            <button class="my-2 mr-2 btn btn-primary" onclick="uploadFile()">Submit</button>
-            <button class="my-2 mr-2 btn btn-danger" onclick="resetForm()">Cancel</button>
+
+          <div class="position-relative row form-group"><label for="ext" class="col-sm-2 col-form-label">Extension</label>
+            <div class="col-sm-6"><input name="ext" id="ext" placeholder="Extension that indicates the file type. If None, uses extension of filename" type="text" class="form-control"></div>
           </div>
+
+          <div class="position-relative row form-group"><label for="name" class="col-sm-2 col-form-label">Dataset Name</label>
+            <div class="col-sm-6"><input name="name" id="name" placeholder="Name of the dataset" type="text" class="form-control"></div>
+          </div>
+
+          <div class="position-relative row form-group"><label for="owner" class="col-sm-2 col-form-label">Owner</label>
+            <div class="col-sm-6"><input name="owner" id="owner" placeholder="Owner of the dataset" type="text" class="form-control" value="Upload"></div>
+          </div>
+
+          <div class="position-relative row form-group"><label for="description" class="col-sm-2 col-form-label">Description</label>
+            <div class="col-sm-10"><textarea name="description" id="description" placeholder="Short description of the dataset" class="form-control"></textarea></div>
+          </div>
+          </form>
+        </div>
+        <div class="card-footer">
+          <button class="my-2 mr-2 btn btn-primary" onclick="uploadFile()">Submit</button>
+          <button class="my-2 mr-2 btn btn-danger" onclick="resetForm()">Cancel</button>
         </div>
       </div>
     </div>
   </div>
+</div>
 </div>
 {% endblock %}
 {% block js %}

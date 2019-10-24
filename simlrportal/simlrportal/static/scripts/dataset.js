@@ -39,7 +39,7 @@ const uploadFile = () => {
   }
   const formData = new FormData($("#form-upload")[0]);
   $.ajax({
-    url: 'dataupload',
+    url: '/dataupload',
     data: formData,
     processData: false,
     contentType: false,
@@ -58,7 +58,7 @@ JS Code for Listing
 
 const removeDataset = (id) => {
   $.ajax({
-    url: "datasets",
+    url: "/datasets",
     method: "DELETE",
     data: {
       'id': id

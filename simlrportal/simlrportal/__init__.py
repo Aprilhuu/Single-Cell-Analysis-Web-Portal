@@ -9,3 +9,4 @@ db = SQLAlchemy(app)
 db.create_all()
 
 import simlrportal.dataset
+import simlrportal.process
