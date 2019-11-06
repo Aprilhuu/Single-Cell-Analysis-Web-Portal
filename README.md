@@ -29,7 +29,7 @@ and will return an Plotly formated json string for ploting.
 
 `annotation: string (optional)` explaination for this parameter
 
-`listLength: int (optional, type=text)` the server expects a `List(str)` for parameter, if `listLength=-1`, then is unlimited.
+`isList: bool (optional, type=text)`  if `List(str)` is expected for parameter input. Then the string will be splited by `, `
 
 `options: Array[string] (required if type=option)` the options. __The first option need to be the default value.__
 

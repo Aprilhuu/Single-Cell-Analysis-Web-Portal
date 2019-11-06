@@ -99,6 +99,7 @@ $(".options").click(() => {
   })
   if (!reader) return;
   $("#option-content").empty()
-  constructOptions($("#option-content"), reader.params)
+  $("#option-bool").empty()
+  constructOptions($("#option-content"), $("#option-bool"), reader.params)
   $("#modal-option").modal("show");
 })
