@@ -1,5 +1,6 @@
+'use strict'
 /**
-JS Code for uploading
+  For dataset section 
 **/
 
 const allowed_file = $("#allowed_file").text().split(", ")

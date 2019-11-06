@@ -47,13 +47,15 @@
                             <i class="fas fa-table"></i> Select Dataset
                           </button>
                           <button class="btn btn-primary" id="choose-reader"><i class="fas fa-code-branch"></i> Select Reader</button>
-                          <button class="btn btn-alternate" id="choose-options"><i class="fas fa-cog"></i></button>
+                          <button class="btn btn-alternate options" data-name="read" data-package="scanpy">
+                            <i class="fas fa-cog"></i>
+                          </button>
                         </span>
                         <hr>
                         <div>
-                          Dataset: <b><span class="text-primary" id="chosen-dataset"></span></b>
+                          Dataset <b><span class="text-primary" id="chosen-dataset"></span></b>
                           <br>
-                          Reader: <b><span class="text-primary" id="chosen-method">scanpy.read</span></b>
+                          Reader <b><span class="text-primary" id="chosen-method">scanpy.read</span></b>
                         </div>
 
                       </div>
@@ -73,18 +75,6 @@
                       </div>
                     </div>
 
-                    <div class="col-lg-2 col-md-3 col-sm-6 sort">
-                      <div class="card-shadow-secondary border mb-3 card card-body border-secondary card-process">
-                        <h5 class="card-title">Secondary Card Shadow</h5>
-                        <span>
-                          <button class="btn btn-alternate"><i class="fas fa-cog"></i></button>
-                          <button class="btn btn-danger"><i class="fas fa-minus"></i></button>
-                          <button class="btn btn-secondary"><i class="fas fa-table"></i></button>
-                        </span>
-                        <hr>
-                        With supporting text below as a natural lead-in to additional content.
-                      </div>
-                    </div>
 
                   </div>
                 </div>
@@ -99,21 +89,6 @@
                 <div class="card-body">
                   <h5 class="card-title">Add New Steps</h5>
                   <div class="row">
-                    <div class="col-2">
-                      <div class="card-shadow-secondary border mb-3 card card-body border-secondary">
-                        <h5 class="card-title">Secondary Card Shadow</h5>With supporting text below as a natural lead-in to additional content.
-                      </div>
-                    </div>
-                    <div class="col-2">
-                      <div class="card-shadow-secondary border mb-3 card card-body border-secondary">
-                        <h5 class="card-title">Secondary Card Shadow</h5>With supporting text below as a natural lead-in to additional content.
-                      </div>
-                    </div>
-                    <div class="col-2">
-                      <div class="card-shadow-secondary border mb-3 card card-body border-secondary">
-                        <h5 class="card-title">Secondary Card Shadow</h5>With supporting text below as a natural lead-in to additional content.
-                      </div>
-                    </div>
                     <div class="col-2">
                       <div class="card-shadow-secondary border mb-3 card card-body border-secondary">
                         <h5 class="card-title">Secondary Card Shadow</h5>With supporting text below as a natural lead-in to additional content.
@@ -211,7 +186,8 @@
         </button>
       </div>
       <div class="modal-body">
-        
+        <div class="form-row m-2-md" id="option-content">
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -230,5 +206,6 @@
   })
 </script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+<script type="text/javascript" src="/static/scripts/optionFactory.js"></script>
 <script type="text/javascript" src="/static/scripts/process.js"></script>
 {% endblock %}

@@ -10,17 +10,16 @@
         "options": [
           "r",
           "r+"
-        ],
-        "default": "r"
+        ]
       },
       {
         "name": "sheet",
-        "type": "str",
+        "type": "text",
         "annotation": "Name of sheet/table in hdf5 or Excel file."
       },
       {
         "name": "ext",
-        "type": "str",
+        "type": "text",
         "annotation": "Extension that indicates the file type, if not provided, use the extension of filename"
       }
     ]

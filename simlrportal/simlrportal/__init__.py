@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, redirect
 from flask_sqlalchemy import SQLAlchemy
 from config import Config
 
@@ -10,3 +10,7 @@ db.create_all()
 
 import simlrportal.dataset
 import simlrportal.process
+
+@app.route("/")
+def render_index():
+    return redirect("/newprocess.html")

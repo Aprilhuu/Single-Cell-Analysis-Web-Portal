@@ -1,6 +1,21 @@
+'use strict'
+/**
+  For Process Section
+**/
+
+
+let installedReaders;
+
+$.get("/installed-methods", {
+  type: 'reader',
+  name: '_all'
+}, data => {
+  installedReaders = JSON.parse(data);
+});
+
 const dataset_table_option = {
-  item: `<tr class="id">
-    <td class="name"></td>
+  item: `<tr>
+    <td class="name id"></td>
     <td class="description"></td>
     <td class="modified">
     </td>
@@ -38,15 +53,8 @@ $("#choose-dataset").click(() => {
 $("#choose-reader").click(() => {
   $("#modal-reader").modal("show");
   const table = new List('reader-table', reader_table_option, {});
-
-  $.get("/installed-methods", {
-    type: 'reader',
-    name: '_all'
-  }, data => {
-    data = JSON.parse(data);
-    table.clear();
-    table.add(data);
-  });
+  table.clear();
+  table.add(installedReaders);
 })
 
 
@@ -58,7 +66,7 @@ $("#dataset-table .list").click(() => {
     return
   }
   $("#chosen-dataset").text($(target.children()[0]).text())
-  $("#chosen-dataset").data("id", target.data("id"))
+  $("#chosen-dataset").data("id", $(target.children()[0]).data("id"))
   $("#modal-dataset").modal("hide")
 });
 
@@ -67,9 +75,30 @@ $("#reader-table .list").click(() => {
   let target = $(event.target);
   if (target.prop("tagName") === "TD") {
     target = target.parent()
+  } else if (target.parent().prop("tagName") === "TD") {
+    target = target.parent().parent()
   } else {
     return
   }
-  $("#chosen-reader").text($(target.children()[0]).text())
+  const name = target.find(".name")
+  const pack = target.find(".package")
+  $("#chosen-reader").text(name + "." + pack)
   $("#modal-reader").modal("hide")
+  const options = $("#choose-reader").parent().find(".option")
+  options.data("name", name)
+  options.data("package", pack)
 });
+
+$(".options").click(() => {
+  let target = $(event.target)
+  if (target.prop("tagName") === "I") {
+    target = target.parent()
+  }
+  const reader = installedReaders.find(el => {
+    return el.name === target.data("name") && el.package === target.data("package")
+  })
+  if (!reader) return;
+  $("#option-content").empty()
+  constructOptions($("#option-content"), reader.params)
+  $("#modal-option").modal("show");
+})
