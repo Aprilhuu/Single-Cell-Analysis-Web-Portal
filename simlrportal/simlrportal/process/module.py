@@ -1,15 +1,8 @@
-class PP:
-    """ Interface for Preprocesses,
-        For each implementation of this class, make sure the name is unique
-
-        == Attributes ==
-        description: str  - A short description
-        progress:    int  - Used to update the progress bar, if not implemented,
-                            leave as -1
+class Module:
+    """ Interface for modules,
+        For each implementation of this class, make sure the class name is unique
     """
-    def __init__(self, name, description):
-        self.name = name
-        self.description = description
+    def __init__(self):
         self.progress = -1
 
     def get_progress(self):
@@ -17,6 +10,11 @@ class PP:
             -1 stands for not implemented, and will be ignored by the frontend
         """
         return self.progress
+
+    def update_progress(self):
+        """ Set the progress
+        """
+        raise NotImplementedError("update_progress: not implemented")
 
 
     def run(self, params):
@@ -40,3 +38,4 @@ class PP:
             prereq: A list of string of prerequisite class that must be run
                     before this
         """
+        pass

@@ -57,6 +57,9 @@ JS Code for Listing
 **/
 
 const removeDataset = (id) => {
+  if (id === ""){
+    return
+  }
   $.ajax({
     url: "/datasets",
     method: "DELETE",
