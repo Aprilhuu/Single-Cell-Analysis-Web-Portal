@@ -1,0 +1,8 @@
+.card-process {
+  height: 240px;
+  overflow-y: auto;
+}
+
+#reader-table,#dataset-table .list tr {
+  cursor: pointer;
+}

@@ -14,6 +14,11 @@ ALLOWED_EXTENSIONS = set(['h5ad', 'csv', 'h5', 'loom', 'mtx', 'txt'] + [x[0] for
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+
+
+
+
+
 @app.route('/dataupload.html', methods=['GET'])
 def render_dataupload():
     return render_template("dataupload.html", allowed_file=", ".join(ALLOWED_EXTENSIONS))
@@ -21,6 +26,10 @@ def render_dataupload():
 @app.route('/datasets.html', methods=['GET'])
 def render_datasets():
     return render_template("datasets.html")
+
+
+
+
 
 
 @app.route('/dataupload', methods=['POST'])
@@ -62,6 +71,7 @@ def dataupload():
             print(e)
             return "failed"
         return "success"
+
 
 
 @app.route('/datasets', methods=['GET', 'DELETE'])

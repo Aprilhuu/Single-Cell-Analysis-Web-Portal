@@ -39,31 +39,31 @@
                   <hr>
                   <div class="row" id='sortable'>
 
-                    <div class="col-4 non-sort">
-                      <div class="card-shadow-primary border mb-3 card card-body border-primary">
+                    <div class="col-lg-4 col-md-6 col-sm-12 non-sort sort">
+                      <div class="card-shadow-primary border mb-3 card card-body border-primary card-process">
                         <h5 class="card-title">Data Reader</h5>
                         <span>
                           <button class="btn btn-success" id="choose-dataset">
                             <i class="fas fa-table"></i> Select Dataset
                           </button>
                           <button class="btn btn-primary" id="choose-reader"><i class="fas fa-code-branch"></i> Select Reader</button>
-                          <button class="btn btn-alternate" id="choose-options"><i class="fas fa-cog"></i> Select Options</button>
+                          <button class="btn btn-alternate" id="choose-options"><i class="fas fa-cog"></i></button>
                         </span>
                         <hr>
                         <div>
                           Dataset: <b><span class="text-primary" id="chosen-dataset"></span></b>
                           <br>
-                          Methed: <b><span class="text-primary" id="chosen-method">scanpy.read</span></b>
+                          Reader: <b><span class="text-primary" id="chosen-method">scanpy.read</span></b>
                         </div>
 
                       </div>
                     </div>
 
-                    <div class="col-2">
-                      <div class="card-shadow-secondary border mb-3 card card-body border-secondary">
+                    <div class="col-lg-2 col-md-3 col-sm-6 sort">
+                      <div class="card-shadow-secondary border mb-3 card card-body border-secondary card-process">
                         <h5 class="card-title">Secondary Card Shadow</h5>
                         <span>
-                          <button class="btn btn-primary"><i class="fas fa-cog"></i></button>
+                          <button class="btn btn-alternate"><i class="fas fa-cog"></i></button>
                           <button class="btn btn-danger"><i class="fas fa-minus"></i></button>
                           <button class="btn btn-secondary"><i class="fas fa-table"></i></button>
                         </span>
@@ -73,31 +73,16 @@
                       </div>
                     </div>
 
-                    <div class="col-2">
-                      <div class="card-shadow-secondary border mb-3 card card-body border-secondary">
+                    <div class="col-lg-2 col-md-3 col-sm-6 sort">
+                      <div class="card-shadow-secondary border mb-3 card card-body border-secondary card-process">
                         <h5 class="card-title">Secondary Card Shadow</h5>
                         <span>
-                          <button class="btn btn-primary"><i class="fas fa-cog"></i></button>
+                          <button class="btn btn-alternate"><i class="fas fa-cog"></i></button>
                           <button class="btn btn-danger"><i class="fas fa-minus"></i></button>
                           <button class="btn btn-secondary"><i class="fas fa-table"></i></button>
                         </span>
                         <hr>
                         With supporting text below as a natural lead-in to additional content.
-
-                      </div>
-                    </div>
-
-                    <div class="col-2">
-                      <div class="card-shadow-secondary border mb-3 card card-body border-secondary">
-                        <h5 class="card-title">Secondary Card Shadow</h5>
-                        <span>
-                          <button class="btn btn-primary"><i class="fas fa-cog"></i></button>
-                          <button class="btn btn-danger"><i class="fas fa-minus"></i></button>
-                          <button class="btn btn-secondary"><i class="fas fa-table"></i></button>
-                        </span>
-                        <hr>
-                        With supporting text below as a natural lead-in to additional content.
-
                       </div>
                     </div>
 
@@ -157,7 +142,7 @@
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Choose Dataset</h5>
+        <h5 class="modal-title">Choose Dataset</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -188,25 +173,45 @@
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Choose Reader</h5>
+        <h5 class="modal-title">Choose Reader</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <div id="dataset-table">
+        <div id="reader-table">
           <table class="mb-0 table table-hover">
             <thead class="thead-light">
               <tr>
-                <th style="width: 25%">Package</th>
-                <th style="width: 50%">Method</th>
-                <th style="width: 25%">Modified</th>
+                <th style="width: 33%">Name</th>
+                <th style="width: 67%">Description</th>
               </tr>
             </thead>
             <tbody class="list">
             </tbody>
           </table>
         </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="modal-option" tabindex="-1" role="dialog" aria-labelledby="datasetModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Set Option</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -221,7 +226,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 <script type="text/javascript">
   $("#sortable").sortable({
-    items: ".col-2:not(.non-sort)"
+    items: ".sort:not(.non-sort)"
   })
 </script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
