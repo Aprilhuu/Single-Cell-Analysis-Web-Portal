@@ -225,6 +225,7 @@ $("#modal-option").on("hide.bs.modal", () => {
 
 })
 
+/** TODO **/
 
 $("#submit-process").click(e => {
   console.log($("#active-process-table").find(".btn-alternate.option-btn").parent().map(() => {return $(this).data("pid")}))
