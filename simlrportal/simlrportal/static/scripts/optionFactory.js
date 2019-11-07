@@ -60,6 +60,9 @@ const optionOptionFactory = (obj) => {
   obj.options.slice(1).forEach(opt => {
     const option_ = $('<option></option>')
     option_.text(opt)
+    if (opt === obj.default) {
+      option_.prop("selected", true)
+    }
     select_.append(option_)
   })
 
@@ -97,7 +100,19 @@ const optionBoolFactory = (obj) => {
     form_group.prop('title', obj.annotation)
   }
 
-
-
   return form_group
+}
+
+
+
+
+const retriveValue = (obj) => {
+  const target = $("#option-" + obj.name)
+  if (obj.type === "text" || obj.type === "number") {
+    return target.val()
+  } else if (obj.type === "option") {
+    return target.find("option:selected").text();
+  } else if (obj.type === "bool") {
+    return target.prop("checked")
+  }
 }

@@ -31,6 +31,8 @@ and will return an Plotly formated json string for ploting.
 
 `isList: bool (optional, type=text)`  if `List(str)` is expected for parameter input. Then the string will be splited by `, `
 
-`options: Array[string] (required if type=option)` the options. __The first option need to be the default value.__
+`options: Array[string] (required if type=option)` the options.
 
-`default: string (optinoal)` the default value of the parameter
+`default: string (optinoal)` the default value of the parameter.
+
+`required: bool (optional)` if the parameter is required

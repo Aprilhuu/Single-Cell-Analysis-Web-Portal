@@ -13,6 +13,8 @@ $.get("/installed-methods", {
   installedReaders = JSON.parse(data);
 });
 
+let installedMethods;
+
 const dataset_table_option = {
   item: `<tr>
     <td class="name id"></td>
@@ -98,8 +100,35 @@ $(".options").click(() => {
     return el.name === target.data("name") && el.package === target.data("package")
   })
   if (!reader) return;
+  $("#modal-option").data("type", "reader")
+  $("#modal-option").data("name", target.data("name"))
+  $("#modal-option").data("package", target.data("package"))
   $("#option-content").empty()
   $("#option-bool").empty()
   constructOptions($("#option-content"), $("#option-bool"), reader.params)
   $("#modal-option").modal("show");
+})
+
+
+
+$("#modal-option").on("hide.bs.modal", () => {
+  const target = $("#modal-option")
+  let obj;
+  if (target.data("type") === "reader") {
+    obj = installedReaders.find(el => {
+      return el.name === target.data("name") && el.package === target.data("package")
+    })
+  } else if (target.data("type") === "method") {
+    obj = installedMethods.find(el => {
+      return el.name === target.data("name") && el.package === target.data("package")
+    })
+  }
+  if (! obj) {
+    return
+  }
+
+  for (let i = 0; i < obj.params.length; i++) {
+    obj.params[i].default = retriveValue(obj.params[i])
+  }
+
 })
