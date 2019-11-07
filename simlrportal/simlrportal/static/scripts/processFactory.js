@@ -147,10 +147,10 @@ const constructProcess = (name, pack) => {
   description.text(process_info.description)
   const scroll_ = $('<div class="scrollbar-container ps--active-y"></div>')
   scroll_.append(description)
-  const scroll_area = $('<div class="scroll-area-sm"></div>')
+  const scroll_area = $('<div class="scroll-area-sm mt-1"></div>')
   scroll_area.append(scroll_)
 
-  card_.append(h5_, span_, $("<hr>"), scroll_area)
+  card_.append(h5_, span_, scroll_area)
 
   const div_ = $('<div class="col-lg-2 col-md-3 col-sm-6 sort"></div>')
   div_.append(card_)
