@@ -13,8 +13,8 @@ def get_installed_methods():
         type = request.args.get("type", "")
         name = request.args.get("name", "")
         package = request.args.get("name", "")
-        if type == "reader" and name == "_all":
-            f = open(os.path.join("./simlrportal/installed-methods/reader.json"), "r")
+        if name == "_all":
+            f = open(os.path.join("./simlrportal/installed-methods/" + type + ".json"), "r")
             read_json = f.read()
             f.close()
             return read_json

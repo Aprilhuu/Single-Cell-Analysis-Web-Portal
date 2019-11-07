@@ -37,7 +37,7 @@
                 <div class="card-body">
                   <h5 class="card-title">Current Queue</h5>
                   <hr>
-                  <div class="row" id='sortable'>
+                  <div class="row" id='active-process-table'>
 
                     <div class="col-lg-4 col-md-6 col-sm-12 non-sort sort">
                       <div class="card-shadow-primary border mb-3 card card-body border-primary card-process">
@@ -57,24 +57,8 @@
                           <br>
                           Reader <b><span class="text-primary" id="chosen-method">scanpy.read</span></b>
                         </div>
-
                       </div>
                     </div>
-
-                    <div class="col-lg-2 col-md-3 col-sm-6 sort">
-                      <div class="card-shadow-secondary border mb-3 card card-body border-secondary card-process">
-                        <h5 class="card-title">Secondary Card Shadow</h5>
-                        <span>
-                          <button class="btn btn-alternate"><i class="fas fa-cog"></i></button>
-                          <button class="btn btn-danger"><i class="fas fa-minus"></i></button>
-                          <button class="btn btn-secondary"><i class="fas fa-table"></i></button>
-                        </span>
-                        <hr>
-                        With supporting text below as a natural lead-in to additional content.
-
-                      </div>
-                    </div>
-
 
                   </div>
                 </div>
@@ -88,11 +72,9 @@
               <div class="main-card mb-3 card">
                 <div class="card-body">
                   <h5 class="card-title">Add New Steps</h5>
-                  <div class="row">
-                    <div class="col-2">
-                      <div class="card-shadow-secondary border mb-3 card card-body border-secondary">
-                        <h5 class="card-title">Secondary Card Shadow</h5>With supporting text below as a natural lead-in to additional content.
-                      </div>
+                  <div id="new-steps-table">
+                    <div class="row list">
+
                     </div>
                   </div>
                 </div>
@@ -204,11 +186,11 @@
 {% block js %}
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 <script type="text/javascript">
-  $("#sortable").sortable({
+  $("#active-process-table").sortable({
     items: ".sort:not(.non-sort)"
   })
 </script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
-<script type="text/javascript" src="/static/scripts/optionFactory.js"></script>
+<script type="text/javascript" src="/static/scripts/processFactory.js"></script>
 <script type="text/javascript" src="/static/scripts/process.js"></script>
 {% endblock %}

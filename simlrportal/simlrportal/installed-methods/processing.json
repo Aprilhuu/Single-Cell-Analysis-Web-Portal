@@ -1,0 +1,56 @@
+[
+  {
+    "name": "pp.filter_cells",
+    "package": "scanpy",
+    "description": "Filter cell outliers based on counts and numbers of genes expressed. Only provide one of the optional parameters per call.",
+    "params": [
+      {
+        "name": "min_counts",
+        "type": "number",
+        "default": ""
+      },
+      {
+        "name": "max_counts",
+        "type": "number",
+        "default": ""
+      },
+      {
+        "name": "min_genes",
+        "type": "number",
+        "default": ""
+      },
+      {
+        "name": "max_genes",
+        "type": "number",
+        "default": ""
+      }
+    ]
+  },
+  {
+    "name": "pp.filter_genes",
+    "package": "scanpy",
+    "description": "Filter genes based on number of cells or counts. Only provide one of the optional parameters per call",
+    "params": [
+      {
+        "name": "min_counts",
+        "type": "number",
+        "default": ""
+      },
+      {
+        "name": "max_counts",
+        "type": "number",
+        "default": ""
+      },
+      {
+        "name": "min_genes",
+        "type": "number",
+        "default": ""
+      },
+      {
+        "name": "max_genes",
+        "type": "number",
+        "default": ""
+      }
+    ]
+  }
+]

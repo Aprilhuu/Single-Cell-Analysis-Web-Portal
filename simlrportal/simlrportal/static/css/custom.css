@@ -6,3 +6,20 @@
 #reader-table,#dataset-table .list tr {
   cursor: pointer;
 }
+
+.card-new-steps {
+  height: 200px;
+  overflow-y: auto;
+  cursor: pointer;
+}
+.card-new-steps:hover {
+  border: none !important;
+  box-shadow: none !important;
+  background-color: #3ac47d;
+  color: white;
+}
+
+.option-btn {
+  margin-left: 2px;
+  margin-right: 2px;
+}

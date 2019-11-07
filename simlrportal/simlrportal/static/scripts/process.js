@@ -4,16 +4,53 @@
 **/
 
 
+const new_steps_option = {
+  item: `<div class="col-2">
+            <div class="card-shadow-secondary border mb-3 card card-body border-secondary card-new-steps">
+              <h5 class="card-title" style="text-transform: lowercase;">
+                <span class="package"></span>.<span class="name">
+              </h5>
+              <span class="description"></span>
+            </div>
+          </div>`,
+  valueNames: ['name', 'package', 'description']
+}
+
+const new_steps_table = new List('new-steps-table', new_steps_option, {});
+
+const active_processing = []
+
 let installedReaders;
 
+$("#new-steps-table .list").click(() => {
+  let target = $(event.target)
+  if (! target.hasClass("card-new-steps")) {
+    target = target.parent()
+  }
+  if (! target.hasClass("card-new-steps")) {
+    return;
+  }
+  const process_info = constructProcess(target.find(".name").text(), target.find(".package").text())
+  active_processing.push(process_info);
+})
+
 $.get("/installed-methods", {
-  type: 'reader',
-  name: '_all'
-}, data => {
+    type: 'reader',
+    name: '_all'
+  }, data => {
   installedReaders = JSON.parse(data);
 });
 
 let installedMethods;
+
+$.get("/installed-methods", {
+    type: 'processing',
+    name: '_all',
+  }, data => {
+  installedMethods = JSON.parse(data);
+  new_steps_table.clear()
+  new_steps_table.add(installedMethods)
+})
 
 const dataset_table_option = {
   item: `<tr>
@@ -37,6 +74,7 @@ const reader_table_option = {
   </tr>`,
   valueNames: ['name', 'package', 'description']
 }
+
 
 $("#choose-dataset").click(() => {
   $("#modal-dataset").modal("show");
@@ -91,6 +129,21 @@ $("#reader-table .list").click(() => {
   options.data("package", pack)
 });
 
+$("#active-process-table").click(e => {
+  let target = $(event.target)
+  if (target.hasClass("fa-cog")) {
+    target = target.parent()
+  }
+  if (target.hasClass("option-btn")) {
+    const params = active_processing.find(el => el.pid == target.parent().data("pid")).params
+    $("#modal-option").data("type", "processing")
+    $("#option-content").empty()
+    $("#option-bool").empty()
+    $("#modal-option").data("pid", target.parent().data("pid"))
+    constructOptions($("#option-content"), $("#option-bool"), params);
+    $("#modal-option").modal("show");
+  }
+})
 $(".options").click(() => {
   let target = $(event.target)
   if (target.prop("tagName") === "I") {
@@ -118,12 +171,10 @@ $("#modal-option").on("hide.bs.modal", () => {
     obj = installedReaders.find(el => {
       return el.name === target.data("name") && el.package === target.data("package")
     })
-  } else if (target.data("type") === "method") {
-    obj = installedMethods.find(el => {
-      return el.name === target.data("name") && el.package === target.data("package")
-    })
+  } else if (target.data("type") === "processing") {
+    obj = active_processing.find(el => el.pid == target.data("pid"))
   }
-  if (! obj) {
+  if (!obj) {
     return
   }
 
