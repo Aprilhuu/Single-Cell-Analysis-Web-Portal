@@ -34,34 +34,38 @@
           <div class="row">
             <div class="col-12">
               <div class="main-card mb-3 card">
+                <div class="card-header">Current Queue
+                  <button class="btn btn-success btn-lg ml-3" id="submit-process">Start new Process</button>
+                </div>
                 <div class="card-body">
-                  <h5 class="card-title">Current Queue</h5>
-                  <hr>
                   <div class="row" id='active-process-table'>
 
                     <div class="col-lg-4 col-md-6 col-sm-12 non-sort sort">
                       <div class="card-shadow-primary border mb-3 card card-body border-primary card-process">
                         <h5 class="card-title">Data Reader</h5>
                         <span>
-                          <button class="btn btn-success" id="choose-dataset">
+                          <button class="btn btn-primary mr-1 mb-1" id="choose-dataset">
                             <i class="fas fa-table"></i> Select Dataset
                           </button>
-                          <button class="btn btn-primary" id="choose-reader"><i class="fas fa-code-branch"></i> Select Reader</button>
-                          <button class="btn btn-alternate options" data-name="read" data-package="scanpy">
+                          <button class="btn btn-primary mr-1 mb-1" id="choose-reader"><i class="fas fa-code-branch"></i> Select Reader</button>
+                          <button class="btn btn-alternate options mr-1 mb-1" data-name="read" data-package="scanpy">
                             <i class="fas fa-cog"></i>
                           </button>
                         </span>
                         <hr>
-                        <div>
-                          Dataset <b><span class="text-primary" id="chosen-dataset"></span></b>
-                          <br>
-                          Reader <b><span class="text-primary" id="chosen-method">scanpy.read</span></b>
+                        <div class="scroll-area-sm">
+                          <div class="scrollbar-container ps--active-y">
+                            Dataset <b><span class="text-primary" id="chosen-dataset"></span></b>
+                            <br>
+                            Reader <b><span class="text-primary" id="chosen-method">scanpy.read</span></b>
+                          </div>
                         </div>
                       </div>
                     </div>
 
                   </div>
                 </div>
+
               </div>
             </div>
           </div>

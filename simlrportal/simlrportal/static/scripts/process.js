@@ -4,53 +4,23 @@
 **/
 
 
+/** ===== Table Options ===== **/
 const new_steps_option = {
   item: `<div class="col-2">
             <div class="card-shadow-secondary border mb-3 card card-body border-secondary card-new-steps">
               <h5 class="card-title" style="text-transform: lowercase;">
                 <span class="package"></span>.<span class="name">
               </h5>
-              <span class="description"></span>
+              <div class="scroll-area-sm">
+                <div class="scrollbar-container ps--active-y">
+                  <span class="description"></span>
+                </div>
+              </div>
             </div>
           </div>`,
   valueNames: ['name', 'package', 'description']
 }
 
-const new_steps_table = new List('new-steps-table', new_steps_option, {});
-
-const active_processing = []
-
-let installedReaders;
-
-$("#new-steps-table .list").click(() => {
-  let target = $(event.target)
-  if (! target.hasClass("card-new-steps")) {
-    target = target.parent()
-  }
-  if (! target.hasClass("card-new-steps")) {
-    return;
-  }
-  const process_info = constructProcess(target.find(".name").text(), target.find(".package").text())
-  active_processing.push(process_info);
-})
-
-$.get("/installed-methods", {
-    type: 'reader',
-    name: '_all'
-  }, data => {
-  installedReaders = JSON.parse(data);
-});
-
-let installedMethods;
-
-$.get("/installed-methods", {
-    type: 'processing',
-    name: '_all',
-  }, data => {
-  installedMethods = JSON.parse(data);
-  new_steps_table.clear()
-  new_steps_table.add(installedMethods)
-})
 
 const dataset_table_option = {
   item: `<tr>
@@ -67,6 +37,7 @@ const dataset_table_option = {
   ]
 }
 
+
 const reader_table_option = {
   item: `<tr>
     <td><span class="package"></span>.<span class="name"></span></td>
@@ -74,6 +45,46 @@ const reader_table_option = {
   </tr>`,
   valueNames: ['name', 'package', 'description']
 }
+
+/** ===== Variables ===== **/
+
+
+const new_steps_table = new List('new-steps-table', new_steps_option, {});
+
+const active_processing = []
+
+let installedReaders;
+let installedMethods;
+$.get("/installed-methods", {
+    type: 'reader',
+    name: '_all'
+  }, data => {
+  installedReaders = JSON.parse(data);
+});
+$.get("/installed-methods", {
+    type: 'processing',
+    name: '_all',
+  }, data => {
+  installedMethods = JSON.parse(data);
+  new_steps_table.clear()
+  new_steps_table.add(installedMethods)
+})
+
+$("#new-steps-table .list").click(() => {
+  let target = $(event.target)
+  for (let i = 0; i < 5; i++) {
+    if (! target.hasClass("card-new-steps")) {
+      target = target.parent();
+    } else {
+      break;
+    }
+  }
+  if (! target.hasClass("card-new-steps")) {
+    return;
+  }
+  const process_info = constructProcess(target.find(".name").text(), target.find(".package").text())
+  active_processing.push(process_info);
+})
 
 
 $("#choose-dataset").click(() => {
@@ -128,6 +139,7 @@ $("#reader-table .list").click(() => {
   options.data("name", name)
   options.data("package", pack)
 });
+
 
 $("#active-process-table").click(e => {
   let target = $(event.target)
@@ -211,4 +223,9 @@ $("#modal-option").on("hide.bs.modal", () => {
     obj.params[i].default = retriveValue(obj.params[i])
   }
 
+})
+
+
+$("#submit-process").click(e => {
+  console.log($("#active-process-table").find(".btn-alternate.option-btn").parent().map(() => {return $(this).data("pid")}))
 })

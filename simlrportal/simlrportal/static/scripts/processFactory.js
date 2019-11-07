@@ -137,15 +137,20 @@ const constructProcess = (name, pack) => {
 
   const span_ = $('<span></span>')
   span_.data("pid", process_info.pid)
-  span_.append($('<button class="btn btn-alternate option-btn"><i class="fas fa-cog"></i></button> '))
-  span_.append($('<button class="btn btn-danger option-btn"><i class="fas fa-minus"></i></button> '))
-  span_.append($('<button class="btn btn-secondary option-btn"><i class="fas fa-table"></i></button> '))
+  span_.append($('<button class="btn btn-alternate option-btn mr-1 mb-1"><i class="fas fa-cog"></i></button> '))
+  span_.append($('<button class="btn btn-danger option-btn mr-1 mb-1"><i class="fas fa-minus"></i></button> '))
+  span_.append($('<button class="btn btn-secondary option-btn mr-1 mb-1"><i class="fas fa-table"></i></button> '))
 
   const card_ = $('<div class="card-shadow-secondary border mb-3 card card-body border-secondary card-process"></div>')
 
   const description =  $('<span clas="description"></span>')
   description.text(process_info.description)
-  card_.append(h5_, span_, $("<hr>"), description)
+  const scroll_ = $('<div class="scrollbar-container ps--active-y"></div>')
+  scroll_.append(description)
+  const scroll_area = $('<div class="scroll-area-sm"></div>')
+  scroll_area.append(scroll_)
+
+  card_.append(h5_, span_, $("<hr>"), scroll_area)
 
   const div_ = $('<div class="col-lg-2 col-md-3 col-sm-6 sort"></div>')
   div_.append(card_)

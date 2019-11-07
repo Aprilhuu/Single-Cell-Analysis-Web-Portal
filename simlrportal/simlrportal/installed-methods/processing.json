@@ -2,7 +2,7 @@
   {
     "name": "pp.filter_cells",
     "package": "scanpy",
-    "description": "Filter cell outliers based on counts and numbers of genes expressed. Only provide one of the optional parameters per call.",
+    "description": "Filter cell outliers based on counts and numbers of genes expressed. Only provide one of the optional parameters per call. ",
     "params": [
       {
         "name": "min_counts",
