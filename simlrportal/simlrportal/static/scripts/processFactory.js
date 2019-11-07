@@ -121,12 +121,16 @@ const optionBoolFactory = (obj) => {
 
 
 /** <--------- Processing Factory ----------> **/
+let pid = 0
+
 const constructProcess = (name, pack) => {
   const find = installedMethods.find(el => {
     return el.name === name && el.package === pack
   })
   const process_info = JSON.parse(JSON.stringify(find))
-  process_info.pid = active_processing.length;
+  process_info.pid = pid;
+  process_info.view = false;
+  pid++;
 
   const h5_ = $('<h5 class="card-title" style="text-transform: lowercase;"></h5>')
   h5_.text(pack + "." + name)

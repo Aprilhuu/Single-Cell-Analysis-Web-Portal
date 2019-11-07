@@ -131,11 +131,16 @@ $("#reader-table .list").click(() => {
 
 $("#active-process-table").click(e => {
   let target = $(event.target)
-  if (target.hasClass("fa-cog")) {
+  if (target.hasClass("fas")) {
     target = target.parent()
   }
-  if (target.hasClass("option-btn")) {
-    const params = active_processing.find(el => el.pid == target.parent().data("pid")).params
+  const pid = target.parent().data("pid")
+  console.log(pid)
+  if (pid != 0 && ! pid) {
+    return
+  }
+  if (target.hasClass("btn-alternate")) {
+    const params = active_processing.find(el => el.pid == pid).params
     $("#modal-option").data("type", "processing")
     $("#option-content").empty()
     $("#option-bool").empty()
@@ -143,7 +148,31 @@ $("#active-process-table").click(e => {
     constructOptions($("#option-content"), $("#option-bool"), params);
     $("#modal-option").modal("show");
   }
+  else if (target.hasClass("btn-danger")) {
+    const index_ = active_processing.findIndex(el => el.pid == pid);
+    if (index_ != -1) {
+      active_processing.splice(index_, 1)
+    }
+    for (let i = 0; i < 5; i++) {
+      if (target.hasClass("col-lg-2 col-md-3 col-sm-6 sort")) {
+        target.remove()
+        return;
+      } else {
+         target = target.parent()
+      }
+    }
+  } else if (target.hasClass("btn-secondary")) {
+    active_processing.find(el => el.pid == pid).view = true
+    target.removeClass("btn-secondary")
+    target.addClass("btn-success")
+  } else if (target.hasClass("btn-success")) {
+    active_processing.find(el => el.pid == pid).view = false
+    target.removeClass("btn-success")
+    target.addClass("btn-secondary")
+  }
 })
+
+
 $(".options").click(() => {
   let target = $(event.target)
   if (target.prop("tagName") === "I") {
