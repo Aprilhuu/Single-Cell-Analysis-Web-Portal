@@ -152,9 +152,16 @@ const constructProcess = (name, pack) => {
 
   card_.append(h5_, span_, scroll_area)
 
-  const div_ = $('<div class="col-lg-2 col-md-3 col-sm-6 sort"></div>')
-  div_.append(card_)
+  let div_ = $('<div class="col-lg-2 col-md-3 col-sm-6 sort"></div>')
 
+
+  if (display_mode === "s") {
+    scroll_area.hide();
+    span_.hide();
+    card_.css("height", "128px");
+    div_ = $('<div class="col-lg-1 col-md-2 col-sm-4 sort"></div>')
+  }
+  div_.append(card_)
   $("#active-process-table").append(div_)
   return process_info;
 }

@@ -56,15 +56,15 @@ const active_processing = []
 let installedReaders;
 let installedMethods;
 $.get("/installed-methods", {
-    type: 'reader',
-    name: '_all'
-  }, data => {
+  type: 'reader',
+  name: '_all'
+}, data => {
   installedReaders = JSON.parse(data);
 });
 $.get("/installed-methods", {
-    type: 'processing',
-    name: '_all',
-  }, data => {
+  type: 'processing',
+  name: '_all',
+}, data => {
   installedMethods = JSON.parse(data);
   new_steps_table.clear()
   new_steps_table.add(installedMethods)
@@ -73,13 +73,13 @@ $.get("/installed-methods", {
 $("#new-steps-table .list").click(() => {
   let target = $(event.target)
   for (let i = 0; i < 5; i++) {
-    if (! target.hasClass("card-new-steps")) {
+    if (!target.hasClass("card-new-steps")) {
       target = target.parent();
     } else {
       break;
     }
   }
-  if (! target.hasClass("card-new-steps")) {
+  if (!target.hasClass("card-new-steps")) {
     return;
   }
   const process_info = constructProcess(target.find(".name").text(), target.find(".package").text())
@@ -143,12 +143,23 @@ $("#reader-table .list").click(() => {
 
 $("#active-process-table").click(e => {
   let target = $(event.target)
+  if (display_mode === "s") {
+    if (target.parent().hasClass("card-shadow-secondary")) {
+      target = target.parent();
+    }
+    if (! target.hasClass("card-shadow-secondary")) {
+      return;
+    }
+    target.children("span").show();
+    target.parent().addClass("col-lg-2 col-md-3 col-sm-6");
+    target.parent().remove("col-lg-1 col-md-2 col-sm-4");
+    return;
+  }
   if (target.hasClass("fas")) {
     target = target.parent()
   }
   const pid = target.parent().data("pid")
-  console.log(pid)
-  if (pid != 0 && ! pid) {
+  if (pid != 0 && !pid) {
     return
   }
   if (target.hasClass("btn-alternate")) {
@@ -159,8 +170,7 @@ $("#active-process-table").click(e => {
     $("#modal-option").data("pid", target.parent().data("pid"))
     constructOptions($("#option-content"), $("#option-bool"), params);
     $("#modal-option").modal("show");
-  }
-  else if (target.hasClass("btn-danger")) {
+  } else if (target.hasClass("btn-danger")) {
     const index_ = active_processing.findIndex(el => el.pid == pid);
     if (index_ != -1) {
       active_processing.splice(index_, 1)
@@ -170,7 +180,7 @@ $("#active-process-table").click(e => {
         target.remove()
         return;
       } else {
-         target = target.parent()
+        target = target.parent()
       }
     }
   } else if (target.hasClass("btn-secondary")) {
@@ -225,8 +235,42 @@ $("#modal-option").on("hide.bs.modal", () => {
 
 })
 
+/** hide the processes details in the queue
+**/
+let display_mode = "l";
+
+$("#change-queue-display").click(() => {
+  $("#change-queue-display").toggleClass("btn-primary btn-secondary");
+
+  if (display_mode === "l") {
+    display_mode = "s";
+    $("#active-process-table .card-shadow-secondary").parent()
+    .removeClass("col-lg-2 col-md-3 col-sm-6");
+    $("#active-process-table .card-shadow-secondary").parent()
+    .addClass("col-lg-1 col-md-2 col-sm-4");
+    $("#active-process-table .scroll-area-sm.mt-1").hide();
+    $("#active-process-table .card-shadow-secondary span").hide();
+    $("#active-process-table .card-process").css("height", "128px");
+  } else {
+    display_mode = "l";
+    $("#active-process-table .card-shadow-secondary").parent()
+    .addClass("col-lg-2 col-md-3 col-sm-6");
+    $("#active-process-table .card-shadow-secondary").parent()
+    .removeClass("col-lg-1 col-md-2 col-sm-4");
+    $("#active-process-table .scroll-area-sm.mt-1").show();
+    $("#active-process-table .card-shadow-secondary span").show();
+    $("#active-process-table .card-process").css("height", "240px");
+  }
+})
+
 /** TODO **/
 
 $("#submit-process").click(e => {
-  console.log($("#active-process-table").find(".btn-alternate.option-btn").parent().map(() => {return $(this).data("pid")}))
+  const process_order = $("#active-process-table").find(".btn-alternate.option-btn")
+    .parent()
+    .map((index, e) => {
+      return $(e).data("pid")
+    })
+    .get();
+
 })
