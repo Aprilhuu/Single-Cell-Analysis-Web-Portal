@@ -24,24 +24,6 @@
         "name": "ext",
         "type": "text",
         "annotation": "Extension that indicates the file type, if not provided, use the extension of filename"
-      },
-      {
-        "name": "test",
-        "type": "bool",
-        "default": true,
-        "annotation": "Test for the annotation tooltip"
-      },
-      {
-        "name": "test2",
-        "type": "bool",
-        "default": true,
-        "annotation": "Test for the annotation tooltip"
-      },
-      {
-        "name": "test3",
-        "type": "bool",
-        "default": true,
-        "annotation": "Test for the annotation tooltip"
       }
     ]
   }

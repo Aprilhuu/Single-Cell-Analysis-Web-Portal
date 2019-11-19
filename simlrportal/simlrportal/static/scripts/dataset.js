@@ -1,6 +1,6 @@
 'use strict'
 /**
-  For dataset section 
+  For dataset section
 **/
 
 const allowed_file = $("#allowed_file").text().split(", ")
@@ -33,9 +33,9 @@ const uploadFile = () => {
   }
   const file_ext = file.name.substring(file.name.lastIndexOf(".") + 1, file.name.length);
   if (!allowed_file.includes(file_ext)) {
-    $("#model_warning .modal-title").text("Incompatible file Extension")
-    $("#model_warning .modal-body p").text("The uploading file does not have a recognizable extension, please upload a valid dataset file")
-    $("#model_warning").modal();
+    $("#modal-warning .modal-title").text("Incompatible file Extension")
+    $("#modal-warning .modal-body p").text("The uploading file does not have a recognizable extension, please upload a valid dataset file")
+    $("#modal-warning").modal();
     return
   }
   const formData = new FormData($("#form-upload")[0]);
@@ -46,9 +46,9 @@ const uploadFile = () => {
     contentType: false,
     type: 'POST',
     success: function(data) {
-      $("#model_warning .modal-title").text("Uploaded")
-      $("#model_warning .modal-body p").text("The file is uploaded")
-      $("#model_warning").modal();
+      $("#modal-warning .modal-title").text("Uploaded")
+      $("#modal-warning .modal-body p").text("The file is uploaded")
+      $("#modal-warning").modal();
     }
   });
 }

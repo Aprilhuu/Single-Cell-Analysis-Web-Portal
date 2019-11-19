@@ -143,16 +143,17 @@ $("#reader-table .list").click(() => {
 
 $("#active-process-table").click(e => {
   let target = $(event.target)
-  if (display_mode === "s") {
+  if (display_mode === "s"
+    && ! target.hasClass("fas")
+    && ! target.hasClass("option-btn")) {
     if (target.parent().hasClass("card-shadow-secondary")) {
       target = target.parent();
     }
     if (! target.hasClass("card-shadow-secondary")) {
       return;
     }
-    target.children("span").show();
-    target.parent().addClass("col-lg-2 col-md-3 col-sm-6");
-    target.parent().remove("col-lg-1 col-md-2 col-sm-4");
+    target.children("span").toggle();
+    target.parent().toggleClass("col-lg-2 col-md-3 col-sm-6 col-lg-1 col-md-2 col-sm-4");
     return;
   }
   if (target.hasClass("fas")) {
@@ -176,7 +177,7 @@ $("#active-process-table").click(e => {
       active_processing.splice(index_, 1)
     }
     for (let i = 0; i < 5; i++) {
-      if (target.hasClass("col-lg-2 col-md-3 col-sm-6 sort")) {
+      if (target.hasClass("sort")) {
         target.remove()
         return;
       } else {
@@ -263,7 +264,8 @@ $("#change-queue-display").click(() => {
   }
 })
 
-/** TODO **/
+
+
 
 $("#submit-process").click(e => {
   const process_order = $("#active-process-table").find(".btn-alternate.option-btn")
@@ -273,4 +275,49 @@ $("#submit-process").click(e => {
     })
     .get();
 
+  const reader_data = {
+    name: $(".non-sort .options").data("name"),
+    package: $(".non-sort .options").data("package"),
+    params: {}
+  }
+
+  const curr_reader = installedReaders.find(el => el.name === reader_data.name && el.package === reader_data.package);
+  curr_reader.params.forEach(p => {
+    reader_data.params[p.name] = p.default
+  })
+
+
+  const data = [reader_data];
+
+  let integrity = true;
+  process_order.forEach((order) => {
+    const process = active_processing.find(e => e.pid === order);
+    const target = {
+      name: process.name,
+      package: process.package,
+      params: {}
+    };
+    process.params.forEach(p => {
+      if (p.required && p.default === "") {
+        integrity = false;
+      }
+      target.params[p.name] = p.default;
+    })
+    data.push(target);
+  })
+
+  if (integrity == false) {
+    $("#modal-warning").modal("show");
+    return;
+  }
+  $.ajax({
+    url: '/new-process',
+    data: JSON.stringify(data),
+    dataType: 'json',
+    contentType: 'application/json; charset=utf-8',
+    type: 'POST',
+    success: (data) => {
+      console.log(data);
+    }
+  });
 })

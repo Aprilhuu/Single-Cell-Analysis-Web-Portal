@@ -1,7 +1,6 @@
 from flask import render_template, request, jsonify
 from simlrportal import app, db
 import os
-import json
 
 @app.route('/newprocess.html', methods=['GET'])
 def render_newprocess():
@@ -19,3 +18,10 @@ def get_installed_methods():
             f.close()
             return read_json
     return "failed", 404
+
+
+@app.route("/new-process", methods=['GET', 'POST'])
+def post_new_process():
+    data = request.get_json()
+    print(data)
+    return jsonify(data)
