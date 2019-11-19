@@ -33,13 +33,26 @@ const retriveValue = (obj) => {
 const optionTextFactory = (obj, input_type) => {
   const form_group = $('<div class="form-group col-md-6"></div>')
 
+
   const label_ = $('<label></label>')
   label_.attr("for", "option-" + obj.name)
   label_.text(obj.name)
 
-  const input_ = $('<input class="form-control">')
-  input_.attr("id", "option-" + obj.name)
-  input_.attr("type", input_type)
+  const input_ = $('<input class="form-control">');
+  input_.attr("id", "option-" + obj.name);
+  input_.attr("type", input_type);
+  if (obj.required){
+    input_.change(() => {
+      if (input_.val() != "") {
+        input_.removeClass("is-invalid")
+      } else {
+        input_.addClass("is-invalid")
+      }
+    })
+    if (! obj.default) {
+      input_.addClass("is-invalid")
+    }
+  }
 
   form_group.append(label_, input_)
 
@@ -132,6 +145,7 @@ const constructProcess = (name, pack) => {
   process_info.view = false;
   pid++;
 
+
   const h5_ = $('<h5 class="card-title" style="text-transform: lowercase;"></h5>')
   h5_.text(pack + "." + name)
 
@@ -142,6 +156,12 @@ const constructProcess = (name, pack) => {
   span_.append($('<button class="btn btn-secondary option-btn mr-1 mb-1"><i class="fas fa-table"></i></button> '))
 
   const card_ = $('<div class="card-shadow-secondary border mb-3 card card-body border-secondary card-process"></div>')
+  for (let p of process_info.params) {
+    if (p.required) {
+      card_.toggleClass("card-shadow-secondary card-shadow-danger border-secondary border-danger");
+      break;
+    }
+  }
 
   const description =  $('<span clas="description"></span>')
   description.text(process_info.description)

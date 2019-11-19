@@ -82,7 +82,8 @@ $("#new-steps-table .list").click(() => {
   if (!target.hasClass("card-new-steps")) {
     return;
   }
-  const process_info = constructProcess(target.find(".name").text(), target.find(".package").text())
+  const process_info = constructProcess(target.find(".name").text(),
+                                        target.find(".package").text())
   active_processing.push(process_info);
 })
 
@@ -229,9 +230,22 @@ $("#modal-option").on("hide.bs.modal", () => {
   if (!obj) {
     return
   }
-
+  let required_params = false;
   for (let i = 0; i < obj.params.length; i++) {
     obj.params[i].default = retriveValue(obj.params[i])
+    if (obj.params[i].required && obj.params[i].default === "") {
+      required_params = true;
+    }
+  }
+  const card_ = $("#active-process-table .card-process span")
+  .filter((index, e) => $(e).data("pid") === obj.pid).parent();
+
+  if (required_params) {
+    card_.addClass("card-shadow-danger border-danger");
+    card_.removeClass("card-shadow-secondary border-secondary");
+  } else {
+    card_.removeClass("card-shadow-danger border-danger");
+    card_.addClass("card-shadow-secondary border-secondary");
   }
 
 })
@@ -295,11 +309,16 @@ $("#submit-process").click(e => {
     const target = {
       name: process.name,
       package: process.package,
-      params: {}
+      params: {},
+      view: process.view
     };
     process.params.forEach(p => {
       if (p.required && p.default === "") {
         integrity = false;
+        const card_ = $("#active-process-table .card-process span")
+        .filter((index, e) => $(e).data("pid") === order).parent();
+        card_.addClass("card-shadow-danger border-danger");
+        card_.removeClass("card-shadow-secondary border-secondary");
       }
       target.params[p.name] = p.default;
     })
@@ -307,7 +326,9 @@ $("#submit-process").click(e => {
   })
 
   if (integrity == false) {
-    $("#modal-warning").modal("show");
+    $("#modal-warning .modal-title").text("Integrity Check")
+    $("#modal-warning .modal-body p").text("Exist required parameters that is not filled")
+    $("#modal-warning").modal();
     return;
   }
   $.ajax({
