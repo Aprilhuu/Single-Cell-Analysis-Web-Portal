@@ -155,7 +155,7 @@ const constructProcess = (name, pack) => {
   span_.append($('<button class="btn btn-danger option-btn mr-1 mb-1"><i class="fas fa-minus"></i></button> '))
   span_.append($('<button class="btn btn-secondary option-btn mr-1 mb-1"><i class="fas fa-table"></i></button> '))
 
-  const card_ = $('<div class="card-shadow-secondary border mb-3 card card-body border-secondary card-process"></div>')
+  const card_ = $('<div class="card-shadow-secondary border mb-3 card card-body border-secondary card-process card-pp"></div>')
   for (let p of process_info.params) {
     if (p.required) {
       card_.toggleClass("card-shadow-secondary card-shadow-danger border-secondary border-danger");

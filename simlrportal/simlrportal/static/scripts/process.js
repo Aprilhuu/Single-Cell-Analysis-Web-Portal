@@ -147,10 +147,10 @@ $("#active-process-table").click(e => {
   if (display_mode === "s"
     && ! target.hasClass("fas")
     && ! target.hasClass("option-btn")) {
-    if (target.parent().hasClass("card-shadow-secondary")) {
+    if (target.parent().hasClass("card-pp")) {
       target = target.parent();
     }
-    if (! target.hasClass("card-shadow-secondary")) {
+    if (! target.hasClass("card-pp")) {
       return;
     }
     target.children("span").toggle();
@@ -237,7 +237,7 @@ $("#modal-option").on("hide.bs.modal", () => {
       required_params = true;
     }
   }
-  const card_ = $("#active-process-table .card-process span")
+  const card_ = $("#active-process-table .card-pp span")
   .filter((index, e) => $(e).data("pid") === obj.pid).parent();
 
   if (required_params) {
@@ -315,7 +315,7 @@ $("#submit-process").click(e => {
     process.params.forEach(p => {
       if (p.required && p.default === "") {
         integrity = false;
-        const card_ = $("#active-process-table .card-process span")
+        const card_ = $("#active-process-table .card-pp span")
         .filter((index, e) => $(e).data("pid") === order).parent();
         card_.addClass("card-shadow-danger border-danger");
         card_.removeClass("card-shadow-secondary border-secondary");
