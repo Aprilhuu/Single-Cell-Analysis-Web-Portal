@@ -5,7 +5,7 @@ import os
 import json
 from datetime import datetime
 from time import time
-from .models.models import DataFile
+from simlrportal.models.models import DataFile
 from shutil import unpack_archive, get_archive_formats, rmtree
 
 

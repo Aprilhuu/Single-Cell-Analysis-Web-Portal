@@ -26,5 +26,22 @@
         "annotation": "Extension that indicates the file type, if not provided, use the extension of filename"
       }
     ]
+  },
+  {
+    "name": "read_10x_mtx",
+    "package": "scanpy",
+    "description": "Read 10x-Genomics-formatted mtx directory.",
+    "params": [
+      {
+        "name": "var_names",
+        "type": "option",
+        "options": [
+          "gene_symbols",
+          "gene_ids"
+        ],
+        "default": "gene_symbols",
+        "annotation": "The variables index."
+      }
+    ]
   }
 ]

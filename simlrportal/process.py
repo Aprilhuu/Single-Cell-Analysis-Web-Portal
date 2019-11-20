@@ -1,6 +1,7 @@
 from flask import render_template, request, jsonify
 from simlrportal import app, db
 import os
+from simlrportal.src.worker import Worker
 
 @app.route('/newprocess.html', methods=['GET'])
 def render_newprocess():
@@ -24,4 +25,7 @@ def get_installed_methods():
 def post_new_process():
     data = request.get_json()
     print(data)
+    worker = Worker(data)
+    worker.run()
+
     return jsonify(data)

@@ -43,12 +43,12 @@
         "default": ""
       },
       {
-        "name": "min_genes",
+        "name": "min_cells",
         "type": "number",
         "default": ""
       },
       {
-        "name": "max_genes",
+        "name": "max_cells",
         "type": "number",
         "default": ""
       }

@@ -105,4 +105,4 @@ venv.bak/
 
 simlrportal/app.db
 
-simlrportal/datasets/
+datasets/

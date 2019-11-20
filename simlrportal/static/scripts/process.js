@@ -132,11 +132,12 @@ $("#reader-table .list").click(() => {
   } else {
     return
   }
-  const name = target.find(".name")
-  const pack = target.find(".package")
+  const name = target.find(".name").text()
+  const pack = target.find(".package").text()
+  console.log(name, pack)
   $("#chosen-reader").text(name + "." + pack)
   $("#modal-reader").modal("hide")
-  const options = $("#choose-reader").parent().find(".option")
+  const options = $("#choose-reader").parent().find(".options")
   options.data("name", name)
   options.data("package", pack)
 });
@@ -259,21 +260,21 @@ $("#change-queue-display").click(() => {
 
   if (display_mode === "l") {
     display_mode = "s";
-    $("#active-process-table .card-shadow-secondary").parent()
+    $("#active-process-table .card-pp").parent()
     .removeClass("col-lg-2 col-md-3 col-sm-6");
-    $("#active-process-table .card-shadow-secondary").parent()
+    $("#active-process-table .card-pp").parent()
     .addClass("col-lg-1 col-md-2 col-sm-4");
     $("#active-process-table .scroll-area-sm.mt-1").hide();
-    $("#active-process-table .card-shadow-secondary span").hide();
+    $("#active-process-table .card-pp span").hide();
     $("#active-process-table .card-process").css("height", "128px");
   } else {
     display_mode = "l";
-    $("#active-process-table .card-shadow-secondary").parent()
+    $("#active-process-table .card-pp").parent()
     .addClass("col-lg-2 col-md-3 col-sm-6");
-    $("#active-process-table .card-shadow-secondary").parent()
+    $("#active-process-table .card-pp").parent()
     .removeClass("col-lg-1 col-md-2 col-sm-4");
     $("#active-process-table .scroll-area-sm.mt-1").show();
-    $("#active-process-table .card-shadow-secondary span").show();
+    $("#active-process-table .card-pp span").show();
     $("#active-process-table .card-process").css("height", "240px");
   }
 })
@@ -292,7 +293,7 @@ $("#submit-process").click(e => {
   const reader_data = {
     name: $(".non-sort .options").data("name"),
     package: $(".non-sort .options").data("package"),
-    params: {}
+    params: {filename: $("#chosen-dataset").data("id")}
   }
 
   const curr_reader = installedReaders.find(el => el.name === reader_data.name && el.package === reader_data.package);
@@ -321,6 +322,9 @@ $("#submit-process").click(e => {
         card_.removeClass("card-shadow-secondary border-secondary");
       }
       target.params[p.name] = p.default;
+      if (p.type === "number") {
+        target.params[p.name] = Number(target.params[p.name])
+      }
     })
     data.push(target);
   })
@@ -331,6 +335,7 @@ $("#submit-process").click(e => {
     $("#modal-warning").modal();
     return;
   }
+  console.log(data)
   $.ajax({
     url: '/new-process',
     data: JSON.stringify(data),
