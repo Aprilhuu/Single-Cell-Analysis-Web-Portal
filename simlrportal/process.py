@@ -24,8 +24,10 @@ def get_installed_methods():
 @app.route("/new-process", methods=['GET', 'POST'])
 def post_new_process():
     data = request.get_json()
-    print(data)
     worker = Worker(data)
-    worker.run()
+    integrity = worker.check_integrity()
+    if not integrity[1]:
+        return integrity[0]
+    worker.start()
 
     return jsonify(data)

@@ -108,3 +108,7 @@ simlrportal/app.db
 datasets/
 
 app.db
+
+cache/
+
+temp/
