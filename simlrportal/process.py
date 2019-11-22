@@ -2,10 +2,15 @@ from flask import render_template, request, jsonify
 from simlrportal import app, db
 import os
 from simlrportal.src.worker import Worker
+from simlrportal.models.models import *
 
 @app.route('/newprocess.html', methods=['GET'])
 def render_newprocess():
     return render_template("newprocess.html")
+
+@app.route('/process-history.html', methods=['GET'])
+def render_process_history():
+    return render_template("process-history.html")
 
 @app.route('/installed-methods', methods=['GET', 'POST'])
 def get_installed_methods():
@@ -26,8 +31,12 @@ def post_new_process():
     data = request.get_json()
     worker = Worker(data)
     integrity = worker.check_integrity()
-    if not integrity[1]:
-        return integrity[0]
-    worker.start()
+    if integrity['status']:
+        worker.start()
+    return jsonify(integrity)
 
-    return jsonify(data)
+@app.route("/process-history", methods=['GET'])
+def get_process_history():
+    if request.method == 'GET':
+        result = Process.query.all()
+        return jsonify([d.to_dict() for d in result])

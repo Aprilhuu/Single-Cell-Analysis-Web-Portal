@@ -13,7 +13,7 @@ class DataFile(db.Model):
         return '<file:  {} time: {}>'.format(self.id, self.modified)
 
     def to_dict(self):
-        dict_ = {
+        return {
             'id': self.id,
             'source': self.source,
             'name': self.name,
@@ -21,4 +21,27 @@ class DataFile(db.Model):
             'description': self.description,
             'modified':self.modified.strftime("%m/%d/%Y %H:%M:%S")
         }
-        return dict_
+
+
+
+class Process(db.Model):
+    __tablename__ = "processes"
+    id = db.Column(db.String(32), primary_key=True)
+    index = db.Column(db.Integer, primary_key=True)
+    call = db.Column(db.Text)
+    status = db.Column(db.Integer)
+    time = db.Column(db.DateTime, index=False, unique=False, nullable=False)
+    output = db.Column(db.Text)
+
+    def __repr__(self):
+        return '<id: {} index: {} call: {}>'.format(self.id, self.index, self.call)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'index': self.index,
+            'call': self.call,
+            'status': self.status,
+            'time': self.time.strftime("%m/%d/%Y %H:%M:%S"),
+            'output': self.output
+        }

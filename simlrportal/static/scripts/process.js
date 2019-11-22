@@ -120,6 +120,10 @@ $("#dataset-table .list").click(() => {
   $("#chosen-dataset").text($(target.children()[0]).text())
   $("#chosen-dataset").data("id", $(target.children()[0]).data("id"))
   $("#modal-dataset").modal("hide")
+
+  const card_ = $($("#active-process-table .card-process")[0])
+  card_.removeClass("card-shadow-danger border-danger");
+  card_.addClass("card-shadow-secondary border-secondary");
 });
 
 
@@ -134,7 +138,6 @@ $("#reader-table .list").click(() => {
   }
   const name = target.find(".name").text()
   const pack = target.find(".package").text()
-  console.log(name, pack)
   $("#chosen-reader").text(name + "." + pack)
   $("#modal-reader").modal("hide")
   const options = $("#choose-reader").parent().find(".options")
@@ -296,6 +299,13 @@ $("#submit-process").click(e => {
     params: {filename: $("#chosen-dataset").data("id")}
   }
 
+  if (! reader_data.params.filename) {
+    const card_ = $($("#active-process-table .card-process")[0])
+    card_.addClass("card-shadow-danger border-danger");
+    card_.removeClass("card-shadow-secondary border-secondary");
+    return;
+  }
+
   const curr_reader = installedReaders.find(el => el.name === reader_data.name && el.package === reader_data.package);
   curr_reader.params.forEach(p => {
     reader_data.params[p.name] = p.default
@@ -335,7 +345,7 @@ $("#submit-process").click(e => {
     $("#modal-warning").modal();
     return;
   }
-  console.log(data)
+
   $.ajax({
     url: '/new-process',
     data: JSON.stringify(data),
@@ -343,6 +353,7 @@ $("#submit-process").click(e => {
     contentType: 'application/json; charset=utf-8',
     type: 'POST',
     success: (data) => {
+      console.log("WW");
       console.log(data);
     }
   });
