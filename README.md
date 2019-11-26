@@ -1,4 +1,10 @@
 # Web Portal
+## Install
+requires pip/conda, python3
+```
+pip install requirements.txt
+python app.py
+```
 
 #### installed-methods
 To add a function, add a specified json object to `/installed-methods/[FILE].json`. Then, the front end will be able to render the controls.
