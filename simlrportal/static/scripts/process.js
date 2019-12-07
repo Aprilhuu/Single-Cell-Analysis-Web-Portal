@@ -138,7 +138,7 @@ $("#reader-table .list").click(() => {
   }
   const name = target.find(".name").text()
   const pack = target.find(".package").text()
-  $("#chosen-reader").text(name + "." + pack)
+  $("#chosen-reader").text(pack + "." + name)
   $("#modal-reader").modal("hide")
   const options = $("#choose-reader").parent().find(".options")
   options.data("name", name)
@@ -353,8 +353,9 @@ $("#submit-process").click(e => {
     contentType: 'application/json; charset=utf-8',
     type: 'POST',
     success: (data) => {
-      console.log("WW");
-      console.log(data);
+      $("#modal-warning .modal-title").text("Work Deplyed")
+      $("#modal-warning .modal-body p").text("Work has been successfully deployed, the deployment ID is " + data.info)
+      $("#modal-warning").modal();
     }
   });
 })

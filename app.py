@@ -6,6 +6,8 @@ if not os.path.exists(app.config['CACHE_FOLDER']):
     os.makedirs(app.config['CACHE_FOLDER'])
 if not os.path.exists(app.config['TEMP_FOLDER']):
     os.makedirs(app.config['TEMP_FOLDER'])
+if not os.path.exists(app.config['UPLOAD_FOLDER']):
+    os.makedirs(app.config['UPLOAD_FOLDER'])
 
 db.create_all()
 

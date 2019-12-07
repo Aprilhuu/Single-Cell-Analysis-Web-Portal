@@ -38,5 +38,9 @@ def post_new_process():
 @app.route("/process-history", methods=['GET'])
 def get_process_history():
     if request.method == 'GET':
-        result = Process.query.all()
+        name = request.args.get("name", "")
+        if name == "_all":
+            result = WorkerRecord.query.all()
+        else:
+            result = Process.query.filter_by(id = name)
         return jsonify([d.to_dict() for d in result])

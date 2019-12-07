@@ -55,6 +55,13 @@ class Worker(Thread):
                               )
             db.session.add(process)
             index += 1
+        wr = WorkerRecord( id = self.id,
+                           status = 0,
+                           time = datetime.now(),
+                           curr = 0,
+                           total = len(self.process)
+                         )
+        db.session.add(wr)
 
         db.session.commit()
 
@@ -75,8 +82,6 @@ class Worker(Thread):
                      str(e),
                      2 )
 
-
-        self.curr += 1
         return ( reader['package'] + "." + reader['name'],
                  params,
                  str(self.annData),
@@ -106,7 +111,7 @@ class Worker(Thread):
         if process['view']:
             self.annData.write(app.config['TEMP_FOLDER'] + "resutls{curr}.h5ad".format(curr=str(self.curr)))
 
-        self.curr += 1
+        # self.curr += 1
         return ( process['package'] + "." + process['name'],
                  params,
                  str(self.annData),
@@ -119,22 +124,38 @@ class Worker(Thread):
         params = ", ".join([str(k) + "=" + str(v) for k, v in params.items()])
         call = "{call}(target, {params})".format(call=call, params=params)
 
-        log = Process.query.filter_by(id=self.id, index=self.curr - 1).first()
+
+        log = Process.query.filter_by(id=self.id, index=self.curr).first()
         log.time = datetime.now()
         log.status = status
         log.output = output
         log.call = call
 
+        self.curr += 1
+
+        log_worker = WorkerRecord.query.filter_by(id=self.id).first()
+        log_worker.time = datetime.now()
+        log_worker.curr = self.curr
+
         db.session.commit()
+
 
 
     def run(self):
         self.log_adata(*self.read_data())
         curr = 1
-        while self.curr < len(self.process) and self.curr == curr:
-            process = self.process[self.curr]
+        for process in self.process[1:]:
+            if curr != self.curr:
+                break
             self.log_adata(*self.proceed(process))
             curr += 1
+
+        log_worker = WorkerRecord.query.filter_by(id=self.id).first()
+        if self.curr == len(self.process):
+            log_worker.status = 1
+        else:
+            log_worker.status = 2
+        db.session.commit()
         try:
             self.annData.write(app.config['TEMP_FOLDER'] + self.id +"/resutls.h5ad")
         except AttributeError:

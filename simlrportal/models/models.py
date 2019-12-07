@@ -45,3 +45,26 @@ class Process(db.Model):
             'time': self.time.strftime("%m/%d/%Y %H:%M:%S"),
             'output': self.output
         }
+
+
+class WorkerRecord(db.Model):
+    """Stores information for the worker"""
+
+    __tablename__ = "worker"
+    id = db.Column(db.String(32), primary_key=True)
+    status = db.Column(db.Integer)
+    time = db.Column(db.DateTime, index=False, unique=False, nullable=False)
+    curr = db.Column(db.Integer)
+    total = db.Column(db.Integer)
+
+    def __repr__(self):
+        return '<id: {} current: {}>'.format(self.id, self.curr)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'status': self.status,
+            'time': self.time.strftime("%m/%d/%Y %H:%M:%S"),
+            'curr' : self.curr,
+            'total': self.total
+        }
