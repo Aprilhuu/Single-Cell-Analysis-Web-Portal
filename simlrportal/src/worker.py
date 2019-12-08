@@ -15,7 +15,7 @@ class Worker(Thread):
                    the worker
         @param annData: the annData in the memory going through each preprocess
     """
-    def __init__(self, process):
+    def __init__(self, process, name):
         Thread.__init__(self)
         self.process = process
         self.curr = 0
@@ -23,6 +23,7 @@ class Worker(Thread):
         self.id = ""
         self.annData = None
         self.filename = None
+        self.name = name
 
     def check_integrity(self):
         """ Check whether this process can run
@@ -59,13 +60,14 @@ class Worker(Thread):
                            status = 0,
                            time = datetime.now(),
                            curr = 0,
-                           total = len(self.process)
+                           total = len(self.process),
+                           name = self.name
                          )
         db.session.add(wr)
 
         db.session.commit()
 
-        return {'info': self.id, 'status': True}
+        return {'info': self.name, 'status': True}
 
 
     def read_data(self):

@@ -35,12 +35,24 @@
             <div class="col-12">
               <div class="main-card mb-3 card">
                 <div class="card-header">Current Queue
-                  <button class="btn btn-success btn-lg ml-3" id="submit-process">Start new Process</button>
                   <button class="btn btn-primary btn-lg ml-3 ml-auto mr-3" id="change-queue-display">
                     <i class="fas fa-th-large"></i>
                   </button>
                 </div>
                 <div class="card-body">
+                  <div class="row mb-3">
+                    <div class="col">
+                      <div class="form-inline">
+                        <div class="form-group">
+                          <label for="worker-name">Worker Name</label>
+                          <input type="text" id="worker-name" class="form-control mx-sm-3" value="New Worker">
+                          <button class="btn btn-success btn-lg ml-3" id="submit-process">Start new Process</button>
+                          <button class="btn btn-primary btn-lg ml-3" id="save-process">Save Process</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="dropdown-divider"></div>
                   <div class="row" id='active-process-table'>
 
                     <div class="col-lg-4 col-md-6 col-sm-12 non-sort sort">
@@ -186,6 +198,8 @@
     </div>
   </div>
 </div>
+
+
 {% endblock %}
 
 

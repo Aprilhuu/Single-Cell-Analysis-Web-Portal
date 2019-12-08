@@ -286,6 +286,12 @@ $("#change-queue-display").click(() => {
 
 
 $("#submit-process").click(e => {
+  if ($("#worker-name").val() === "") {
+    return;
+  }
+  const full_data = {
+    name: $("#worker-name").val()
+  }
   const process_order = $("#active-process-table").find(".btn-alternate.option-btn")
     .parent()
     .map((index, e) => {
@@ -339,16 +345,16 @@ $("#submit-process").click(e => {
     data.push(target);
   })
 
-  if (integrity == false) {
+  if (! integrity) {
     $("#modal-warning .modal-title").text("Integrity Check")
     $("#modal-warning .modal-body p").text("Exist required parameters that is not filled")
     $("#modal-warning").modal();
     return;
   }
-
+  full_data.process = data;
   $.ajax({
     url: '/new-process',
-    data: JSON.stringify(data),
+    data: JSON.stringify(full_data),
     dataType: 'json',
     contentType: 'application/json; charset=utf-8',
     type: 'POST',

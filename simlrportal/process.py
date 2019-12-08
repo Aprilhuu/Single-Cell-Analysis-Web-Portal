@@ -8,6 +8,14 @@ from simlrportal.models.models import *
 def render_newprocess():
     return render_template("newprocess.html")
 
+@app.route('/process.html', methods=['GET'])
+def render_process():
+    worker = WorkerRecord.query.filter_by(id=request.args.get("name", "")).first()
+    if worker is None:
+        return 404
+    worker = worker.to_dict()
+    return render_template("process.html", worker=worker)
+
 @app.route('/process-history.html', methods=['GET'])
 def render_process_history():
     return render_template("process-history.html")
@@ -29,7 +37,7 @@ def get_installed_methods():
 @app.route("/new-process", methods=['GET', 'POST'])
 def post_new_process():
     data = request.get_json()
-    worker = Worker(data)
+    worker = Worker(data['process'], data['name'])
     integrity = worker.check_integrity()
     if integrity['status']:
         worker.start()

@@ -5,7 +5,7 @@ const progress_history_table_option = {
         <div class="widget-content-outer">
           <div class="widget-content-wrapper">
             <div class="widget-content-left">
-              <div class="widget-heading id"></div>
+              <div class="widget-heading name"></div>
               <div class="widget-subheading">Last Modified:
                 <span class="time"></span>
               </div>
@@ -20,7 +20,7 @@ const progress_history_table_option = {
       </div>
     </a>
   </div>`,
-  valueNames: ['id', 'time', 'curr', 'total', {
+  valueNames: ['time', 'curr', 'total', 'name', {
     name: 'status', attr: 'data-status'
   }, {
     name: 'link', attr: 'href'
@@ -36,7 +36,7 @@ $.get("/process-history", {
   progress_history_table.clear()
   console.log(
     data.map(e => {
-      e.link = "/process-history?name=" + e.id
+      e.link = "/process.html?name=" + e.id
       return e
     })
   )

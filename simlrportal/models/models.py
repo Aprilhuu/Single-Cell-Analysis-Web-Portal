@@ -52,6 +52,7 @@ class WorkerRecord(db.Model):
 
     __tablename__ = "worker"
     id = db.Column(db.String(32), primary_key=True)
+    name = db.Column(db.String(32))
     status = db.Column(db.Integer)
     time = db.Column(db.DateTime, index=False, unique=False, nullable=False)
     curr = db.Column(db.Integer)
@@ -63,6 +64,7 @@ class WorkerRecord(db.Model):
     def to_dict(self):
         return {
             'id': self.id,
+            'name': self.name,
             'status': self.status,
             'time': self.time.strftime("%m/%d/%Y %H:%M:%S"),
             'curr' : self.curr,
