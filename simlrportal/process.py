@@ -3,6 +3,7 @@ from simlrportal import app, db
 import os
 from simlrportal.src.worker import Worker
 from simlrportal.models.models import *
+from shutil import rmtree
 
 @app.route('/newprocess.html', methods=['GET'])
 def render_newprocess():
@@ -43,7 +44,7 @@ def post_new_process():
         worker.start()
     return jsonify(integrity)
 
-@app.route("/process-history", methods=['GET'])
+@app.route("/process-history", methods=['GET', 'DELETE'])
 def get_process_history():
     if request.method == 'GET':
         name = request.args.get("name", "")
@@ -52,3 +53,15 @@ def get_process_history():
         else:
             result = Process.query.filter_by(id = name)
         return jsonify([d.to_dict() for d in result])
+
+    if request.method == 'DELETE':
+        id = request.values.get("id", "")
+        WorkerRecord.query.filter_by(id = id).delete()
+        Process.query.filter_by(id = id).delete()
+        try:
+            rmtree(os.path.join(app.config['TEMP_FOLDER'], id))
+        except:
+            pass
+        db.session.commit()
+
+        return id

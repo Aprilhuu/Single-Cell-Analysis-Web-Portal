@@ -133,7 +133,8 @@ class Worker(Thread):
         log.output = output
         log.call = call
 
-        self.curr += 1
+        if status == 1:
+            self.curr += 1
 
         log_worker = WorkerRecord.query.filter_by(id=self.id).first()
         log_worker.time = datetime.now()
