@@ -1,0 +1,31 @@
+{% extends 'frame.html' %}
+{% block sidebar %}
+<ul class="vertical-nav-menu">
+    <li class="app-sidebar__heading">Report</li>
+    <li>
+        <a href="/process/process.html?id={{ worker.id }}">
+            <i class="metismenu-icon fas fa-clipboard-check"></i>
+            Summary
+        </a>
+    </li>
+    <li class="app-sidebar__heading">Visualizations</li>
+    <li>
+        <a href="/process/process.html?id={{ worker.id }}">
+            <i class="metismenu-icon fas fa-clipboard"></i>
+            Create A New Process
+        </a>
+    </li>
+    <li>
+        <a href="/process/process.html?id={{ worker.id }}">
+            <i class="metismenu-icon fas fa-paperclip"></i>
+            Manage Procdures
+        </a>
+    </li>
+    <li>
+        <a href="/process/process.html?id={{ worker.id }}">
+            <i class="metismenu-icon fas fa-history"></i>
+            Processes History
+        </a>
+    </li>
+</ul>
+{% endblock %}
