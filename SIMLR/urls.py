@@ -21,5 +21,6 @@ urlpatterns = [
     path('process/', include('process.urls')),
     path('dataset/', include('dataset.urls')),
     path('settings/', include('settings.urls')),
-    path('admin/', admin.site.urls),
+    path('plot/', include('plot.urls')),
+    path('admin/', admin.site.urls)
 ]

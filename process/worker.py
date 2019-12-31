@@ -103,7 +103,7 @@ class Worker(Thread):
                     2)
 
         if process['view']:
-            self.annData.write(TEMP_FOLDER + "resutls{curr}.h5ad".format(curr=str(self.curr)))
+            self.annData.write(os.path.join(TEMP_FOLDER, "resutls{curr}.h5ad".format(curr=str(self.curr))))
 
         return (process['package'] + "." + process['name'],
                 params,
@@ -113,7 +113,11 @@ class Worker(Thread):
     def log_adata(self, call, params, output, status):
         """ Print the log of the finished process
         """
-        params = ", ".join([str(k) + "=" + str(v) for k, v in params.items()])
+        param_str = []
+        for k, v in params.items():
+            v = "\'" + v + "\'" if type(v) == str else str(v)
+            param_str.append(str(k) + "=" + v)
+        params = ", ".join(param_str)
         call = "{call}(target, {params})".format(call=call, params=params)
 
         log = Process.objects.get(wrid=self.id, index=self.curr)

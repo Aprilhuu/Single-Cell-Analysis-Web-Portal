@@ -7,16 +7,16 @@ from django.http import JsonResponse
 from .worker import Worker
 
 def render_newprocess(request):
-    return render(request, "newprocess.html")
+    return render(request, "process/newprocess.html")
 
 
 def render_process(request):
     worker = get_object_or_404(WorkerRecord, id=int(request.GET.get('id', None)))
-    return render(request, "process.html", {'worker': worker})
+    return render(request, "process/process.html", {'worker': worker})
 
 
 def render_process_history(request):
-    return render(request, "process-history.html")
+    return render(request, "process/process-history.html")
 
 
 def get_process_history(request):

@@ -40,7 +40,7 @@ $("#script-button").click(() => {
     $("#report-div .card-title").each((index, obj) => {
         script_ += ($(obj).text() + "\n");
     });
-    download(script_, "script.py", "text/plain");
+    download(script_, $("#worker-name").text() + "_script.py", "text/plain");
 });
 
 $("#report-button").click(() => {
@@ -51,7 +51,7 @@ $("#report-button").click(() => {
         report_ += $(obj).find(".card-subtitle").text() + "\n";
         report_ += $(obj).find("p").text() + "\n\n"
     });
-    download(report_, "report.txt", "text/plain");
+    download(report_, $("#worker-name").text() + ".txt", "text/plain");
 });
 
 

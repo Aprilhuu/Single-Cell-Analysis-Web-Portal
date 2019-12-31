@@ -9,11 +9,11 @@ import os
 
 
 def render_dataset(request):
-    return render(request, "datasets.html")
+    return render(request, "dataset/datasets.html")
 
 
 def render_dataupload(request):
-    return render(request, "dataupload.html",
+    return render(request, "dataset/dataupload.html",
                   {'allowed_file': ", ".join(ALLOWED_EXTENSIONS)})
 
 
