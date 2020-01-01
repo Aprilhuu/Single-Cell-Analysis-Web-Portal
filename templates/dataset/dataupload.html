@@ -1,5 +1,5 @@
 {% extends 'nav.html' %}
-
+{% load static %}
 {% block content %}
 <div class="app-main__outer">
   <div class="app-main__inner">
@@ -57,5 +57,5 @@
 </div>
 {% endblock %}
 {% block js %}
-<script type="text/javascript" src="/static/scripts/dataset.js"></script>
+<script type="text/javascript" src={% static "scripts/dataset.js" %}></script>
 {% endblock %}

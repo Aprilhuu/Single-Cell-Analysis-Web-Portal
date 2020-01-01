@@ -1,6 +1,12 @@
 {% extends 'frame.html' %}
 {% block sidebar %}
 <ul class="vertical-nav-menu">
+<li>
+        <a href="/process/process-history.html">
+            <i class="metismenu-icon fas fa-chevron-circle-left"></i>
+            Processes History
+        </a>
+    </li>
     <li class="app-sidebar__heading">Report</li>
     <li>
         <a href="/process/process.html?id={{ worker.id }}">

@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ["0.0.0.0", "127.0.0.1", "192.168.2.37"]
 INSTALLED_APPS = [
     'dataset.apps.DatasetConfig',
     'process.apps.ProcessConfig',
+    'settings.apps.SettingsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

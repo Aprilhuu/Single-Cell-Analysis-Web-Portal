@@ -59,13 +59,13 @@ $.get("/settings/installed-methods", {
     type: 'reader',
     name: '_all'
 }, data => {
-    installedReaders = JSON.parse(data);
+    installedReaders = data;
 });
 $.get("/settings/installed-methods", {
     type: 'processing',
     name: '_all',
 }, data => {
-    installedMethods = JSON.parse(data);
+    installedMethods = data;
     new_steps_table.clear();
     new_steps_table.add(installedMethods)
 });
@@ -359,20 +359,15 @@ $("#submit-process").click(e => {
 
     full_data.process = JSON.stringify(data);
 
-
-    console.log(full_data);
-
-
     $.ajax({
         url: '/process/new-process',
         data: full_data,
         type: 'POST',
         success: data => {
-            console.log((data))
-            // $("#modal-warning .modal-title").text("Work Deplyed");
-            // $("#modal-warning .modal-body p").text("Work has been successfully deployed, " +
-            //     "the deployment ID is " + data.info);
-            // $("#modal-warning").modal();
+            $("#modal-warning .modal-title").text("Work Deplyed");
+            $("#modal-warning .modal-body p").text("Work has been successfully deployed, " +
+                "the deployment ID is " + data.info);
+            $("#modal-warning").modal();
         }
     });
 });
