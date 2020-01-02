@@ -34,13 +34,14 @@ def get_installed_methods(request):
     return Http404
 
 
-def add_installed_methods(request):
-    saved_method = Methods(
+def update_installed_methods(request):
+    saved_method, _ = Methods.objects.update_or_create(
         type=request.POST.get('type'),
         package=request.POST.get('package'),
         name=request.POST.get('name'),
-        description=request.POST.get('description'),
-        params=str(request.POST.get('params', ""))
+        defaults= {
+            'description': request.POST.get('description'),
+            'params': str(request.POST.get('params', ""))
+        }
     )
-    saved_method.save()
     return JsonResponse(saved_method.assembly(), safe=False)

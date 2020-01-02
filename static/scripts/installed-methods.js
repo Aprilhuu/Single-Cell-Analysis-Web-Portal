@@ -118,7 +118,6 @@ const getDefaultValue = (default_div) => {
     $("#param-default").removeClass("is-invalid");
     let v = default_div.val().trim();
     const type = $('#param-type :selected').text();
-    console.log(v, type, type === "option");
     if (type === "number") {
         v = Number(v);
     } else if (type === "option" && ($("#param-options").val().split(",").includes(v) === false)) {
@@ -137,6 +136,9 @@ const getDefaultValue = (default_div) => {
     if (isNaN(v) && typeof v !== "string") {
         $("#param-default").addClass("is-invalid");
         return;
+    }
+    if (v === "EMPTY_STRING") {
+        v = ""
     }
     return v;
 };
@@ -187,7 +189,7 @@ const postMethod = () => {
     };
     if (method_data.package !== "" && method_data.name !== "") {
         $.ajax({
-            url: '/settings/new-method',
+            url: '/settings/update-method',
             data: method_data,
             type: 'POST',
             success: data => {

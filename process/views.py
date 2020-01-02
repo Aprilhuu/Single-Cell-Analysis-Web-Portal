@@ -6,8 +6,8 @@ from settings.settings import TEMP_FOLDER
 from django.http import JsonResponse
 from .worker import Worker
 
-def render_newprocess(request):
-    return render(request, "process/newprocess.html")
+def render_new_process(request):
+    return render(request, "process/new-process.html")
 
 
 def render_process(request):
