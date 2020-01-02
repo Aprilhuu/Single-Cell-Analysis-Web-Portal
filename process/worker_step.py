@@ -1,6 +1,8 @@
-from .models import Process
-import importlib, os
+import importlib
+import os
+
 from settings.settings import TEMP_FOLDER
+from .models import Process
 
 
 class WorkerStep:
@@ -39,7 +41,7 @@ class WorkerStep:
         log = Process.objects.get(wrid=self.wrID, index=self.index)
         log.status = self.status
         log.output = self.output
-        log.call = "{call}(target, {params})".format(call=call, params=params)
+        log.call = f"{call}(target, {params})"
         log.save()
 
 
@@ -84,8 +86,8 @@ class ProcessingStep(WorkerStep):
 
         if self.context['view']:
             self.annData.write(os.path.join(TEMP_FOLDER,
-                                            os.path.join(str(self.wrID),
-                                                         "/views_{index}.h5ad".format(index=self.index))))
+                                            str(self.wrID),
+                                            f'views_{self.index}.h5ad'))
 
         self.output = str(self.annData)
         self.status = 1

@@ -1,9 +1,9 @@
-from .models import Process, WorkerRecord
+import os
+from threading import Thread
+
 from dataset.models import DataFile
 from settings.settings import TEMP_FOLDER
-from datetime import datetime
-from threading import Thread
-import os, importlib
+from .models import Process, WorkerRecord
 from .worker_step import ReaderStep, ProcessingStep
 
 
@@ -86,4 +86,6 @@ class Worker(Thread):
                 wr.save()
         wr.status = 1
         wr.save()
-        self.annData.write(os.path.join(TEMP_FOLDER, os.path.join(str(self.id), "/results.h5ad")))
+        self.annData.write(os.path.join(TEMP_FOLDER,
+                                        str(self.id),
+                                        "results.h5ad"))
