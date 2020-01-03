@@ -12,16 +12,12 @@ def render_installed_methods(request):
 
 def get_installed_methods(request):
     if request.method == "GET":
-        type = request.GET.get("type", "")
+        type = request.GET.get("type", "").split(";")
         name = request.GET.get("name", "")
-        if type == "_all" and name == "_all":
-            read_json = Methods.objects.all()
-        elif type == "_all":
-            read_json = Methods.objects.filter(name=name)
-        elif name == "_all":
-            read_json = Methods.objects.filter(type=type)
+        if name == "_all":
+            read_json = Methods.objects.filter(type__in=type)
         else:
-            read_json = Methods.objects.filter(name=name, type=type)
+            read_json = Methods.objects.filter(name=name, type__in=type)
         read_json = [m.assembly() for m in read_json]
         return JsonResponse(read_json, safe=False)
     if request.method == "POST":

@@ -4,7 +4,7 @@ from threading import Thread
 from dataset.models import DataFile
 from settings.settings import TEMP_FOLDER
 from .models import Process, WorkerRecord
-from .worker_step import ReaderStep, ProcessingStep
+from .worker_step import ReadStep, ProcessStep, PlotStep
 
 
 class Worker(Thread):
@@ -47,8 +47,6 @@ class Worker(Thread):
                           name=self.name)
         wr.save()
         self.id = wr.id
-        if not os.path.isdir(TEMP_FOLDER):
-            os.mkdir(TEMP_FOLDER)
         os.mkdir(os.path.join(TEMP_FOLDER, str(self.id)))
         index = 0
         for p in self.process:
@@ -68,9 +66,11 @@ class Worker(Thread):
         wr = WorkerRecord.objects.get(id=self.id)
         for step in self.process:
             if step['type'] == 'reader':
-                worker_step = ReaderStep(step, self.id, self.curr, self.filename, None)
+                worker_step = ReadStep(step, self.id, self.curr, self.filename, None)
             elif step['type'] == 'processing':
-                worker_step = ProcessingStep(step, self.id, self.curr, "", self.annData)
+                worker_step = ProcessStep(step, self.id, self.curr, "", self.annData)
+            elif step['type'] == 'plot':
+                worker_step = PlotStep(step, self.id, self.curr, "", self.annData)
             else:
                 return
             worker_step.run()
@@ -86,6 +86,4 @@ class Worker(Thread):
                 wr.save()
         wr.status = 1
         wr.save()
-        self.annData.write(os.path.join(TEMP_FOLDER,
-                                        str(self.id),
-                                        "results.h5ad"))
+        self.annData.write(os.path.join(TEMP_FOLDER, str(self.id), "results.h5ad"))

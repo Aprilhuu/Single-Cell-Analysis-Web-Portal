@@ -18,7 +18,7 @@ const table_option = {
 const table = new List('methods-table', table_option, {});
 
 $.get("/settings/installed-methods", {
-    type: '_all',
+    type: 'processing;reader;plot',
     name: '_all'
 }, data => {
     table.clear();

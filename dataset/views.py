@@ -40,9 +40,7 @@ def rest_datasets(request):
             return Http404
 
 
-def dataupload(request):
-    if not os.path.isdir(UPLOAD_FOLDER):
-        os.mkdir(UPLOAD_FOLDER)
+def data_upload(request):
     file = request.FILES.get('file', None)
     if not file:
         return HttpResponseBadRequest

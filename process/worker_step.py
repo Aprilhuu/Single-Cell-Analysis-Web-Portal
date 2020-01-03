@@ -45,7 +45,7 @@ class WorkerStep:
         log.save()
 
 
-class ReaderStep(WorkerStep):
+class ReadStep(WorkerStep):
 
     def run(self):
         params = self.context['params']
@@ -63,7 +63,7 @@ class ReaderStep(WorkerStep):
         self.log()
 
 
-class ProcessingStep(WorkerStep):
+class ProcessStep(WorkerStep):
 
     def run(self):
         module = importlib.import_module(self.context['package'])
@@ -85,10 +85,37 @@ class ProcessingStep(WorkerStep):
             return
 
         if self.context['view']:
-            self.annData.write(os.path.join(TEMP_FOLDER,
-                                            str(self.wrID),
-                                            f'views_{self.index}.h5ad'))
+            self.annData.write(os.path.join(TEMP_FOLDER, str(self.wrID), f'views_{self.index}.h5ad'))
 
         self.output = str(self.annData)
+        self.status = 1
+        self.log()
+
+
+class PlotStep(WorkerStep):
+
+    def run(self):
+        module = importlib.import_module(self.context['package'])
+        components = self.context['name'].split(".")
+        for attr in components:
+            module = getattr(module, attr)
+
+        params = self.context['params'].copy()
+        for key, value in self.context['params'].items():
+            if value == "" or value == 0:
+                del params[key]
+        self.context['params'] = params
+        try:
+            module(self.annData,
+                   **params,
+                   save=f'plot_{self.index}.svg',
+                   show=False)
+        except Exception as e:
+            self.output = str(e)
+            self.status = 2
+            self.log()
+            return
+
+        self.output = f"Image Saved as plot_{self.index}.svg"
         self.status = 1
         self.log()
