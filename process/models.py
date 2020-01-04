@@ -1,5 +1,6 @@
 from django.db import models
 
+
 # Create your models here.
 
 
@@ -10,6 +11,7 @@ class Process(models.Model):
     status = models.PositiveSmallIntegerField()
     time = models.DateTimeField(auto_now=True)
     output = models.TextField()
+    type = models.CharField(max_length=16)
 
 
 class WorkerRecord(models.Model):

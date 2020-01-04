@@ -30,10 +30,15 @@
   color: #d92550;
 }
 
-#progress-history-table a{
-  text-decoration: none;
+#progress-history-table a {
+    text-decoration: none;
 }
 
 #progress-history-table a .widget-subheading {
-  color: #343a40;
+    color: #343a40;
+}
+
+
+.plot-card-body {
+    height: 500px;
 }

@@ -96,6 +96,9 @@ class PlotStep(WorkerStep):
 
     def run(self):
         module = importlib.import_module(self.context['package'])
+        if self.context['package'] == 'scanpy':
+            from pathlib import Path
+            module._settings.settings.figdir = Path(os.path.join(TEMP_FOLDER, str(self.wrID), "figures"))
         components = self.context['name'].split(".")
         for attr in components:
             module = getattr(module, attr)
@@ -108,7 +111,7 @@ class PlotStep(WorkerStep):
         try:
             module(self.annData,
                    **params,
-                   save=f'plot_{self.index}.svg',
+                   save=f'plot_{self.index}.png',
                    show=False)
         except Exception as e:
             self.output = str(e)
@@ -116,6 +119,6 @@ class PlotStep(WorkerStep):
             self.log()
             return
 
-        self.output = f"Image Saved as plot_{self.index}.svg"
+        self.output = f"{components[-1]}plot_{self.index}.png"
         self.status = 1
         self.log()

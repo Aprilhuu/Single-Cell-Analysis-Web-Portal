@@ -54,13 +54,13 @@ class Worker(Thread):
                               index=index,
                               call=p['package'] + "." + p['name'],
                               status=0,
-                              output=""
-                              )
+                              output="",
+                              type=p['type'])
             index += 1
 
             process.save()
 
-        return {'info': self.filename, 'status': True}
+        return {'info': self.name, 'status': True}
 
     def run(self):
         wr = WorkerRecord.objects.get(id=self.id)
