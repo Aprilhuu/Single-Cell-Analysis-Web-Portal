@@ -1,4 +1,5 @@
 import importlib
+import json
 import os
 
 from settings.settings import TEMP_FOLDER
@@ -23,9 +24,21 @@ class WorkerStep:
         self.index = index
         self.file = file
         self.annData = annData
+        self.folder = os.path.join(TEMP_FOLDER, str(self.wrID))
 
     def run(self):
         return NotImplementedError("Abstract class")
+
+    def parse_call(self):
+        module = importlib.import_module(self.context['package'])
+        components = self.context['name'].split(".")
+        for attr in components:
+            module = getattr(module, attr)
+        params = self.context['params'].copy()
+        for key, value in self.context['params'].items():
+            if value == "" or value == 0:
+                del params[key]
+        return module, params, components
 
     def log(self):
         """ Print the log of the finished process
@@ -48,11 +61,10 @@ class WorkerStep:
 class ReadStep(WorkerStep):
 
     def run(self):
-        params = self.context['params']
+        module, params, _ = self.parse_call()
         del params['filename']
-        module = importlib.import_module(self.context['package'])
         try:
-            self.annData = getattr(module, self.context['name'])(self.file, **params, cache=True)
+            self.annData = module(self.file, **params, cache=True)
         except Exception as e:
             self.output = str(e)
             self.status = 2
@@ -64,17 +76,8 @@ class ReadStep(WorkerStep):
 
 
 class ProcessStep(WorkerStep):
-
     def run(self):
-        module = importlib.import_module(self.context['package'])
-        components = self.context['name'].split(".")
-        for attr in components:
-            module = getattr(module, attr)
-
-        params = self.context['params'].copy()
-        for key, value in self.context['params'].items():
-            if value == "" or value == 0:
-                del params[key]
+        module, params, _ = self.parse_call()
         self.context['params'] = params
         try:
             module(self.annData, **params)
@@ -85,7 +88,7 @@ class ProcessStep(WorkerStep):
             return
 
         if self.context['view']:
-            self.annData.write(os.path.join(TEMP_FOLDER, str(self.wrID), f'views_{self.index}.h5ad'))
+            self.annData.write(os.path.join(self.folder, f'views_{self.index}.h5ad'))
 
         self.output = str(self.annData)
         self.status = 1
@@ -93,26 +96,48 @@ class ProcessStep(WorkerStep):
 
 
 class PlotStep(WorkerStep):
-
-    def run(self):
+    def parse_call(self):
         module = importlib.import_module(self.context['package'])
-        if self.context['package'] == 'scanpy':
-            from pathlib import Path
-            module._settings.settings.figdir = Path(os.path.join(TEMP_FOLDER, str(self.wrID), "figures"))
+        if self.context['package'] == "scanpy":
+            module._settings.settings.figdir = self.folder
         components = self.context['name'].split(".")
         for attr in components:
             module = getattr(module, attr)
-
         params = self.context['params'].copy()
         for key, value in self.context['params'].items():
             if value == "" or value == 0:
                 del params[key]
+        return module, params, components
+
+    def run(self):
+        module, params, components = self.parse_call()
         self.context['params'] = params
         try:
             module(self.annData,
                    **params,
                    save=f'plot_{self.index}.png',
                    show=False)
+        except Exception as e:
+            self.output = str(e)
+            self.status = 2
+            self.log()
+            return
+
+        self.output = f"{components[-1]}plot_{self.index}.png"
+        self.status = 1
+        self.log()
+
+
+class IPlotStep(WorkerStep):
+    def run(self):
+        module, params, components = self.parse_call()
+        self.context['params'] = params
+        try:
+            with open(os.path.join(self.folder, f"{components[-1]}plot_{self.index}.json"), "w") as f:
+                json.dump(module(self.annData,
+                                 **params,
+                                 save=os.path.join(self.folder, f"{components[-1]}plot_{self.index}.png")),
+                          f)
         except Exception as e:
             self.output = str(e)
             self.status = 2

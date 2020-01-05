@@ -62,7 +62,7 @@ $.get("/settings/installed-methods", {
     installedReaders = data;
 });
 $.get("/settings/installed-methods", {
-    type: 'processing;plot',
+    type: 'processing;plot;iplot',
     name: '_all',
 }, data => {
     installedMethods = data;

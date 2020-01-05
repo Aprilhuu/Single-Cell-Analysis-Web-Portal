@@ -4,7 +4,7 @@ from threading import Thread
 from dataset.models import DataFile
 from settings.settings import TEMP_FOLDER
 from .models import Process, WorkerRecord
-from .worker_step import ReadStep, ProcessStep, PlotStep
+from .worker_step import ReadStep, ProcessStep, PlotStep, IPlotStep
 
 
 class Worker(Thread):
@@ -71,7 +71,11 @@ class Worker(Thread):
                 worker_step = ProcessStep(step, self.id, self.curr, "", self.annData)
             elif step['type'] == 'plot':
                 worker_step = PlotStep(step, self.id, self.curr, "", self.annData)
+            elif step['type'] == 'iplot':
+                worker_step = IPlotStep(step, self.id, self.curr, "", self.annData)
             else:
+                wr.status = 2
+                wr.save()
                 return
             worker_step.run()
 
