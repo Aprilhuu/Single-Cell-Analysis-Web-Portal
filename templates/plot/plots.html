@@ -29,11 +29,26 @@
                 {% for p in plots %}
                     <div class="col-lg-6 mb-4">
                         <div class="main-card card">
-                            <div class="card-header text-lowercase">{{ p.call }}</div>
+
+                            <div class="card-header text-lowercase"
+                                 {% if p.type == "iplot" %}style="color:#3ac47d"{% endif %}>
+                                {{ p.call }}
+                            </div>
+
                             <div class="card-body">
-                                <img src="/userData/temp/{{ p.wrid }}/{{ p.output }}"
-                                     class="img-fluid plot-card-body"
-                                     alt="{{ p.output }}">
+                                {% if p.type == "iplot" %}
+                                    <a href="/plot/plot-detail.html?id={{ p.wrid }}&output={{ p.output }}">
+                                        <img src="/userData/temp/{{ p.wrid }}/{{ p.output }}"
+                                             class="img-fluid plot-card-body"
+                                             alt="{{ p.output }}"/>
+                                    </a>
+                                {% endif %}
+                                {% if p.type == "plot" %}
+                                    <img src="/userData/temp/{{ p.wrid }}/{{ p.output }}"
+                                         class="img-fluid plot-card-body"
+                                         alt="{{ p.output }}"/>
+                                {% endif %}
+
                             </div>
                             <div class="card-footer">
                                 <a class="btn btn-success" href="/userData/temp/{{ p.wrid }}/{{ p.output }}"

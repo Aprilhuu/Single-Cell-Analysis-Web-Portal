@@ -7,13 +7,14 @@ import scanpy as sc
 from anndata import AnnData
 
 
-def highest_expr_genes(adata: AnnData,
-                       n_top: int = 30,
-                       gene_symbols: Optional[str] = None,
-                       log: bool = False,
-                       save: Optional[str] = None,
-                       **kwds
-                       ):
+def highest_expr_genes(
+        adata: AnnData,
+        n_top: int = 30,
+        gene_symbols: Optional[str] = None,
+        log: bool = False,
+        save: Optional[str] = None,
+        **kwds
+):
     from scipy.sparse import issparse
     norm_dict = sc.pp.normalize_total(adata, target_sum=100, inplace=False)
     # identify the genes with the highest mean
@@ -34,10 +35,12 @@ def highest_expr_genes(adata: AnnData,
         counts_top_genes, index=adata.obs_names, columns=columns
     )
     data = []
+
+    fig = go.Figure()
     for col in counts_top_genes.columns:
-        data.append(go.Box(y=counts_top_genes[col], name=col))
-    layout = go.Layout(xaxis={'type': 'log' if log else 'linear'})
-    fig = go.Figure(data, layout)
+        fig.add_trace(go.Box(y=counts_top_genes[col], name=col))
+    fig.update_layout(yaxis={'type': 'log' if log else 'linear'}, title="Highest Expression Genes", showlegend=False)
+
     if save:
         fig.write_image(save)
     return fig.to_json(save + ".json")
