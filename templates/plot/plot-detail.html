@@ -1,5 +1,20 @@
 {% extends 'frame.html' %}
 {% load static %}
+
+{% block header %}
+
+    <ul class="header-menu nav">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+               aria-haspopup="true" aria-expanded="false">Change Layout</a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a id="orientation" class="button-link dropdown-item" data-orientation="v">Vertical Layout</a>
+                <a id="legend" class="button-link dropdown-item">Show Legend</a>
+            </div>
+        </li>
+    </ul>
+{% endblock %}
+
 {% block sidebar %}
     <ul class="vertical-nav-menu">
         <li>
@@ -9,18 +24,6 @@
             </a>
         </li>
         <li class="app-sidebar__heading">Styling</li>
-        <li>
-            <a id="orientation" class="button-link">
-                <i class="metismenu-icon fas fa-arrow-circle-up"></i>
-                Change Orientation
-            </a>
-        </li>
-        <li>
-            <a id="legend" class="button-link">
-                <i class="metismenu-icon fas fa-bars"></i>
-                Show Legend
-            </a>
-        </li>
         <li>
             <a href="#" aria-expanded="false">
                 <i class="metismenu-icon fas fa-pen"></i>
@@ -138,11 +141,15 @@
 {% block content %}
     <div class="app-main__outer">
         <div class="app-main__inner">
-
             <div class="row">
-                <span id="output" data-link={{ link }} hidden>{{ output }}</span>
-                <div class="col-md-11 col-lg-11 plot-detail-card" id="plotly"></div>
+                <div class="col-md-12">
+                    <div class="main-card mb-3 card">
+                        <span id="output" data-link={{ link }} hidden>{{ output }}</span>
+                        <div id="plotly" style="height: 100vh;"></div>
+                    </div>
+                </div>
             </div>
+
 
         </div>
 

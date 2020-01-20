@@ -14,22 +14,23 @@ $.ajax({
 });
 
 $("#orientation").click(() => {
-    const icon = $("#orientation i");
-    if (icon.hasClass("fa-arrow-circle-up")) {
+    const target = $(event.target);
+    if (target.data('orientation') === 'v') {
         Plotly.restyle(divPlotly, {orientation: 'h'});
+        target.data('orientation', 'h').text("Vertical Layout")
     } else {
         Plotly.restyle(divPlotly, {orientation: 'v'});
+        target.data('orientation', 'v').text("Horizontal Layout")
     }
-    icon.toggleClass("fa-arrow-circle-up fa-arrow-circle-right");
 });
 
 $("#legend").click(() => {
     const legend = $("#legend");
     if (legend.text() === "Hide Legend") {
-        legend.html('<i class=\"metismenu-icon fas fa-bars\"></i>Show Legend');
+        legend.html('Show Legend');
         Plotly.relayout(divPlotly, {showlegend: false});
     } else {
-        legend.html('<i class="metismenu-icon fas fa-bars"></i>Hide Legend');
+        legend.html('Hide Legend');
         Plotly.relayout(divPlotly, {showlegend: true});
     }
 });
@@ -76,10 +77,10 @@ $("#download-image").click(() => {
     const size = Number($(".size-choice.active-sidebar").data("size"));
     if (ratio[0] >= ratio[1]) {
         config.width = size;
-        config.height = size * ratio[1] / ratio[0];
+        config.height = Math.round(size * ratio[1] / ratio[0]);
     } else {
         config.height = size;
-        config.width = size * ratio[0] / ratio[1];
+        config.width = Math.round(size * ratio[0] / ratio[1]);
     }
     Plotly.downloadImage(divPlotly, config);
 });
