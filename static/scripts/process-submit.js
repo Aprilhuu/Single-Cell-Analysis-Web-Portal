@@ -70,6 +70,8 @@ $("#submit-process").click(e => {
 
     full_data.process = JSON.stringify(data);
 
+    console.log(full_data);
+
     $.ajax({
         url: '/process/new-process',
         data: full_data,
