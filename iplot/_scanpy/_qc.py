@@ -13,8 +13,7 @@ def highest_expr_genes(
         gene_symbols: Optional[str] = None,
         log: bool = False,
         save: Optional[str] = None,
-        **kwds
-):
+        **kwds) -> None:
     from scipy.sparse import issparse
     norm_dict = sc.pp.normalize_total(adata, target_sum=100, inplace=False)
     # identify the genes with the highest mean
@@ -43,4 +42,4 @@ def highest_expr_genes(
 
     if save:
         fig.write_image(save)
-    return fig.to_json(save + ".json")
+    return fig.to_json()
