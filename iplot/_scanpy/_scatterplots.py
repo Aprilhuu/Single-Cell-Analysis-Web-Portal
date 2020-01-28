@@ -33,10 +33,15 @@ def _scatter(adata: AnnData,
     :param use_raw: Use .raw attribute of adata for coloring with gene expression.
     """
 
-    adata = adata.copy()
     if f'X_{basis}' not in adata.obsm_keys():
         raise ValueError(f"Cannot find the basis. Was passed {basis}")
-    genes = genes[:5] if genes is not None else adata.var.sort_values("n_cells", ascending=False).index[:5]
+
+    if genes is not None:
+        genes = genes[:5]
+    elif "n_cells" in adata.var.columns:
+        genes = adata.var.sort_values("n_cells", ascending=False).index[:5]
+    else:
+        genes = adata.var.sort_values(adata.var.columns[1], ascending=False).index[:1]
     if use_raw:
         use_raw = layer is None and adata.raw is not None
         if layer is not None:
