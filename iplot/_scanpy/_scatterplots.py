@@ -71,8 +71,12 @@ def _scatter(adata: AnnData,
                 'color': matrix[:, 0],
                 'colorscale': 'Reds',
                 'showscale': True,
-                'opacity': .7
-            }
+                'opacity': .7,
+                'colorbar': {
+                    'outlinewidth': 0
+                }
+            },
+            hovertemplate="%{marker.color}<extra></extra>",
         )
     )
 
@@ -86,16 +90,16 @@ def _scatter(adata: AnnData,
 
     fig.update_layout(
         updatemenus=[
-            go.layout.Updatemenu(
-                type="buttons",
-                active=0,
-                direction='down',
-                buttons=buttons,
-                showactive=True,
-                xanchor="right",
-                yanchor="top",
-            ),
-        ]
+            go.layout.Updatemenu(type="buttons", buttons=buttons,
+                                 showactive=True, active=0,
+                                 direction="right", x=1, xanchor="right", y=1, yanchor="top"
+                                 ),
+        ],
+        yaxis={'scaleanchor': "x", 'scaleratio': 1,
+               'title': 'tSNE2',
+               'showticklabels': False, 'showgrid': False, 'zeroline': False},
+        xaxis={'title': 'tSNE1',
+               'showticklabels': False, 'showgrid': False, 'zeroline': False}
     )
 
     if save:
