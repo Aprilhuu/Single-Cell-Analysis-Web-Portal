@@ -4,8 +4,6 @@ import numpy as np
 import plotly.graph_objects as go
 from anndata import AnnData
 
-from .._utils._color import get_weighted_color_blend
-
 
 def tsne(adata: AnnData,
          genes: Optional[Sequence[str]] = None,
@@ -41,7 +39,7 @@ def _scatter(adata: AnnData,
     elif "n_cells" in adata.var.columns:
         genes = adata.var.sort_values("n_cells", ascending=False).index[:5]
     else:
-        genes = adata.var.sort_values(adata.var.columns[1], ascending=False).index[:1]
+        genes = adata.var.sort_values(adata.var.columns[1], ascending=False).index[:5]
     if use_raw:
         use_raw = layer is None and adata.raw is not None
         if layer is not None:
@@ -60,9 +58,7 @@ def _scatter(adata: AnnData,
             raise ValueError(f"Cannot find the layer. Was passed: {layer}")
         matrix = np.array(adata.layers[layer].X.toarray())
     else:
-        matrix = np.array(adata[:, genes].X.toarray())
-
-    c = get_weighted_color_blend(matrix, palette)
+        matrix = adata[:, genes].X.toarray()
 
     fig = go.Figure()
 
@@ -72,10 +68,34 @@ def _scatter(adata: AnnData,
             y=adata.obsm['X_tsne'][:, 1],
             mode='markers',
             marker={
-                'color': [f'rgb({row[0]}, {row[1]}, {row[2]})' for row in list(c)],
-                'opacity': .8
+                'color': matrix[:, 0],
+                'colorscale': 'Reds',
+                'showscale': True,
+                'opacity': .7
             }
         )
+    )
+
+    buttons = []
+    for i in range(len(genes)):
+        buttons.append({
+            'args': ['marker.color', [matrix[:, i]]],
+            'label': genes[i],
+            'method': 'restyle'
+        })
+
+    fig.update_layout(
+        updatemenus=[
+            go.layout.Updatemenu(
+                type="buttons",
+                active=0,
+                direction='down',
+                buttons=buttons,
+                showactive=True,
+                xanchor="right",
+                yanchor="top",
+            ),
+        ]
     )
 
     if save:
