@@ -54,6 +54,9 @@ const optionTextFactory = (obj, input_type) => {
         }
     }
 
+    if (obj.isList) {
+        input_.data("isList", true);
+    }
     form_group.append(label_, input_);
 
     if (obj.annotation) {

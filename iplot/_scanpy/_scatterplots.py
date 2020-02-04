@@ -1,71 +1,86 @@
 from typing import Optional, Sequence
 
-import numpy as np
 import plotly.graph_objects as go
 from anndata import AnnData
 
 
 def tsne(adata: AnnData,
-         genes: Optional[Sequence[str]] = None,
-         use_raw: Optional[bool] = None,
-         layer: Optional[str] = None,
-         palette: str = 'Accent',
+         names: Optional[Sequence[str]] = None,
          save: Optional[str] = None
          ):
-    return _scatter(adata, "tsne", genes, use_raw, layer, save, palette)
+    if names:
+        clusterings = [n for n in names if n in adata.obs.columns]
+        if clusterings:
+            return _scatter_cluster(adata, "tSNE", clusterings, save)
+    return _scatter(adata, "tSNE", names, save)
+
+
+def _scatter_cluster(adata: AnnData,
+                     basis: str,
+                     clusterings: Sequence[str],
+                     save: Optional[str] = None
+                     ) -> str:
+    fig = go.Figure()
+    visibility = []
+    visible = True
+    for method in clusterings:
+        for cluster in adata.obs[method].cat.categories:
+            fig.add_trace(
+                go.Scattergl(
+                    x=adata.obsm[f'X_{basis.lower()}'][adata.obs[method] == cluster, 0],
+                    y=adata.obsm[f'X_{basis.lower()}'][adata.obs[method] == cluster, 1],
+                    name=cluster,
+                    mode='markers',
+                    hoverinfo="text",
+                    hovertext=adata.obs[adata.obs[method] == cluster].index,
+                    visible=visible
+                )
+            )
+            visibility.append(method)
+        visible = False
+    buttons = []
+    for method in clusterings:
+        buttons.append({
+            'args': [{'visible': [x == method for x in visibility]}],
+            'label': method,
+            'method': 'update'
+        })
+    _scatter_layout(fig, basis, buttons)
+
+    if save:
+        fig.write_image(save)
+    return fig.to_json()
 
 
 def _scatter(adata: AnnData,
              basis: str,
-             genes: Optional[Sequence[str]] = None,
-             use_raw: Optional[bool] = None,
-             layer: Optional[str] = None,
-             save: Optional[str] = None,
-             palette: str = 'Accent') -> None:
+             names: Optional[Sequence[str]] = None,
+             save: Optional[str] = None
+             ) -> str:
     """
     Plot a 2D scatter plot on the given basis,
     :param adata: given annData that contains the obsm of the given basis
     :param basis: the name of the basis, currently accepting tsne and umap
-    :param genes: a list of gene names that will decide the coloring. If is None, chose the top 5 most.
+    :param names: a list of gene names that will decide the coloring. If is None, chose the top 5 most.
     :param layer: Name of the AnnData object layer that wants to be plotted.
     :param use_raw: Use .raw attribute of adata for coloring with gene expression.
     """
 
-    if f'X_{basis}' not in adata.obsm_keys():
+    if f'X_{basis.lower()}' not in adata.obsm_keys():
         raise ValueError(f"Cannot find the basis. Was passed {basis}")
 
-    if genes is not None:
-        genes = genes[:5]
-    elif "n_cells" in adata.var.columns:
-        genes = adata.var.sort_values("n_cells", ascending=False).index[:5]
+    if names is not None:
+        names = names[:10]
     else:
-        genes = adata.var.sort_values(adata.var.columns[1], ascending=False).index[:5]
-    if use_raw:
-        use_raw = layer is None and adata.raw is not None
-        if layer is not None:
-            raise ValueError("Cannot use both a layer and the raw representation. Was passed:"
-                             f"use_raw={use_raw}, layer={layer}.")
-        if adata.raw is None:
-            raise ValueError(
-                "`use_raw` is set to True but AnnData object does not have raw. "
-                "Please check."
-            )
-        matrix = np.array(adata.raw[:, genes].X.toarray())
-    elif layer is not None:
-        if adata.layers is None:
-            raise ValueError("AnnData does not have any layers")
-        if adata.layers.get(layer) is None:
-            raise ValueError(f"Cannot find the layer. Was passed: {layer}")
-        matrix = np.array(adata.layers[layer].X.toarray())
-    else:
-        matrix = adata[:, genes].X.toarray()
+        names = adata.var.sort_values(adata.var.columns[1], ascending=False).index[:5]
+    matrix = adata[:, names].X.toarray()
 
     fig = go.Figure()
 
     fig.add_trace(
         go.Scattergl(
-            x=adata.obsm['X_tsne'][:, 0],
-            y=adata.obsm['X_tsne'][:, 1],
+            x=adata.obsm[f'X_{basis.lower()}'][:, 0],
+            y=adata.obsm[f'X_{basis.lower()}'][:, 1],
             mode='markers',
             marker={
                 'color': matrix[:, 0],
@@ -81,13 +96,21 @@ def _scatter(adata: AnnData,
     )
 
     buttons = []
-    for i in range(len(genes)):
+    for i in range(len(names)):
         buttons.append({
             'args': ['marker.color', [matrix[:, i]]],
-            'label': genes[i],
+            'label': names[i],
             'method': 'restyle'
         })
 
+    _scatter_layout(fig, basis, buttons)
+
+    if save:
+        fig.write_image(save)
+    return fig.to_json()
+
+
+def _scatter_layout(fig, basis, buttons):
     fig.update_layout(
         updatemenus=[
             go.layout.Updatemenu(type="buttons", buttons=buttons,
@@ -96,12 +119,8 @@ def _scatter(adata: AnnData,
                                  ),
         ],
         yaxis={'scaleanchor': "x", 'scaleratio': 1,
-               'title': 'tSNE2',
+               'title': f'{basis}2',
                'showticklabels': False, 'showgrid': False, 'zeroline': False},
-        xaxis={'title': 'tSNE1',
+        xaxis={'title': f'{basis}1',
                'showticklabels': False, 'showgrid': False, 'zeroline': False}
     )
-
-    if save:
-        fig.write_image(save)
-    return fig.to_json()

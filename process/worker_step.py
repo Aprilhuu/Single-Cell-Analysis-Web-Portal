@@ -1,6 +1,7 @@
 import importlib
 import json
 import os
+import traceback
 
 from settings.settings import TEMP_FOLDER
 from .models import Process
@@ -45,6 +46,7 @@ class WorkerStep:
         """
         param_str = []
         params = self.context['params']
+        params.pop('filename', None)
         for k, v in params.items():
             v = "\'" + v + "\'" if type(v) == str else str(v)
             param_str.append(str(k) + "=" + v)
@@ -64,7 +66,7 @@ class ReadStep(WorkerStep):
         module, params, _ = self.parse_call()
         del params['filename']
         try:
-            self.annData = module(self.file, **params, cache=True)
+            self.annData = module(self.file, **params)
         except Exception as e:
             self.output = str(e)
             self.status = 2
@@ -82,12 +84,12 @@ class ProcessStep(WorkerStep):
         try:
             module(self.annData, **params)
         except Exception as e:
-            self.output = str(e)
+            self.output = traceback.print_exc()  # str(e)
             self.status = 2
             self.log()
             return
 
-        if self.context['view']:
+        if self.context.get('view', None):
             self.annData.write(os.path.join(self.folder, f'views_{self.index}.h5ad'))
 
         self.output = str(self.annData)

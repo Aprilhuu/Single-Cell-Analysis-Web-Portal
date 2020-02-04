@@ -42,9 +42,12 @@ $("#submit-process").click(e => {
             name: process.name,
             type: process.type,
             package: process.package,
-            params: {},
-            view: process.view
+            params: {}
         };
+        if (process.view) {
+            target['view'] = true
+        }
+
         process.params.forEach(p => {
             if (p.required && p.default === "") {
                 integrity = false;
@@ -56,6 +59,9 @@ $("#submit-process").click(e => {
             target.params[p.name] = p.default;
             if (p.type === "number") {
                 target.params[p.name] = Number(target.params[p.name])
+            }
+            if (p.isList && p.default) {
+                target.params[p.name] = p.default.split(", ");
             }
         });
         data.push(target);
