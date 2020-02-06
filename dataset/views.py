@@ -15,7 +15,7 @@ def render_dataset(request):
 
 
 def render_dataupload(request):
-    return render(request, "dataset/dataupload2.html",
+    return render(request, "dataset/dataupload.html",
                   {'allowed_file': ", ".join(ALLOWED_EXTENSIONS)})
 
 

@@ -1,228 +1,188 @@
 {% extends 'nav.html' %}
 {% load static %}
 {% block content %}
-  <div class="app-main__outer">
-    <div class="app-main__inner">
-      <div class="app-page-title">
-        <div class="page-title-wrapper">
-          <div class="page-title-heading">
-            <div class="page-title-icon">
-              <i class="fas fa-clipboard">
-              </i>
-            </div>
-            <div>Create New Process
-              <div class="page-title-subheading">
-                Order the steps to start a new process
-              </div>
-            </div>
-          </div>
-        </div>
-        <ul class="body-tabs body-tabs-layout tabs-animated body-tabs-animated nav">
-          <li class="nav-item">
-            <a role="tab" class="nav-link active" id="tab-1" data-toggle="tab" href="#tab-content-1">
-              <span>Create New</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a role="tab" class="nav-link" id="tab-2" data-toggle="tab" href="#tab-content-2">
-              <span>Load Saved Procedure</span>
-            </a>
-          </li>
-        </ul>
-
-
-      </div>
-      <div class="tab-content">
-        <div class="tab-pane tabs-animation fade show active" id="tab-content-1" role="tabpanel">
-          <div class="row">
-            <div class="col-12">
-              <div class="main-card mb-3 card">
-                <div class="card-header">Current Queue
-                  <button class="btn btn-primary btn-lg ml-3 ml-auto mr-3" id="change-queue-display">
-                    <i class="fas fa-th-large"></i>
-                  </button>
-                </div>
-                <div class="card-body">
-                  <div class="row mb-3">
-                    <div class="col">
-                      <div class="form-inline">
-                        <div class="form-group">
-                          <label for="worker-name">Worker Name</label>
-                          <input type="text" id="worker-name" class="form-control mx-sm-3"
-                                 value="New Worker">
-                          <button class="btn btn-success btn-lg ml-3" id="submit-process">
-                            Start new Process
-                          </button>
-                          <button class="btn btn-primary btn-lg ml-3" id="save-process">Save
-                            Process
-                          </button>
+    <div class="app-main__outer">
+        <div class="app-main__inner">
+            <div class="app-page-title">
+                <div class="page-title-wrapper">
+                    <div class="page-title-heading">
+                        <div class="page-title-icon">
+                            <i class="fas fa-clipboard">
+                            </i>
                         </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="dropdown-divider"></div>
-                  <div class="row" id='active-process-table'>
-
-                    <div class="col-lg-4 col-md-6 col-sm-12 non-sort sort">
-                      <div class="card-shadow-danger border mb-3 card card-body border-danger card-process">
-                        <h5 class="card-title">Data Reader</h5>
-                        <span>
-                          <button class="btn btn-primary mr-1 mb-1" id="choose-dataset">
-                            <i class="fas fa-table"></i> Select Dataset
-                          </button>
-                          <button class="btn btn-primary mr-1 mb-1" id="choose-reader"><i
-                                  class="fas fa-code-branch"></i> Select Reader</button>
-                          <button class="btn btn-alternate options mr-1 mb-1" data-name="read" data-package="scanpy">
-                            <i class="fas fa-cog"></i>
-                          </button>
-                        </span>
-                        <div class="scroll-area-sm mt-1">
-                          <div class="scrollbar-container ps--active-y">
-                            Dataset <b><span class="text-primary"
-                                             id="chosen-dataset"></span></b>
-                            <br>
-                            Reader <b><span class="text-primary" id="chosen-reader">scanpy.read</span></b>
-                          </div>
+                        <div>Create New Process
+                            <div class="page-title-subheading">
+                                Order the steps to start a new process
+                            </div>
                         </div>
-                      </div>
+                    </div>
+                </div>
+                <ul class="body-tabs body-tabs-layout tabs-animated body-tabs-animated nav">
+                    <li class="nav-item">
+                        <a role="tab" class="nav-link active" id="tab-1" data-toggle="tab" href="#tab-content-1">
+                            <span>Create New</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a role="tab" class="nav-link" id="tab-2" data-toggle="tab" href="#tab-content-2">
+                            <span>Load Saved Procedure</span>
+                        </a>
+                    </li>
+                </ul>
+
+
+            </div>
+            <div class="tab-content">
+                <div class="tab-pane tabs-animation fade show active" id="tab-content-1" role="tabpanel">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="main-card mb-3 card">
+                                <div class="card-header">Current Queue
+                                    <button class="btn btn-primary btn-lg ml-3 ml-auto mr-3" id="change-queue-display">
+                                        <i class="fas fa-th-large"></i>
+                                    </button>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row mb-3">
+                                        <div class="col">
+                                            <div class="form-inline">
+                                                <div class="form-group">
+                                                    <label for="worker-name">Select Dataset</label>
+                                                    <input type="text" id="chosen-dataset"
+                                                           class="form-control mx-sm-3 is-invalid"
+                                                           value="" disabled>
+                                                    <button class="btn btn-primary btn-lg ml-3" id="choose-dataset">
+                                                        <i class="fas fa-table"></i> Select Dataset
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-divider"></div>
+                                    <div class="row" id='active-process-table'>
+
+
+                                    </div>
+                                </div>
+                                <div class="card-footer" id="submit-footer">
+                                    <div class="col">
+                                        <div class="form-inline">
+                                            <div class="form-group">
+                                                <label for="worker-name">Worker Name </label>
+                                                <input type="text" id="worker-name" class="form-control mx-sm-3"
+                                                       value="New Worker">
+                                                <button class="btn btn-success btn-lg ml-3" id="submit-process">
+                                                    Start new Process
+                                                </button>
+                                                <button class="btn btn-primary btn-lg ml-3" id="save-process">Save
+                                                    Process
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                  </div>
-                </div>
 
-              </div>
-            </div>
-          </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="main-card mb-3 card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Add New Steps</h5>
+                                    <div id="new-steps-table">
+                                        <div class="row list">
 
-
-          <div class="row">
-            <div class="col-12">
-              <div class="main-card mb-3 card">
-                <div class="card-body">
-                  <h5 class="card-title">Add New Steps</h5>
-                  <div id="new-steps-table">
-                    <div class="row list">
-
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
 
+                </div>
+                <div class="tab-pane tabs-animation fade" id="tab-content-2" role="tabpanel">
+                </div>
+            </div>
         </div>
-        <div class="tab-pane tabs-animation fade" id="tab-content-2" role="tabpanel">
-        </div>
-      </div>
+
     </div>
-
-  </div>
 {% endblock %}
 
 
 {% block modal %}
-  <div class="modal fade" id="modal-dataset" tabindex="-1" role="dialog" aria-labelledby="datasetModalLabel"
-       aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Choose Dataset</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+    <div class="modal fade" id="modal-dataset" tabindex="-1" role="dialog" aria-labelledby="datasetModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Choose Dataset</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="dataset-table">
+                        <table class="mb-0 table table-hover">
+                            <thead class="thead-light">
+                            <tr>
+                                <th style="width: 25%">Name</th>
+                                <th style="width: 50%">Description</th>
+                                <th style="width: 25%">Modified</th>
+                            </tr>
+                            </thead>
+                            <tbody class="list">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
         </div>
-        <div class="modal-body">
-          <div id="dataset-table">
-            <table class="mb-0 table table-hover">
-              <thead class="thead-light">
-              <tr>
-                <th style="width: 25%">Name</th>
-                <th style="width: 50%">Description</th>
-                <th style="width: 25%">Modified</th>
-              </tr>
-              </thead>
-              <tbody class="list">
-              </tbody>
-            </table>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        </div>
-      </div>
     </div>
-  </div>
 
-  <div class="modal fade" id="modal-reader" tabindex="-1" role="dialog" aria-labelledby="datasetModalLabel"
-       aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Choose Reader</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div id="reader-table">
-            <table class="mb-0 table table-hover">
-              <thead class="thead-light">
-              <tr>
-                <th style="width: 33%">Name</th>
-                <th style="width: 67%">Description</th>
-              </tr>
-              </thead>
-              <tbody class="list">
-              </tbody>
-            </table>
-          </div>
 
+
+    <div class="modal fade" id="modal-option" tabindex="-1" role="dialog" aria-labelledby="datasetModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Set Option</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-row m-2" id="option-content">
+                    </div>
+                    <div class="form-row m-4" id="option-bool">
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        </div>
-      </div>
     </div>
-  </div>
-
-
-  <div class="modal fade" id="modal-option" tabindex="-1" role="dialog" aria-labelledby="datasetModalLabel"
-       aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Set Option</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="form-row m-2" id="option-content">
-          </div>
-          <div class="form-row m-4" id="option-bool">
-
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
 
 
 {% endblock %}
 
 
 {% block js %}
-  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-  <script type="text/javascript">
-      $("#active-process-table").sortable({
-          items: ".sort:not(.non-sort)"
-      })
-  </script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
-  <script type="text/javascript" src={% static "scripts/process-factory.js" %}></script>
-  <script type="text/javascript" src={% static "scripts/process.js" %}></script>
-  <script type="text/javascript" src={% static "scripts/process-submit.js" %}></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+    <script type="text/javascript">
+        $("#active-process-table").sortable({
+            items: ".sort:not(.non-sort)"
+        })
+    </script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+    <script type="text/javascript" src={% static "scripts/process/process-factory.js" %}></script>
+    <script type="text/javascript" src={% static "scripts/process/process.js" %}></script>
+    <script type="text/javascript" src={% static "scripts/process/process-submit.js" %}></script>
 {% endblock %}

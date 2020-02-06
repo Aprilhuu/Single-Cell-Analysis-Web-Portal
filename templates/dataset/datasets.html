@@ -44,12 +44,12 @@
 
 {% endblock %}
 {% block js %}
-  <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
-  <script type="text/javascript" src={% static "scripts/dataset.js" %}></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+    <script type="text/javascript" src={% static "scripts/dataset/dataset.js" %}></script>
 
-  <script>
-      const table_option = {
-          item: `<tr>
+    <script>
+        const table_option = {
+            item: `<tr>
       <td class="name"></td>
       <td class="description"></td>
       <td class="owner"></td>

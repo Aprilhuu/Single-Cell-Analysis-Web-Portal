@@ -63,3 +63,17 @@
 
     </div>
 {% endblock %}
+
+{% block js %}
+    <script>
+        const remove_history = (id) => {
+            $.ajax({
+                url: '/process/process-history',
+                data: {id: id, action: 'DELETE'},
+                type: 'POST',
+                success: (data) => {
+                    window.location.href = "/process/process-history.html"
+                }
+            });
+        };</script>
+{% endblock %}

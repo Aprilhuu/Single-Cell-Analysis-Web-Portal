@@ -72,7 +72,7 @@ def _scatter(adata: AnnData,
     if names is not None:
         names = names[:10]
     else:
-        names = adata.var.sort_values(adata.var.columns[1], ascending=False).index[:5]
+        raise ValueError("No colors provided")
     matrix = adata[:, names].X.toarray()
 
     fig = go.Figure()
@@ -91,7 +91,8 @@ def _scatter(adata: AnnData,
                     'outlinewidth': 0
                 }
             },
-            hovertemplate="%{marker.color}<extra></extra>",
+            hovertemplate='%{text}: %{marker.color}<extra></extra>',
+            text=adata.obs.index
         )
     )
 
@@ -120,7 +121,11 @@ def _scatter_layout(fig, basis, buttons):
         ],
         yaxis={'scaleanchor': "x", 'scaleratio': 1,
                'title': f'{basis}2',
-               'showticklabels': False, 'showgrid': False, 'zeroline': False},
+               'showticklabels': False,
+               'showgrid': False,
+               'zeroline': False},
         xaxis={'title': f'{basis}1',
-               'showticklabels': False, 'showgrid': False, 'zeroline': False}
+               'showticklabels': False,
+               'showgrid': False,
+               'zeroline': False}
     )
