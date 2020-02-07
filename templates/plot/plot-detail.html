@@ -5,11 +5,19 @@
 
     <ul class="header-menu nav">
         <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+            <a class="nav-link dropdown-toggle" href="#" id="change-layout" role="button" data-toggle="dropdown"
                aria-haspopup="true" aria-expanded="false">Change Layout</a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <div class="dropdown-menu" aria-labelledby="change-layout">
                 <a id="orientation" class="button-link dropdown-item" data-orientation="v">Vertical Layout</a>
                 <a id="legend" class="button-link dropdown-item">Show Legend</a>
+            </div>
+        </li>
+
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="components" role="button" data-toggle="dropdown"
+               aria-haspopup="true" aria-expanded="false">View Components</a>
+            <div class="dropdown-menu" aria-labelledby="components">
+                <a id="data-wizard" class="button-link dropdown-item" data-orientation="v">Data Exporter</a>
             </div>
         </li>
     </ul>
@@ -141,8 +149,19 @@
 {% block content %}
     <div class="app-main__outer">
         <div class="app-main__inner" style="padding: 0">
-            <span id="output" data-link={{ link }} hidden>{{ output }}</span>
+            <div class="row mb-3" id="data-wizard-card" hidden>
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header"></div>
+                        <div class="card-body">
+                            <div class="row"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <span id="output" data-id="{{ worker.id }}" data-link={{ link }} hidden>{{ output }}</span>
             <div id="plotly" style="height: 100vh;"></div>
+
         </div>
 
     </div>
@@ -153,5 +172,6 @@
 {% endblock %}
 
 {% block js %}
-    <script type="text/javascript" src={% static "scripts/plot-detail.js" %}></script>
+    <script type="text/javascript" src={% static "scripts/plot/plotly-options.js" %}></script>
+    <script type="text/javascript" src={% static "scripts/plot/plotly-plot.js" %}></script>
 {% endblock %}
