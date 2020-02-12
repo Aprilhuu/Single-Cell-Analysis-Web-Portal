@@ -9,8 +9,6 @@ def tsne(adata: AnnData,
          names: Optional[Sequence[str]] = None,
          save: Optional[str] = None
          ):
-    if "_index" not in adata.obs_keys():
-        adata.obs['_index'] = np.arange(adata.n_obs)
     if names:
         clusterings = [n for n in names if n in adata.obs.columns]
         if clusterings:
@@ -28,7 +26,6 @@ def _scatter_cluster(adata: AnnData,
     visible = True
     for method in clusterings:
         for cluster in adata.obs[method].cat.categories:
-            adata_cluster = adata.obs[adata.obs[method] == cluster]
             fig.add_trace(
                 go.Scattergl(
                     x=adata.obsm[f'X_{basis.lower()}'][adata.obs[method] == cluster, 0],
@@ -36,8 +33,8 @@ def _scatter_cluster(adata: AnnData,
                     name=cluster,
                     mode='markers',
                     hoverinfo="text",
-                    hovertext=adata_cluster.index,
-                    text=adata_cluster["_index"],
+                    hovertext=adata.obs[adata.obs[method] == cluster].index,
+                    text=np.where(adata.obs[method] == cluster)[0],
                     visible=visible
                 )
             )
@@ -98,7 +95,7 @@ def _scatter(adata: AnnData,
             },
             hovertemplate='%{hovertext}: %{marker.color}<extra></extra>',
             hovertext=adata.obs.index,
-            text=adata.obs['_index']
+            text=np.arange(adata.n_obs)
         )
     )
 

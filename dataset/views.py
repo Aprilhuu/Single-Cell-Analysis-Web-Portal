@@ -107,9 +107,7 @@ def result_export(request):
     indexes = np.fromstring(request.POST.get("index"), dtype=int, sep=",")
     hextime = hex(int(time()))[2:]
     output_path = os.path.join(UPLOAD_FOLDER, f"exported_{pid}_{hextime}.h5ad")
-    adata = adata[indexes, :].copy()
-    adata.obs['_index'] = np.arange(adata.n_obs)
-    adata.write(output_path)
+    adata[indexes, :].write(output_path)
     saved_file = DataFile(
         source=request.POST.get("owner", f"Export from {pid}"),
         name=request.POST.get("name", f"export_{pid}"),
@@ -118,4 +116,5 @@ def result_export(request):
     )
     saved_file.save()
     return JsonResponse(
-        {'status': True, 'info': "File successfully exported as " + saved_file.name + ".h5ad", "output": str(adata)})
+        {'status': True, 'info': "File successfully exported as " + saved_file.name + ".h5ad",
+         "output": str(adata[indexes, :])})
