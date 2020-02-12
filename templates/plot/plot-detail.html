@@ -148,19 +148,40 @@
 
 {% block content %}
     <div class="app-main__outer">
-        <div class="app-main__inner" style="padding: 0">
-            <div class="row mb-3" id="data-wizard-card" hidden>
+        <div class="app-main__inner" style="padding-top: 0">
+            <div class="row my-3" id="data-wizard-card" hidden>
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header"></div>
                         <div class="card-body">
-                            <div class="row"></div>
+                            <div class="row">
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="widget-content">
+                                        <div class="widget-content-wrapper">
+                                            <div class="widget-content-right ml-0 mr-3">
+                                                <div class="widget-numbers text-success" id="selected-length">0</div>
+                                            </div>
+                                            <div class="widget-content-left">
+                                                <div class="widget-heading">Number of Observations Selected<br>
+                                                    <button class="mt-2 mr-2 btn btn-success" id="select-confirm">
+                                                        Confirm
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-4">
+
+                                </div>
+
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             <span id="output" data-id="{{ worker.id }}" data-link={{ link }} hidden>{{ output }}</span>
-            <div id="plotly" style="height: 100vh;"></div>
+            <div id="plotly" style="height: 100vh; margin: 0 -30px 0 -30px;"></div>
 
         </div>
 

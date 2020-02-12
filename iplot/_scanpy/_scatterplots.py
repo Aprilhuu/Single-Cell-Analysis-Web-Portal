@@ -1,5 +1,6 @@
 from typing import Optional, Sequence
 
+import numpy as np
 import plotly.graph_objects as go
 from anndata import AnnData
 
@@ -8,6 +9,8 @@ def tsne(adata: AnnData,
          names: Optional[Sequence[str]] = None,
          save: Optional[str] = None
          ):
+    if "_index" not in adata.obs_keys():
+        adata.obs['_index'] = np.arange(adata.n_obs)
     if names:
         clusterings = [n for n in names if n in adata.obs.columns]
         if clusterings:
@@ -25,6 +28,7 @@ def _scatter_cluster(adata: AnnData,
     visible = True
     for method in clusterings:
         for cluster in adata.obs[method].cat.categories:
+            adata_cluster = adata.obs[adata.obs[method] == cluster]
             fig.add_trace(
                 go.Scattergl(
                     x=adata.obsm[f'X_{basis.lower()}'][adata.obs[method] == cluster, 0],
@@ -32,7 +36,8 @@ def _scatter_cluster(adata: AnnData,
                     name=cluster,
                     mode='markers',
                     hoverinfo="text",
-                    hovertext=adata.obs[adata.obs[method] == cluster].index,
+                    hovertext=adata_cluster.index,
+                    text=adata_cluster["_index"],
                     visible=visible
                 )
             )
@@ -91,8 +96,9 @@ def _scatter(adata: AnnData,
                     'outlinewidth': 0
                 }
             },
-            hovertemplate='%{text}: %{marker.color}<extra></extra>',
-            text=adata.obs.index
+            hovertemplate='%{hovertext}: %{marker.color}<extra></extra>',
+            hovertext=adata.obs.index,
+            text=adata.obs['_index']
         )
     )
 

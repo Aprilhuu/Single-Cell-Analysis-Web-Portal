@@ -106,37 +106,20 @@ $("#data-wizard").click(() => {
 });
 
 const addOptionsScatter = (divPlotly) => {
-    $('#data-wizard-card .card-header').append("Data Exporter");
     const card_body_ = $('#data-wizard-card .card-body .row');
-    const col_ = $('<div class="col-md-4"></div>');
+    const col_ = $('<div class="col-md-6 col-lg-4"></div>');
     const selected_button = $('<button class="mb-2 mr-2 btn btn-primary" ' +
         'id="button-selected">Export Selected Data Points</button>');
     const trace_button = $('<button class="mb-2 mr-2 btn btn-primary" ' +
         'id="button-shown">Export Selected Clusters</button>');
     col_.append(selected_button);
     col_.append(trace_button);
-
-    const export_card = $('<div class="col-md-6 col-lg-4">' +
-        '                    <div class="widget-content">' +
-        '                      <div class="widget-content-wrapper">' +
-        '                        <div class="widget-content-right ml-0 mr-3">' +
-        '                          <div class="widget-numbers text-success" id="selected-length">0</div>' +
-        '                        </div>' +
-        '                        <div class="widget-content-left">' +
-        '                           <div class="widget-heading">Number of Observations Selected<br>' +
-        '                             <button class="mt-2 mr-2 btn btn-success" id="select-confirm">Confirm</button>' +
-        '                           </div>' +
-        '                        </div>' +
-        '                       </div>' +
-        '                     </div>' +
-        '                   </div>');
-    card_body_.append(export_card);
     card_body_.append(col_);
 
     trace_button.click(() => {
         selected_points = [];
         divPlotly.data.forEach((trace) => {
-            if (trace.visible === true) selected_points.push(...trace.hovertext);
+            if (trace.visible === true) selected_points.push(...trace.text);
         });
         $('#selected-length').text(selected_points.length);
     });
@@ -144,27 +127,32 @@ const addOptionsScatter = (divPlotly) => {
     selected_button.click(() => {
         const selected_length = $('#selected-length');
         if (!selected) {
+            console.log("not selected");
             selected_length.text(0);
             return;
         }
         selected_points = [];
-        selected_points.forEach(p => selected_points.push(p.hovertext));
+        selected.points.forEach(p => selected_points.push(p.text));
         selected_length.text(selected_points.length);
     });
 
     $("#select-confirm").click(() => {
-        data = {
-            id: $("#output").data("id"),
-            index: selected_points
+        if (selected_points.length === 0) {
+            return;
         }
-        // $.ajax({
-        //     type: "POST",
-        //     url: url,
-        //     data: data,
-        //     success: success,
-        //     dataType: dataType
-        // });
-        console.log(selected_points);
+        const data = {
+            pid: $("#output").data("id"),
+            index: selected_points.join(",")
+        };
+        console.log(data);
+        $.ajax({
+            url: '/dataset/result-export',
+            type: "POST",
+            data: data,
+            success: (data) => {
+                console.log(data)
+            }
+        });
     })
 
 

@@ -3,10 +3,11 @@ import os
 from shutil import rmtree, unpack_archive, get_archive_formats
 from time import time
 
+import numpy as np
 from django.http import JsonResponse, Http404, HttpResponseForbidden, HttpResponseBadRequest
 from django.shortcuts import render
 
-from settings.settings import UPLOAD_FOLDER, ALLOWED_EXTENSIONS
+from settings.settings import UPLOAD_FOLDER, ALLOWED_EXTENSIONS, TEMP_FOLDER
 from .models import DataFile
 
 
@@ -95,3 +96,26 @@ def data_upload(request):
     )
     saved_file.save()
     return JsonResponse({'status': True, 'info': "File successfully uploaded as " + saved_file.name + ".h5ad"})
+
+
+def result_export(request):
+    pid = request.POST.get("pid", None)
+    if not pid:
+        return HttpResponseBadRequest
+    import scanpy as sc
+    adata = sc.read_h5ad(os.path.join(TEMP_FOLDER, str(pid), "results.h5ad"))
+    indexes = np.fromstring(request.POST.get("index"), dtype=int, sep=",")
+    hextime = hex(int(time()))[2:]
+    output_path = os.path.join(UPLOAD_FOLDER, f"exported_{pid}_{hextime}.h5ad")
+    adata = adata[indexes, :].copy()
+    adata.obs['_index'] = np.arange(adata.n_obs)
+    adata.write(output_path)
+    saved_file = DataFile(
+        source=request.POST.get("owner", f"Export from {pid}"),
+        name=request.POST.get("name", f"export_{pid}"),
+        path=output_path,
+        description=request.POST.get("description", "")
+    )
+    saved_file.save()
+    return JsonResponse(
+        {'status': True, 'info': "File successfully exported as " + saved_file.name + ".h5ad", "output": str(adata)})
