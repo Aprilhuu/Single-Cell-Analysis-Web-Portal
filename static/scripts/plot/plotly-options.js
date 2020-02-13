@@ -106,15 +106,16 @@ $("#data-wizard").click(() => {
 });
 
 const addOptionsScatter = (divPlotly) => {
-    const card_body_ = $('#data-wizard-card .card-body .row');
-    const col_ = $('<div class="col-md-6 col-lg-4"></div>');
-    const selected_button = $('<button class="mb-2 mr-2 btn btn-primary" ' +
+    const selection_div = $("#selection-div");
+    const selected_button = $('<button class="my-2 mr-2 btn btn-primary" ' +
         'id="button-selected">Export Selected Data Points</button>');
-    const trace_button = $('<button class="mb-2 mr-2 btn btn-primary" ' +
+    const trace_button = $('<button class="my-2 mr-2 btn btn-primary" ' +
         'id="button-shown">Export Selected Clusters</button>');
-    col_.append(selected_button);
-    col_.append(trace_button);
-    card_body_.append(col_);
+    selection_div.append(selected_button);
+    selection_div.append(trace_button);
+
+
+    const select_confirm = $("#select-confirm");
 
     trace_button.click(() => {
         selected_points = [];
@@ -122,21 +123,31 @@ const addOptionsScatter = (divPlotly) => {
             if (trace.visible === true) selected_points.push(...trace.text);
         });
         $('#selected-length').text(selected_points.length);
+        if (selected_points.length > 0) {
+            select_confirm.prop("disabled", false);
+        } else {
+            select_confirm.prop("disabled", true);
+        }
     });
 
     selected_button.click(() => {
         const selected_length = $('#selected-length');
         if (!selected) {
-            console.log("not selected");
             selected_length.text(0);
+            select_confirm.prop("disabled", true);
             return;
         }
         selected_points = [];
         selected.points.forEach(p => selected_points.push(p.text));
         selected_length.text(selected_points.length);
+        if (selected_points.length > 0) {
+            select_confirm.prop("disabled", false);
+        } else {
+            select_confirm.prop("disabled", true);
+        }
     });
 
-    $("#select-confirm").click(() => {
+    select_confirm.click(() => {
         if (selected_points.length === 0) {
             return;
         }
@@ -144,13 +155,22 @@ const addOptionsScatter = (divPlotly) => {
             pid: $("#output").data("id"),
             index: selected_points.join(",")
         };
-        console.log(data);
+        const name = $("#name-input").val();
+        if (name !== "") data.name = name;
+        const description = $("#description-input").val();
+        if (description !== "") data.description = description;
+
+        $("#modal-warning .modal-title").text("Exporting");
+        $("#modal-warning .modal-body p").text("The data is exporting, please keep this page open");
+        $("#modal-warning").modal();
+
         $.ajax({
             url: '/dataset/result-export',
             type: "POST",
             data: data,
             success: (data) => {
-                console.log(data)
+                $("#modal-warning .modal-title").text("Export");
+                $("#modal-warning .modal-body p").text(data.info);
             }
         });
     })

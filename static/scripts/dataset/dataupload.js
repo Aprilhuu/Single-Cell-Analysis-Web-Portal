@@ -79,7 +79,6 @@ const uploadFile = () => {
         contentType: false,
         type: 'POST',
         success: data => {
-            console.log(data);
             $("#modal-warning .modal-title").text("Uploaded");
             $("#modal-warning .modal-body p").text(data.info);
         }

@@ -1,6 +1,6 @@
 const progress_history_table_option = {
   item: `<div class="col-lg-3 col-md-4">
-      <div class="card mb-3 widget-content">
+      <div class="card mb-3 widget-content" style="height: 100px">
         <div class="widget-content-outer">
           <div class="widget-content-wrapper">
             <button class="btn btn-danger mr-3 id" onclick="remove_history()">

@@ -27,7 +27,7 @@
     <ul class="vertical-nav-menu">
         <li>
             <a href="/plot/plots.html?id={{ worker.id }}">
-                <i class="metismenu-icon fas fa-clipboard"></i>
+                <i class="metismenu-icon fas fa-chevron-circle-left"></i>
                 All Plots
             </a>
         </li>
@@ -162,20 +162,28 @@
                                                 <div class="widget-numbers text-success" id="selected-length">0</div>
                                             </div>
                                             <div class="widget-content-left">
-                                                <div class="widget-heading">Number of Observations Selected<br>
-                                                    <button class="mt-2 mr-2 btn btn-success" id="select-confirm">
-                                                        Confirm
-                                                    </button>
+                                                <div class="widget-heading" id="selection-div">Number of Observations
+                                                    Selected<br>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6 col-lg-4">
-
+                                <div class="col-md-6 col-lg-6">
+                                    <div class="position-relative form-group">
+                                        <label for="name-input">Dataset Name</label>
+                                        <input name="city" id="name-input" type="text" class="form-control">
+                                    </div>
+                                    <div class="position-relative form-group">
+                                        <label for="description-input">Description</label>
+                                        <textarea name="city" id="description-input" type="text"
+                                                  class="form-control"></textarea>
+                                    </div>
                                 </div>
-
                             </div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="mt-2 mr-2 btn btn-success" id="select-confirm" disabled>Export Data</button>
                         </div>
                     </div>
                 </div>
