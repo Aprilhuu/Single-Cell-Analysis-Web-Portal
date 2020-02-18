@@ -1,14 +1,16 @@
 import importlib
+import json
 import os
 from shutil import rmtree, unpack_archive, get_archive_formats
 from time import time
 
 import numpy as np
-from django.http import JsonResponse, Http404, HttpResponseForbidden, HttpResponseBadRequest
+from django.http import JsonResponse, HttpResponseForbidden, HttpResponseBadRequest
 from django.shortcuts import render
 
 from settings.settings import UPLOAD_FOLDER, ALLOWED_EXTENSIONS, TEMP_FOLDER
-from .models import DataFile
+from ._utils import get_anndata_attrs
+from .models import DataSet
 
 
 def render_dataset(request):
@@ -24,27 +26,40 @@ def rest_datasets(request):
     if request.method == 'GET':
         limit = int(request.GET.get('limit', 0))
         offset = int(request.GET.get('offset', 0))
-        result =  DataFile.objects.all()[offset: limit]
-        return JsonResponse(list(result.values()), safe=False)
+        result = DataSet.objects.all()[offset: limit]
+        return JsonResponse(list(result.values('id',
+                                               'user',
+                                               'name',
+                                               'description',
+                                               'modified',
+                                               'n_obs', 'n_vars',
+                                               'attrs')), safe=False)
     if request.method == "POST":
         action = request.POST.get('action', "")
         id = request.POST.get("id", None)
-        if action != "DELETE" or not id:
+        if not id:
             return HttpResponseForbidden()
-        try:
-            result = DataFile.objects.get(id=id)
+        if action == "DELETE":
+            result = DataSet.objects.get(id=id)
             if os.path.isfile(result.path):
-               os.remove(result.path)
+                os.remove(result.path)
             if os.path.isdir(result.path):
-               rmtree(result.path)
+                rmtree(result.path)
             result.delete()
             return JsonResponse({'id': id})
-        except DataFile.DoesNotExist:
-            return Http404
+        elif action == "UPDATE":
+            result = DataSet.objects.get(id=id)
+            name = request.POST.get("name")
+            if name:
+                result.name = name
+            description = request.POST.get("description")
+            if description:
+                result.description = description
+            result.save()
+            return JsonResponse(result.to_dict(), safe=False)
 
 
 def data_upload(request):
-
     file = request.FILES.get('file', None)
     if not file:
         return HttpResponseBadRequest
@@ -63,6 +78,7 @@ def data_upload(request):
                   os.path.join(UPLOAD_FOLDER, hash_name))
         os.remove(path)
         path = os.path.join(UPLOAD_FOLDER, hash_name)
+
     package = request.POST.get("package")
     method = request.POST.get("method")
 
@@ -73,13 +89,13 @@ def data_upload(request):
         components = method.split(".")
         for attr in components:
             module = getattr(module, attr)
-        annData = module(path)
+        adata = module(path)
         if os.path.isdir(path):
             rmtree(path)
         else:
             os.remove(path)
         path = os.path.join(UPLOAD_FOLDER, hash_name + ".h5ad")
-        annData.write(path)
+        adata.write(path)
     except Exception as e:
         if path:
             if os.path.isdir(path):
@@ -88,11 +104,14 @@ def data_upload(request):
                 os.remove(path)
         return JsonResponse({'status': False, 'info': 'Internal Error: ' + str(e)})
 
-    saved_file = DataFile(
-        source=request.POST.get("owner", "Upload"),
+    saved_file = DataSet(
+        user=request.POST.get("owner", "Upload"),
         name=request.POST.get("name", "uploaded-file"),
         path=path,
-        description=request.POST.get("description", "")
+        description=request.POST.get("description", ""),
+        n_obs=adata.n_obs,
+        n_vars=adata.n_vars,
+        attrs=json.dumps(get_anndata_attrs(adata))
     )
     saved_file.save()
     return JsonResponse({'status': True, 'info': "File successfully uploaded as " + saved_file.name + ".h5ad"})
@@ -107,12 +126,17 @@ def result_export(request):
     indexes = np.fromstring(request.POST.get("index"), dtype=int, sep=",")
     hextime = hex(int(time()))[2:]
     output_path = os.path.join(UPLOAD_FOLDER, f"exported_{pid}_{hextime}.h5ad")
-    adata[indexes, :].write(output_path)
-    saved_file = DataFile(
+    adata = adata[indexes, :]
+    adata.write(output_path)
+
+    saved_file = DataSet(
         source=request.POST.get("owner", f"Export from {pid}"),
         name=request.POST.get("name", f"export_{pid}"),
         path=output_path,
-        description=request.POST.get("description", "")
+        description=request.POST.get("description", ""),
+        n_obs=adata.n_obs,
+        n_vars=adata.n_vars,
+        attrs=json.dumps(get_anndata_attrs(adata))
     )
     saved_file.save()
     return JsonResponse(

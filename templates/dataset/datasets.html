@@ -2,89 +2,110 @@
 {% load static %}
 
 {% block content %}
-  <div class="app-main__outer">
-    <div class="app-main__inner">
-      <div class="app-page-title">
-        <div class="page-title-wrapper">
-          <div class="page-title-heading">
-            <div class="page-title-icon">
-              <i class="fas fa-database">
-              </i>
+    <div class="app-main__outer">
+        <div class="app-main__inner">
+            <div class="app-page-title">
+                <div class="page-title-wrapper">
+                    <div class="page-title-heading">
+                        <div class="page-title-icon">
+                            <i class="fas fa-database">
+                            </i>
+                        </div>
+                        <div>Datasets Manager
+                            <div class="page-title-subheading">
+                                Manage existing datasets, and aquire datasets from the Internet
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div>Datasets Manager
-              <div class="page-title-subheading">
-                Manage existing datasets, and aquire datasets from the Internet
-              </div>
+            <div class="row">
+                <div class="col">
+                    <div id="dataset-table">
+                        <table class="mb-0 table table-hover">
+                            <thead class="thead-dark">
+                            <tr>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Shape</th>
+                                <th>User</th>
+                                <th>Last Modified</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody class="list">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <div id="dataset-table">
-            <table class="mb-0 table table-hover">
-              <thead class="thead-dark">
-              <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Owner</th>
-                <th>Last Modified</th>
-                <th>Actions</th>
-              </tr>
-              </thead>
-              <tbody class="list">
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
     </div>
-  </div>
-
-
 {% endblock %}
+
+{% block modal %}
+    <div class="modal fade" id="modal-dataset" tabindex="-1" role="dialog" aria-labelledby="datasetModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="widget-content">
+                                <div class="widget-content-wrapper">
+                                    <div class="widget-content-right ml-0 mr-5">
+                                        <div class="widget-numbers text-success name">
+                                        </div>
+                                    </div>
+                                    <div class="widget-content-left">
+                                        <div class="widget-heading description"></div>
+                                        <div class="widget-subheading modified"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <table class="mb-0 table">
+                                <tbody>
+                                <tr>
+                                    <td>Number of Observations</td>
+                                    <td class="text-success n_obs"></td>
+                                </tr>
+                                <tr>
+                                    <td>Number of Variables</td>
+                                    <td class="text-success n_vars"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="position-relative row form-group">
+                        <label for="new-name" class="col-md-2 col-form-label">Update Name</label>
+                        <div class="col-md-10">
+                            <input id="new-name" placeholder="New dataset name" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="position-relative row form-group">
+                        <label for="new-description" class="col-md-2 col-form-label">Update Description</label>
+                        <div class="col-md-10">
+                            <textarea id="new-description" class="form-control"
+                                      placeholder="New Description"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success save" onclick="updateDataset()">Update and Save
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
 {% block js %}
     <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
     <script type="text/javascript" src={% static "scripts/dataset/dataset.js" %}></script>
-
-    <script>
-        const table_option = {
-            item: `<tr>
-      <td class="name"></td>
-      <td class="description"></td>
-      <td class="owner"></td>
-      <td class="modified"></td>
-      <td>
-        <button class="btn btn-danger text-white source id"><i class="fas fa-times"></i></button>
-        <button class="btn btn-secondary text-white source id"><i class="fas fa-cog"></i></button>
-      </td>
-    </tr>`,
-          valueNames: ['name', 'description', 'owner', 'modified',
-              {
-                  name: 'source',
-                  attr: 'data-source'
-              }, {
-                  name: 'id',
-                  attr: 'data-id'
-              }
-          ]
-      };
-
-      const table = new List('dataset-table', table_option, {});
-
-      $.get("/dataset/datasets", {
-          limit: 10,
-          offset: 0
-      }, data => {
-          table.clear();
-          const display = [];
-          data.forEach(e => {
-              const modified = new Date(e.modified);
-              e.modified = modified.toLocaleString();
-              display.push(e);
-          });
-          table.add(display);
-      });
-  </script>
 {% endblock %}
 

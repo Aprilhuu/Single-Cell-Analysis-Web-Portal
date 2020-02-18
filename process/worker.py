@@ -1,7 +1,7 @@
 import os
 from threading import Thread
 
-from dataset.models import DataFile
+from dataset.models import DataSet
 from settings.settings import TEMP_FOLDER
 from .models import Process, WorkerRecord
 from .worker_step import ReadStep, ProcessStep, PlotStep, IPlotStep
@@ -37,7 +37,7 @@ class Worker(Thread):
         file_id = reader['params'].get('filename', None)
         if not file_id:
             return "Missing File", False
-        self.filename = DataFile.objects.get(id=file_id).path
+        self.filename = DataSet.objects.get(id=file_id).path
         if not self.filename:
             return {'info': "Missing File", 'status': False}
 
