@@ -1,3 +1,6 @@
+'use strict';
+
+let installedMethods;
 const table_option = {
     item: `<tr>
       <td class="type"></td>
@@ -6,13 +9,16 @@ const table_option = {
       <td class="description"></td>
       <td>
         <button class="btn btn-danger text-white id delete"><i class="fas fa-times delete"></i></button>
+        <button class="btn btn-secondary text-white update"><i class="fas fa-cog update"></i></button>
       </td>
     </tr>`,
     valueNames: ['type', 'package', 'name', 'description', {
         name: 'id',
         attr: 'data-id'
     }
-    ]
+    ],
+    page: 10,
+    pagination: true
 };
 
 const table = new List('methods-table', table_option, {});
@@ -22,27 +28,42 @@ $.get("/settings/installed-methods", {
     name: '_all'
 }, data => {
     table.clear();
-    table.add(data);
+    installedMethods = data;
+    table.add(installedMethods);
 });
 
 $("#methods-table tbody").click(() => {
-    if (! $(event.target).hasClass("delete")) {
-        return;
-    }
+
     let target = $(event.target);
-    if (!target.hasClass("id")) {
-        target = target.parent();
+    if (target.hasClass("delete")) {
+        if (!target.hasClass("id")) {
+            target = target.parent();
+        }
+        $.ajax({
+            url: "/settings/installed-methods",
+            method: "POST",
+            data: {
+                id: Number(target.data("id")),
+                action: 'DELETE'
+            },
+        }).done((data) => {
+            table.remove('id', data.id);
+        });
+    } else if (target.hasClass("update")) {
+        if (!target.hasClass("btn")) {
+            target = target.parent();
+        }
+        target = target.prev();
+        const id = target.data("id");
+        const method = installedMethods.find(m => m.id === id);
+        $("#type").val(method.type);
+        $("#name").val(method.name).removeClass("is-invalid");
+        $("#package").val(method.package).removeClass("is-invalid");
+        $("#description").val(method.description);
+        $("#table-params tbody").empty();
+        method.params.forEach(p => insertParamTable(p));
+        $("#tab-2").tab('show');
     }
-    $.ajax({
-        url: "/settings/installed-methods",
-        method: "POST",
-        data: {
-            id: Number(target.data("id")),
-            action: 'DELETE'
-        },
-    }).done((data) => {
-        table.remove('id', data.id);
-    });
 });
 
 $("#div-options").hide();
@@ -205,4 +226,29 @@ const resetForm = () => {
     $("#table-params tbody").empty();
 };
 
+const exportMethods = () => {
+    const data = {
+        name: "SCAWPMETHODS"
+    };
+    data.data = installedMethods.map(m => {
+        const new_m = m;
+        delete new_m.id;
+        return new_m;
+    });
+    download(JSON.stringify(data), "installed_methods.json");
+};
+
+const importMethods = () => {
+    const formData = new FormData($("#form-upload")[0]);
+    $.ajax({
+        url: '/settings/reset-methods',
+        data: formData,
+        processData: false,
+        contentType: false,
+        type: 'POST',
+        success: data => {
+            window.location.reload();
+        }
+    })
+};
 

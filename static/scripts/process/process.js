@@ -2,11 +2,11 @@
 /**
  For Process Section
  **/
-$("#submit-footer, #active-process-table").hide();
+$("#submit-footer, #active-process-table, #new-steps-table").hide();
 
 /** ===== Table Options ===== **/
 const new_steps_option = {
-    item: `<div class="col-2">
+    item: `<div class="col-lg-2 col-md-3">
             <div class="card-shadow-secondary border mb-3 card card-body border-secondary card-new-steps">
               <h5 class="card-title" style="text-transform: lowercase;">
                 <span class="package"></span>.<span class="name">
@@ -18,23 +18,28 @@ const new_steps_option = {
               </div>
             </div>
           </div>`,
-    valueNames: ['name', 'package', 'description']
+    valueNames: ['name', 'package', 'description'],
+    page: 12,
+    pagination: true
 };
 
 
 const dataset_table_option = {
     item: `<tr>
     <td class="name id"></td>
+    <td><span class="n_obs"></span>×<span class="n_vars"></span></td>
     <td class="description"></td>
     <td class="modified">
     </td>
   </tr>`,
-    valueNames: ['name', 'description', 'modified',
+    valueNames: ['name', 'description', 'modified', "n_obs", "n_vars",
         {
             name: 'id',
             attr: 'data-id'
         }
-    ]
+    ],
+    page: 10,
+    pagination: true
 };
 
 /** ===== Variables ===== **/
@@ -50,7 +55,7 @@ $.get("/settings/installed-methods", {
 }, data => {
     installedMethods = data;
     new_steps_table.clear();
-    new_steps_table.add(installedMethods)
+    new_steps_table.add(installedMethods);
 });
 
 $("#new-steps-table .list").click(() => {
@@ -100,7 +105,7 @@ $("#dataset-table .list").click(() => {
 
     const input_ = $('#chosen-dataset');
     input_.removeClass("is-invalid");
-    $("#submit-footer, #active-process-table").show();
+    $("#submit-footer, #active-process-table, #new-steps-table").show();
 });
 
 

@@ -21,7 +21,9 @@ const table_option = {
             name: 'id',
             attr: 'data-id'
         }
-    ]
+    ],
+    page: 25,
+    pagination: true
 };
 
 const table = new List('dataset-table', table_option, {});

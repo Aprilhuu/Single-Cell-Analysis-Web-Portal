@@ -47,7 +47,6 @@
                                         <div class="col">
                                             <div class="form-inline">
                                                 <div class="form-group">
-                                                    <label for="worker-name">Select Dataset</label>
                                                     <input type="text" id="chosen-dataset"
                                                            class="form-control mx-sm-3 is-invalid"
                                                            value="" disabled>
@@ -89,13 +88,21 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="main-card mb-3 card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Add New Steps</h5>
-                                    <div id="new-steps-table">
-                                        <div class="row list">
-
+                                <div class="card-header">Add New Steps</div>
+                                <div class="card-body" id="new-steps-table">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend"><span
+                                                        class="input-group-text">Search</span></div>
+                                                <input type="text" class="form-control search">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <ul class="pagination justify-content-end"></ul>
                                         </div>
                                     </div>
+                                    <div class="row list"></div>
                                 </div>
                             </div>
                         </div>
@@ -124,12 +131,24 @@
                 </div>
                 <div class="modal-body">
                     <div id="dataset-table">
-                        <table class="mb-0 table table-hover">
+                        <div class="row mb-2">
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text">Search</span></div>
+                                    <input type="text" class="form-control search">
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <ul class="pagination"></ul>
+                            </div>
+                        </div>
+                        <table class="table table-hover">
                             <thead class="thead-light">
                             <tr>
-                                <th style="width: 25%">Name</th>
-                                <th style="width: 50%">Description</th>
-                                <th style="width: 25%">Modified</th>
+                                <th class="sort" data-sort="name">Name <i class="fas fa-sort"></i></th>
+                                <th>Shape</th>
+                                <th class="sort" data-sort="description">Description <i class="fas fa-sort"></i></th>
+                                <th class="sort" data-sort="modified">Modified <i class="fas fa-sort"></i></th>
                             </tr>
                             </thead>
                             <tbody class="list">
@@ -175,11 +194,10 @@
 
 
 {% block js %}
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-sortablejs@latest/jquery-sortable.js"></script>
     <script type="text/javascript">
-        $("#active-process-table").sortable({
-            items: ".sort:not(.non-sort)"
-        })
+        $("#active-process-table").sortable()
     </script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
     <script type="text/javascript" src={% static "scripts/process/process-factory.js" %}></script>

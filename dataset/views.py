@@ -17,12 +17,13 @@ def render_dataset(request):
     return render(request, "dataset/datasets.html")
 
 
-def render_dataupload(request):
+def render_data_upload(request):
     return render(request, "dataset/dataupload.html",
                   {'allowed_file': ", ".join(ALLOWED_EXTENSIONS)})
 
 
 def rest_datasets(request):
+    # get Datasets
     if request.method == 'GET':
         limit = int(request.GET.get('limit', 0))
         offset = int(request.GET.get('offset', 0))
@@ -39,6 +40,7 @@ def rest_datasets(request):
         id = request.POST.get("id", None)
         if not id:
             return HttpResponseForbidden()
+        # delete datasets
         if action == "DELETE":
             result = DataSet.objects.get(id=id)
             if os.path.isfile(result.path):
@@ -47,6 +49,8 @@ def rest_datasets(request):
                 rmtree(result.path)
             result.delete()
             return JsonResponse({'id': id})
+
+        # update datasets
         elif action == "UPDATE":
             result = DataSet.objects.get(id=id)
             name = request.POST.get("name")
@@ -60,6 +64,11 @@ def rest_datasets(request):
 
 
 def data_upload(request):
+    """
+    Read the uploaded file and then write it as a H5AD file into the file system
+    """
+
+    # get file and validate
     file = request.FILES.get('file', None)
     if not file:
         return HttpResponseBadRequest
@@ -69,9 +78,16 @@ def data_upload(request):
     hash_name = file_ori + "_" + hex(int(time()))[2:]
     path = os.path.join(UPLOAD_FOLDER, hash_name + "." + ext)
 
+    package = request.POST.get("package")
+    method = request.POST.get("method")
+
+    if not method or not package:
+        return HttpResponseBadRequest
+
     with open(path, 'wb+') as f:
         for chunk in file.chunks():
             f.write(chunk)
+    # if it is a zipped file, unzip it
     if ext in [x[0] for x in get_archive_formats()]:
         unpack_archive(path, os.path.join(UPLOAD_FOLDER))
         os.rename(os.path.join(UPLOAD_FOLDER, file_ori),
@@ -79,31 +95,23 @@ def data_upload(request):
         os.remove(path)
         path = os.path.join(UPLOAD_FOLDER, hash_name)
 
-    package = request.POST.get("package")
-    method = request.POST.get("method")
-
-    if not method or not package:
-        return HttpResponseBadRequest
     try:
+        # according to the provided read method, read the data and write as H5AD file
         module = importlib.import_module(package)
         components = method.split(".")
         for attr in components:
             module = getattr(module, attr)
         adata = module(path)
-        if os.path.isdir(path):
-            rmtree(path)
-        else:
-            os.remove(path)
+        rmtree(path) if os.path.isdir(path) else os.remove(path)
         path = os.path.join(UPLOAD_FOLDER, hash_name + ".h5ad")
         adata.write(path)
     except Exception as e:
+        # if anything wrong, delete anything stored
         if path:
-            if os.path.isdir(path):
-                rmtree(path)
-            else:
-                os.remove(path)
+            rmtree(path) if os.path.isdir(path) else os.remove(path)
         return JsonResponse({'status': False, 'info': 'Internal Error: ' + str(e)})
 
+    # update teh file record to database
     saved_file = DataSet(
         user=request.POST.get("owner", "Upload"),
         name=request.POST.get("name", "uploaded-file"),
@@ -114,10 +122,14 @@ def data_upload(request):
         attrs=json.dumps(get_anndata_attrs(adata))
     )
     saved_file.save()
+
     return JsonResponse({'status': True, 'info': "File successfully uploaded as " + saved_file.name + ".h5ad"})
 
 
 def result_export(request):
+    """
+    create a new dataset from selected indexes of observations
+    """
     pid = request.POST.get("pid", None)
     if not pid:
         return HttpResponseBadRequest

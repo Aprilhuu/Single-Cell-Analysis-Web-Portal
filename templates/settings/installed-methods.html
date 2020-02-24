@@ -16,6 +16,21 @@
                             </div>
                         </div>
                     </div>
+                    <div class="page-title-actions">
+                        <button type="button" class="btn-shadow mr-3 btn btn-primary" onclick="exportMethods()">
+                            <span class="btn-icon-wrapper pr-2 opacity-7">
+                                <i class="fas fa-cloud-download-alt fa-w-20"></i>
+                            </span>
+                            Export
+                        </button>
+                        <button type="button" class="btn-shadow mr-3 btn btn-primary"
+                                onclick='$("#modal-import-dataset").modal("show")'>
+                            <span class="btn-icon-wrapper pr-2 opacity-7">
+                                <i class="fas fa-cloud-upload-alt fa-w-20"></i>
+                            </span>
+                            Import
+                        </button>
+                    </div>
                 </div>
                 <ul class="body-tabs body-tabs-layout tabs-animated body-tabs-animated nav">
                     <li class="nav-item">
@@ -25,7 +40,7 @@
                     </li>
                     <li class="nav-item">
                         <a role="tab" class="nav-link" id="tab-2" data-toggle="tab" href="#tab-content-2">
-                            <span>Add New Method</span>
+                            <span>Add/Update New Method</span>
                         </a>
                     </li>
                 </ul>
@@ -34,22 +49,33 @@
             <div class="tab-content">
                 <div class="tab-pane tabs-animation fade show active" id="tab-content-1" role="tabpanel">
                     <div class="row">
-                        <div class="col">
-                            <div id="methods-table">
-                                <table class="mb-0 table table-hover">
-                                    <thead class="thead-dark">
-                                    <tr>
-                                        <th>Type</th>
-                                        <th>Package</th>
-                                        <th>Method Call</th>
-                                        <th>Description</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody class="list">
-                                    </tbody>
-                                </table>
+                        <div class="col" id="methods-table">
+                            <div class="row mb-2">
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text">Search</span>
+                                        </div>
+                                        <input type="text" class="form-control search">
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <ul class="pagination"></ul>
+                                </div>
                             </div>
+                            <table class="mb-0 table table-hover">
+                                <thead class="thead-dark">
+                                <tr>
+                                    <th class="sort" data-sort="type">Type <i class="fas fa-sort"></i></th>
+                                    <th class="sort" data-sort="package">Package <i class="fas fa-sort"></i></th>
+                                    <th class="sort" data-sort="name">Method Call <i class="fas fa-sort"></i></th>
+                                    <th class="sort" data-sort="description">Description <i class="fas fa-sort"></i>
+                                    </th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody class="list">
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -60,7 +86,6 @@
                             <div class="mb-3 card">
                                 <div class="card-body">
                                     <form id="form-method" enctype=multipart/form-data>
-
                                         <div class="position-relative row form-group">
                                             <label for="type" class="col-sm-2 col-form-label">Type</label>
                                             <div class="col-md-10">
@@ -72,7 +97,6 @@
                                                 </select>
                                             </div>
                                         </div>
-
                                         <div class="position-relative row form-group">
                                             <label for="package" class="col-md-2 col-form-label">Package</label>
                                             <div class="col-md-10">
@@ -80,7 +104,6 @@
                                                        placeholder="Package of the method"
                                                        type="text" class="form-control is-invalid required"></div>
                                         </div>
-
                                         <div class="position-relative row form-group">
                                             <label for="name" class="col-md-2 col-form-label">Name</label>
                                             <div class="col-md-10">
@@ -88,13 +111,14 @@
                                                        placeholder="Name of the method"
                                                        type="text" class="form-control is-invalid required"></div>
                                         </div>
-
                                         <div class="position-relative row form-group">
                                             <label for="description" class="col-sm-2 col-form-label">Description</label>
                                             <div class="col-sm-10">
-                        <textarea name="description" id="description"
-                                  placeholder="Short description of the method"
-                                  class="form-control"></textarea></div>
+                                                <textarea name="description" id="description"
+                                                          placeholder="Short description of the method"
+                                                          class="form-control">
+                                                </textarea>
+                                            </div>
                                         </div>
                                         <div class="position-relative row form-group">
                                             <label class="col-md-2 col-form-label">Parameters</label>
@@ -126,13 +150,8 @@
                         </div>
                     </div>
                 </div>
-
-
             </div>
-
         </div>
-
-
     </div>
 {% endblock %}
 
@@ -142,7 +161,7 @@
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Add a New Parameter</h5>
+                    <h5 class="modal-title">Add/Update a New Parameter</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -218,8 +237,42 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="modal-import-dataset" tabindex="-1" role="dialog" aria-labelledby="model_t"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Import Dataset</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="position-relative row form-group">
+                        <form id="form-upload" enctype=multipart/form-data>
+                            <label for="file" class="col-sm-2 col-form-label">JSON</label>
+                            <div class="col-sm-10">
+                                <input name="file" id="file" type="file" accept=".json"
+                                       class="form-control-file">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <p class='text-danger'>WARNING, this will reset all methods stored and reconstruct the methods based
+                        on the input file</p>
+                    <button type="button" class="btn btn-danger" onclick="importMethods()">Understand and Import
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
 {% block js %}
     <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+    <script type="text/javascript" src={% static "scripts/download.js" %}></script>
     <script type="text/javascript" src={% static "scripts/installed-methods.js" %}></script>
 {% endblock %}
