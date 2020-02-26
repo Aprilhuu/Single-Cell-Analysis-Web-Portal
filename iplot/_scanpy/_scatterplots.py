@@ -16,6 +16,17 @@ def tsne(adata: AnnData,
     return _scatter(adata, "tSNE", names, save)
 
 
+def umap(adata: AnnData,
+         names: Optional[Sequence[str]] = None,
+         save: Optional[str] = None
+         ):
+    if names:
+        clusterings = [n for n in names if n in adata.obs.columns]
+        if clusterings:
+            return _scatter_cluster(adata, "umap", clusterings, save)
+    return _scatter(adata, "umap", names, save)
+
+
 def _scatter_cluster(adata: AnnData,
                      basis: str,
                      clusterings: Sequence[str],
@@ -130,5 +141,6 @@ def _scatter_layout(fig, basis, buttons):
         xaxis={'title': f'{basis}1',
                'showticklabels': False,
                'showgrid': False,
-               'zeroline': False}
+               'zeroline': False},
+        title=f"{basis} Plot"
     )

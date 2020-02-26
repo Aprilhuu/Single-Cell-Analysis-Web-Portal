@@ -1,3 +1,4 @@
+import json
 import os
 from threading import Thread
 
@@ -47,7 +48,14 @@ class Worker(Thread):
                           name=self.name)
         wr.save()
         self.id = wr.id
-        os.mkdir(os.path.join(TEMP_FOLDER, str(self.id)))
+
+        path = os.path.join(TEMP_FOLDER, str(self.id))
+        print(path)
+        os.mkdir(path)
+
+        with open(os.path.join(path, "procedure.json"), "w") as f:
+            json.dump(self.process, f)
+
         index = 0
         for p in self.process:
             process = Process(wrid=self.id,

@@ -27,7 +27,7 @@
 
             <div class="row">
                 {% for p in plots %}
-                    <div class="col-lg-6 mb-4">
+                    <div class="col-md-6 col-lg-4 mb-4">
                         <div class="main-card card">
 
                             <div class="card-header text-lowercase"
@@ -35,7 +35,7 @@
                                 {{ p.call }}
                             </div>
 
-                            <div class="card-body">
+                            <div class="card-body p-0">
                                 {% if p.type == "iplot" %}
                                     <a href="/plot/plot-detail.html?id={{ p.wrid }}&output={{ p.output }}">
                                         <img src="/userData/temp/{{ p.wrid }}/{{ p.output }}"

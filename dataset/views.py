@@ -135,14 +135,15 @@ def result_export(request):
         return HttpResponseBadRequest
     import scanpy as sc
     adata = sc.read_h5ad(os.path.join(TEMP_FOLDER, str(pid), "results.h5ad"))
-    indexes = np.fromstring(request.POST.get("index"), dtype=int, sep=",")
+
     hextime = hex(int(time()))[2:]
     output_path = os.path.join(UPLOAD_FOLDER, f"exported_{pid}_{hextime}.h5ad")
+
+    indexes = np.fromstring(request.POST.get("index"), dtype=int, sep=",")
     adata = adata[indexes, :]
     adata.write(output_path)
 
     saved_file = DataSet(
-        source=request.POST.get("owner", f"Export from {pid}"),
         name=request.POST.get("name", f"export_{pid}"),
         path=output_path,
         description=request.POST.get("description", ""),
@@ -153,4 +154,4 @@ def result_export(request):
     saved_file.save()
     return JsonResponse(
         {'status': True, 'info': "File successfully exported as " + saved_file.name + ".h5ad",
-         "output": str(adata[indexes, :])})
+         "output": str(adata)})

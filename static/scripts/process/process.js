@@ -2,7 +2,7 @@
 /**
  For Process Section
  **/
-$("#submit-footer, #active-process-table, #new-steps-table").hide();
+$("#submit-footer, #active-process-table, #new-steps-card").hide();
 
 /** ===== Table Options ===== **/
 const new_steps_option = {
@@ -105,7 +105,7 @@ $("#dataset-table .list").click(() => {
 
     const input_ = $('#chosen-dataset');
     input_.removeClass("is-invalid");
-    $("#submit-footer, #active-process-table, #new-steps-table").show();
+    $("#submit-footer, #active-process-table, #new-steps-card").show();
 });
 
 
