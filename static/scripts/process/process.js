@@ -76,19 +76,31 @@ $("#new-steps-table .list").click(() => {
 });
 
 
-$("#choose-dataset").click(() => {
-    $("#modal-dataset").modal("show");
-    const table = new List('dataset-table', dataset_table_option, {});
+const dataset_table = new List('dataset-table', dataset_table_option, {});
 
-    $.get("/dataset/datasets", {
-        limit: 10,
-        offset: 0
-    }, data => {
-        table.clear();
-        table.add(data);
-    });
+$.get("/dataset/datasets", {
+    limit: 10,
+    offset: 0
+}, data => {
+    dataset_table.clear();
+    dataset_table.add(data);
+
+    const url = new URL(window.location.href);
+    const dataset = Number(url.searchParams.get("dataset"));
+    if (dataset) {
+        const found_dataset = dataset_table.items.find(data => data._values.id === dataset);
+        if (found_dataset) {
+            const chosen_dataset = $("#chosen-dataset");
+            chosen_dataset.val(found_dataset._values.name);
+            chosen_dataset.data("id", found_dataset._values.id);
+            $("#modal-dataset").modal("hide");
+
+            const input_ = $('#chosen-dataset');
+            input_.removeClass("is-invalid");
+            $("#submit-footer, #active-process-table, #new-steps-card").show();
+        }
+    }
 });
-
 
 
 $("#dataset-table .list").click(() => {
@@ -107,8 +119,6 @@ $("#dataset-table .list").click(() => {
     input_.removeClass("is-invalid");
     $("#submit-footer, #active-process-table, #new-steps-card").show();
 });
-
-
 
 
 $("#active-process-table").click(e => {
@@ -167,7 +177,6 @@ $("#active-process-table").click(e => {
         target.addClass("btn-secondary")
     }
 });
-
 
 
 $("#modal-option").on("hide.bs.modal", () => {

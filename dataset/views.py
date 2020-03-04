@@ -153,5 +153,4 @@ def result_export(request):
     )
     saved_file.save()
     return JsonResponse(
-        {'status': True, 'info': "File successfully exported as " + saved_file.name + ".h5ad",
-         "output": str(adata)})
+        {'status': True, 'id': saved_file.id})

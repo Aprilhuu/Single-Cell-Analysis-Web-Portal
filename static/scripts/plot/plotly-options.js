@@ -95,11 +95,8 @@ const activateOptions = (divPlotly) => {
             'id="button-selected">Export Selected Data Points</button>');
         const trace_button = $('<button class="my-2 mr-2 btn btn-primary" ' +
             'id="button-shown">Export Selected Clusters</button>');
-        const further_button = $('<button class="mt-2 mr-2 btn btn-primary" ' +
-            'id="button-select">Plot on the selected Data</button>');
         selection_div.append(selected_button);
         selection_div.append(trace_button);
-        $("#data-wizard-card .card-footer").append(further_button);
 
 
         const select_confirm = $("#select-confirm");
@@ -158,14 +155,13 @@ const activateOptions = (divPlotly) => {
                 success: (data) => {
                     $("#modal-warning .modal-title").text("Export");
                     $("#modal-warning .modal-body p").text(data.info);
+                    const href = "/process/new-process.html?dataset=" + String(data.id);
+                    const further_button = $("<a class='btn btn-primary'>Start Further Analysis</a>");
+                    further_button.attr("href", href);
+                    $("#modal-warning .modal-footer").prepend(further_button);
                 }
             });
         });
-
-        further_button.click(() => {
-//TODO: ASK FOR FUTTHER ANALYSIS CODE
-        })
-
     };
 
     const type = divPlotly.data[0].type;
