@@ -30,10 +30,15 @@ const activateOptions = (divPlotly) => {
     /***
      * Choose the overall template
      */
-    $(".template-choice").click(() => {
-        const target = $(event.target);
-        const template = target.data('template');
+    const templateOption = $("#template");
+    templateOption.click(() => {
+        const template = templateOption.data('template');
         updateTemplate(template);
+        if (template === "plotly_white") {
+            templateOption.data('template', 'plotly_dark').text("Dark Background");
+        } else {
+            templateOption.data('template', 'plotly_white').text("Bright Background");
+        }
     });
 
     /***
@@ -68,11 +73,11 @@ const activateOptions = (divPlotly) => {
     });
 
     const updateTemplate = (template) => {
-        target = $(".template-choice[data-template=" + template + "]");
-        $(".template-choice").removeClass('active-sidebar');
-        target.addClass('active-sidebar');
         if (templates[template]) {
             Plotly.relayout(divPlotly, {template: templates[template]});
+            if (template === "plotly_dark") {
+                $("#plotly .updatemenu-item-text").css('fill', 'black');
+            }
             return;
         }
         $.ajax({
@@ -81,11 +86,15 @@ const activateOptions = (divPlotly) => {
             success: (data) => {
                 Plotly.relayout(divPlotly, {template: data});
                 templates[template] = data;
+                if (template === "plotly_dark") {
+                    $("#plotly .updatemenu-item-text").css('fill', 'black');
+                }
             },
             statusCode: {
                 404: () => alert('Plot not found')
             }
         });
+
     };
 
 
@@ -167,6 +176,7 @@ const activateOptions = (divPlotly) => {
     const type = divPlotly.data[0].type;
     if (type === "scattergl" || type === "scatter") {
         addOptionsScatter(divPlotly);
+        templateOption.data("template", "plotly_dark");
         updateTemplate("plotly_white");
     }
 

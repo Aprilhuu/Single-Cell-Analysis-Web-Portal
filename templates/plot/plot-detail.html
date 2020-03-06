@@ -10,6 +10,7 @@
             <div class="dropdown-menu" aria-labelledby="change-layout">
                 <a id="orientation" class="button-link dropdown-item" data-orientation="v">Vertical Layout</a>
                 <a id="legend" class="button-link dropdown-item">Show Legend</a>
+                <a id="template" class="button-link dropdown-item">Bright Background</a>
             </div>
         </li>
 
@@ -31,118 +32,6 @@
                 All Plots
             </a>
         </li>
-        <li class="app-sidebar__heading">Styling</li>
-        <li>
-            <a href="#" aria-expanded="false">
-                <i class="metismenu-icon fas fa-pen"></i>
-                Color Templates
-                <i class="metismenu-state-icon pe-7s-angle-down"></i>
-            </a>
-            <ul class="mm-collapse">
-                <li>
-                    <a class="button-link template-choice active-sidebar" data-template="plotly">
-                        Plotly
-                    </a>
-                </li>
-                <li>
-                    <a class="button-link template-choice" data-template="plotly_white">
-                        Bright
-                    </a>
-                </li>
-                <li>
-                    <a class="button-link template-choice" data-template="plotly_dark">
-                        Dark
-                    </a>
-                </li>
-                <li>
-                    <a class="button-link template-choice" data-template="ggplot2">
-                        ggplot2
-                    </a>
-                </li>
-                <li>
-                    <a class="button-link template-choice" data-template="seaborn">
-                        Seaborn
-                    </a>
-                </li>
-                <li>
-                    <a class="button-link template-choice" data-template="simple_white">
-                        Simple White
-                    </a>
-                </li>
-                <li>
-                    <a class="button-link template-choice" data-template="presentation">
-                        Prensentation
-                    </a>
-                </li>
-                <li>
-                    <a class="button-link template-choice" data-template="none">
-                        Simple
-                    </a>
-                </li>
-            </ul>
-        </li>
-        <li class="app-sidebar__heading">Download Plot</li>
-        <li>
-            <a href="#" aria-expanded="false">
-                <i class="metismenu-icon fas fa-expand-arrows-alt"></i>
-                Output Ratio
-                <i class="metismenu-state-icon pe-7s-angle-down"></i>
-            </a>
-            <ul class="mm-collapse">
-                <li>
-                    <a class="button-link ratio-choice active-sidebar" data-ratio="4,3">
-                        Horizontal (4:3)
-                    </a>
-                </li>
-                <li>
-                    <a class="button-link ratio-choice" data-ratio="3,4">
-                        Vertical (3:4)
-                    </a>
-                </li>
-                <li>
-                    <a class="button-link ratio-choice" data-ratio="1,1">
-                        Square (1:1)
-                    </a>
-                </li>
-                <li>
-                    <a class="button-link ratio-choice" data-ratio="16,9">
-                        Long Horizontal (16:9)
-                    </a>
-                </li>
-            </ul>
-        </li>
-        <li>
-            <a href="#" aria-expanded="false">
-                <i class="metismenu-icon fas fa-expand"></i>
-                Image Size
-                <i class="metismenu-state-icon pe-7s-angle-down"></i>
-            </a>
-            <ul class="mm-collapse">
-                <li>
-                    <a class="button-link size-choice active-sidebar" data-size="1080">
-                        Default (1080px)
-                    </a>
-                </li>
-                <li>
-                    <a class="button-link size-choice" data-size="1920">
-                        Large (1920px)
-                    </a>
-                </li>
-                <li>
-                    <a class="button-link size-choice" data-ratio="720">
-                        Small (720px)
-                    </a>
-                </li>
-            </ul>
-        </li>
-        <li>
-            <a class="button-link" id="download-image">
-                <i class="metismenu-icon fas fa-download"></i>
-                Download
-            </a>
-        </li>
-
-
     </ul>
 {% endblock %}
 
@@ -190,9 +79,7 @@
             </div>
             <span id="output" data-id="{{ worker.id }}" data-link={{ link }} hidden>{{ output }}</span>
             <div id="plotly" style="height: 100vh; margin: 0 -30px 0 -30px;"></div>
-
         </div>
-
     </div>
 {% endblock %}
 
