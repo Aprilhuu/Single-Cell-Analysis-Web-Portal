@@ -41,43 +41,10 @@ const activateOptions = (divPlotly) => {
         }
     });
 
-    /***
-     * Choose the output ratio
-     */
-    $(".ratio-choice").click(() => {
-        const target = $(event.target);
-        $(".ratio-choice").removeClass('active-sidebar');
-        target.addClass('active-sidebar');
-    });
-    $(".size-choice").click(() => {
-        const target = $(event.target);
-        $(".size-choice").removeClass('active-sidebar');
-        target.addClass('active-sidebar');
-    });
-
-    $("#download-image").click(() => {
-        const config = {
-            format: 'png',
-            filename: $('#output').text().trim()
-        };
-        const ratio = $(".ratio-choice.active-sidebar").data("ratio").split(",");
-        const size = Number($(".size-choice.active-sidebar").data("size"));
-        if (ratio[0] >= ratio[1]) {
-            config.width = size;
-            config.height = Math.round(size * ratio[1] / ratio[0]);
-        } else {
-            config.height = size;
-            config.width = Math.round(size * ratio[0] / ratio[1]);
-        }
-        Plotly.downloadImage(divPlotly, config);
-    });
 
     const updateTemplate = (template) => {
         if (templates[template]) {
             Plotly.relayout(divPlotly, {template: templates[template]});
-            if (template === "plotly_dark") {
-                $("#plotly .updatemenu-item-text").css('fill', 'black');
-            }
             return;
         }
         $.ajax({
@@ -86,9 +53,6 @@ const activateOptions = (divPlotly) => {
             success: (data) => {
                 Plotly.relayout(divPlotly, {template: data});
                 templates[template] = data;
-                if (template === "plotly_dark") {
-                    $("#plotly .updatemenu-item-text").css('fill', 'black');
-                }
             },
             statusCode: {
                 404: () => alert('Plot not found')
@@ -156,6 +120,7 @@ const activateOptions = (divPlotly) => {
             $("#modal-warning .modal-title").text("Exporting");
             $("#modal-warning .modal-body p").text("The data is exporting, please keep this page open");
             $("#modal-warning").modal();
+            $("#modal-data-wizard").modal("hide");
 
             $.ajax({
                 url: '/dataset/result-export',
@@ -176,22 +141,11 @@ const activateOptions = (divPlotly) => {
     const type = divPlotly.data[0].type;
     if (type === "scattergl" || type === "scatter") {
         addOptionsScatter(divPlotly);
-        templateOption.data("template", "plotly_dark");
-        updateTemplate("plotly_white");
+        templateOption.data("template", "plotly_white");
     }
 
     $("#data-wizard").click(() => {
-
-        const wizard = $('#data-wizard-card');
-        if (wizard.prop("hidden")) {
-            wizard.prop('hidden', false);
-            if (wizard.data("shown") === true) {
-                return;
-            }
-            wizard.data("shown", true);
-        } else {
-            wizard.prop('hidden', true);
-        }
+        const wizard = $('#modal-data-wizard').modal("show");
     });
 
 };

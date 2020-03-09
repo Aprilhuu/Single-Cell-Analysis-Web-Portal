@@ -7,10 +7,11 @@ from time import time
 import numpy as np
 from django.http import JsonResponse, HttpResponseForbidden, HttpResponseBadRequest
 from django.shortcuts import render
+from scanpy import read_h5ad
 
-from settings.settings import UPLOAD_FOLDER, ALLOWED_EXTENSIONS, TEMP_FOLDER
-from ._utils import get_anndata_attrs
+from settings.settings import DATASET_FOLDER, ALLOWED_EXTENSIONS, USER_PROCESS_FOLDER, TEMP_FOLDER
 from .models import DataSet
+from .utils import get_anndata_attrs
 
 
 def render_dataset(request):
@@ -27,7 +28,7 @@ def rest_datasets(request):
     if request.method == 'GET':
         limit = int(request.GET.get('limit', 0))
         offset = int(request.GET.get('offset', 0))
-        result = DataSet.objects.all()[offset: limit]
+        result = DataSet.objects.exclude(user__startswith="__")[offset: limit]
         return JsonResponse(list(result.values('id',
                                                'user',
                                                'name',
@@ -76,7 +77,7 @@ def data_upload(request):
     file_ori, ext = file.name.rsplit('.', 1)
     ext = ext.lower()
     hash_name = file_ori + "_" + hex(int(time()))[2:]
-    path = os.path.join(UPLOAD_FOLDER, hash_name + "." + ext)
+    path = os.path.join(TEMP_FOLDER, hash_name + "." + ext)
 
     package = request.POST.get("package")
     method = request.POST.get("method")
@@ -89,11 +90,11 @@ def data_upload(request):
             f.write(chunk)
     # if it is a zipped file, unzip it
     if ext in [x[0] for x in get_archive_formats()]:
-        unpack_archive(path, os.path.join(UPLOAD_FOLDER))
-        os.rename(os.path.join(UPLOAD_FOLDER, file_ori),
-                  os.path.join(UPLOAD_FOLDER, hash_name))
+        ext_folder = os.path.join(TEMP_FOLDER, file_ori)
+        os.mkdir(ext_folder)
+        unpack_archive(path, ext_folder)
         os.remove(path)
-        path = os.path.join(UPLOAD_FOLDER, hash_name)
+        path = ext_folder
 
     try:
         # according to the provided read method, read the data and write as H5AD file
@@ -103,8 +104,12 @@ def data_upload(request):
             module = getattr(module, attr)
         adata = module(path)
         rmtree(path) if os.path.isdir(path) else os.remove(path)
-        path = os.path.join(UPLOAD_FOLDER, hash_name + ".h5ad")
-        adata.write(path)
+        data_path = os.path.join(DATASET_FOLDER, hash_name + ".h5ad")
+        adata.write(data_path)
+    except (FileNotFoundError, ValueError):
+        if path:
+            rmtree(path) if os.path.isdir(path) else os.remove(path)
+        return JsonResponse({'status': False, 'info': 'Not an invalid data file'})
     except Exception as e:
         # if anything wrong, delete anything stored
         if path:
@@ -133,11 +138,10 @@ def result_export(request):
     pid = request.POST.get("pid", None)
     if not pid:
         return HttpResponseBadRequest
-    import scanpy as sc
-    adata = sc.read_h5ad(os.path.join(TEMP_FOLDER, str(pid), "results.h5ad"))
+    adata = read_h5ad(os.path.join(USER_PROCESS_FOLDER, str(pid), "results.h5ad"))
 
     hextime = hex(int(time()))[2:]
-    output_path = os.path.join(UPLOAD_FOLDER, f"exported_{pid}_{hextime}.h5ad")
+    output_path = os.path.join(DATASET_FOLDER, f"exported_{pid}_{hextime}.h5ad")
 
     indexes = np.fromstring(request.POST.get("index"), dtype=int, sep=",")
     adata = adata[indexes, :]

@@ -6,12 +6,19 @@
             <i class="metismenu-icon fas fa-chevron-circle-left"></i>
             Processes History
         </a>
-    </li>
+</li>
     <li class="app-sidebar__heading">Report</li>
     <li>
         <a href="/process/process.html?id={{ worker.id }}">
             <i class="metismenu-icon fas fa-clipboard-check"></i>
             Summary
+        </a>
+    </li>
+    <li class="app-sidebar__heading">Data</li>
+    <li>
+        <a href="/process/data.html?id={{ worker.id }}">
+            <i class="metismenu-icon fas fa-table"></i>
+            Data Details
         </a>
     </li>
     <li class="app-sidebar__heading">Visualizations</li>
@@ -22,16 +29,11 @@
         </a>
     </li>
     <li>
-        <a href="/process/process.html?id={{ worker.id }}">
-            <i class="metismenu-icon fas fa-paperclip"></i>
-            Manage Procdures
+        <a href="/plot/plot-studio.html?id={{ worker.id }}">
+            <i class="metismenu-icon fas fa-drafting-compass"></i>
+            Plot Studio
         </a>
     </li>
-    <li>
-        <a href="/process/process.html?id={{ worker.id }}">
-            <i class="metismenu-icon fas fa-history"></i>
-            Processes History
-        </a>
-    </li>
+
 </ul>
 {% endblock %}

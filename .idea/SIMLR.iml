@@ -24,6 +24,7 @@
     <orderEntry type="library" name="list" level="application" />
     <orderEntry type="library" name="jquery-ui" level="application" />
     <orderEntry type="library" name="plotly-latest" level="application" />
+    <orderEntry type="library" name="bootstrap-select" level="application" />
   </component>
   <component name="TemplatesService">
     <option name="TEMPLATE_CONFIGURATION" value="Django" />

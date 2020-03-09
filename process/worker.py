@@ -3,7 +3,8 @@ import os
 from threading import Thread
 
 from dataset.models import DataSet
-from settings.settings import TEMP_FOLDER
+from dataset.utils import get_anndata_attrs
+from settings.settings import USER_PROCESS_FOLDER
 from .models import Process, WorkerRecord
 from .worker_step import ReadStep, ProcessStep, PlotStep, IPlotStep
 
@@ -49,7 +50,7 @@ class Worker(Thread):
         wr.save()
         self.id = wr.id
 
-        path = os.path.join(TEMP_FOLDER, str(self.id))
+        path = os.path.join(USER_PROCESS_FOLDER, str(self.id))
         print(path)
         os.mkdir(path)
 
@@ -98,4 +99,17 @@ class Worker(Thread):
                 wr.save()
         wr.status = 1
         wr.save()
-        self.annData.write(os.path.join(TEMP_FOLDER, str(self.id), "results.h5ad"))
+        path = os.path.join(USER_PROCESS_FOLDER, str(self.id), "results.h5ad")
+        self.annData.write(path)
+
+        saved_file = DataSet(
+            user='__RESULT',
+            name=f'Worker_{self.id}',
+            path=path,
+            description="",
+            n_obs=self.annData.n_obs,
+            n_vars=self.annData.n_vars,
+            attrs=json.dumps(get_anndata_attrs(self.annData))
+        )
+        saved_file.save()
+        return self.id

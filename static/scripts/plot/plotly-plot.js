@@ -10,7 +10,7 @@ $(document).ready(() => {
         url: $('#output').data('link'),
         dataType: 'json',
         success: function (data) {
-            Plotly.newPlot('plotly', JSON.parse(data), {}, {modeBarButtonsToRemove: ['toImage']});
+            Plotly.newPlot('plotly', JSON.parse(data), {});
             activateOptions(divPlotly);
             divPlotly.on('plotly_selected', (data) => {
                 selected = data;

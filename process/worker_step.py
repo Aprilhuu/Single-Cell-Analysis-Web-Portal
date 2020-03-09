@@ -3,7 +3,7 @@ import json
 import os
 import traceback
 
-from settings.settings import TEMP_FOLDER
+from settings.settings import USER_PROCESS_FOLDER
 from .models import Process
 
 
@@ -25,7 +25,7 @@ class WorkerStep:
         self.index = index
         self.file = file
         self.annData = annData
-        self.folder = os.path.join(TEMP_FOLDER, str(self.wrID))
+        self.folder = os.path.join(USER_PROCESS_FOLDER, str(self.wrID))
 
     def run(self):
         return NotImplementedError("Abstract class")
@@ -62,11 +62,17 @@ class WorkerStep:
 
 class ReadStep(WorkerStep):
 
+    def __init__(self, context, wrid, index, file, annData, subset=None):
+        WorkerStep.__init__(self, context, wrid, index, file, annData)
+        self.subset = subset
+
     def run(self):
         module, params, _ = self.parse_call()
         del params['filename']
         try:
             self.annData = module(self.file, **params)
+            if self.subset is not None:
+                self.annData = self.annData[self.subset, :]
         except Exception as e:
             self.output = str(e)
             self.status = 2
@@ -83,8 +89,8 @@ class ProcessStep(WorkerStep):
         self.context['params'] = params
         try:
             module(self.annData, **params)
-        except Exception as e:
-            self.output = traceback.print_exc()  # str(e)
+        except Exception:
+            self.output = traceback.print_exc()
             self.status = 2
             self.log()
             return

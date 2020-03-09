@@ -23,8 +23,19 @@ def umap(adata: AnnData,
     if names:
         clusterings = [n for n in names if n in adata.obs.columns]
         if clusterings:
-            return _scatter_cluster(adata, "umap", clusterings, save)
-    return _scatter(adata, "umap", names, save)
+            return _scatter_cluster(adata, "UMAP", clusterings, save)
+    return _scatter(adata, "UMAP", names, save)
+
+
+def pca(adata: AnnData,
+        names: Optional[Sequence[str]] = None,
+        save: Optional[str] = None
+        ):
+    if names:
+        clusterings = [n for n in names if n in adata.obs.columns]
+        if clusterings:
+            return _scatter_cluster(adata, "PCA", clusterings, save)
+    return _scatter(adata, "PCA", names, save)
 
 
 def _scatter_cluster(adata: AnnData,
@@ -86,7 +97,12 @@ def _scatter(adata: AnnData,
         names = names[:10]
     else:
         raise ValueError("No colors provided")
-    matrix = adata[:, names].X.toarray()
+
+    matrix = adata[:, names].X
+    if len(names) > 1:
+        matrix = matrix.toarray()
+    else:
+        matrix = matrix[:, np.newaxis]
 
     fig = go.Figure()
 
@@ -97,7 +113,6 @@ def _scatter(adata: AnnData,
             mode='markers',
             marker={
                 'color': matrix[:, 0],
-                'colorscale': 'Reds',
                 'showscale': True,
                 'opacity': .7,
                 'colorbar': {
@@ -127,10 +142,11 @@ def _scatter(adata: AnnData,
 
 def _scatter_layout(fig, basis, buttons):
     fig.update_layout(
+        template='plotly_dark',
         updatemenus=[
-            go.layout.Updatemenu(type="buttons", buttons=buttons,
+            go.layout.Updatemenu(buttons=buttons,
                                  showactive=True, active=0,
-                                 direction="right", x=1, xanchor="right", y=1, yanchor="top"
+                                 direction="down", x=1, xanchor="right", y=1, yanchor="top"
                                  ),
         ],
         yaxis={'scaleanchor': "x", 'scaleratio': 1,
