@@ -106,10 +106,10 @@ def data_upload(request):
         rmtree(path) if os.path.isdir(path) else os.remove(path)
         data_path = os.path.join(DATASET_FOLDER, hash_name + ".h5ad")
         adata.write(data_path)
-    except (FileNotFoundError, ValueError):
+    except (FileNotFoundError, ValueError) as e:
         if path:
             rmtree(path) if os.path.isdir(path) else os.remove(path)
-        return JsonResponse({'status': False, 'info': 'Not an invalid data file'})
+        return JsonResponse({'status': False, 'info': 'Invalid data file' + str(e)})
     except Exception as e:
         # if anything wrong, delete anything stored
         if path:
@@ -120,7 +120,7 @@ def data_upload(request):
     saved_file = DataSet(
         user=request.POST.get("owner", "Upload"),
         name=request.POST.get("name", "uploaded-file"),
-        path=path,
+        path=data_path,
         description=request.POST.get("description", ""),
         n_obs=adata.n_obs,
         n_vars=adata.n_vars,
