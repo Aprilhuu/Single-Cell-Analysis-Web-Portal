@@ -8,6 +8,7 @@ const id = Number($(".id").text());
 const resetStudio = () => {
     $("#plotly").prop("hidden", true);
     $("#div-select").prop("hidden", false);
+    deactivateOptions();
 };
 
 if (attrs.obsm.includes("X_pca")) {
@@ -25,11 +26,10 @@ attrs.obs.forEach(col => {
 });
 
 if (attrs.var.includes("n_cells")) {
-    $.get('/plot/plot-sync', {
+    $.post('/plot/plot-sync', {
         id: id,
         call: "portal.get_rank_genes"
     }, data => {
-        console.log(data);
         data.index.forEach(i => {
             const markernames = $("#marker-names");
             markernames.append($("<option>" + i + "</option>"));
@@ -46,13 +46,15 @@ $(".scatter-button").click(() => {
     if (!call || !names) {
         return;
     }
-    $.get("/plot/plot-sync", {
+
+    $.post("/plot/plot-sync", {
         id: id,
         call: call,
         params: JSON.stringify({names: names})
     }, data => {
         $("#plotly").prop("hidden", false);
         Plotly.newPlot('plotly', JSON.parse(data), {});
+        activateOptions("scatter");
         $("#div-select").prop("hidden", true);
         window.scrollTo(0, document.body.scrollHeight);
     });

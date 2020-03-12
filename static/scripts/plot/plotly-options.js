@@ -1,7 +1,9 @@
-const activateOptions = (divPlotly) => {
-    /***
-     * Change the orientation of the plot
-     */
+let selected_points = [];
+
+const divPlotly = $("#plotly")[0];
+
+const activateOptions = (type) => {
+
     $("#orientation").click(() => {
         const target = $(event.target);
         if (target.data('orientation') === 'v') {
@@ -13,9 +15,6 @@ const activateOptions = (divPlotly) => {
         }
     });
 
-    /***
-     * Hide the legend
-     */
     $("#legend").click(() => {
         const legend = $("#legend");
         if (legend.text() === "Hide Legend") {
@@ -27,12 +26,13 @@ const activateOptions = (divPlotly) => {
         }
     });
 
-    /***
-     * Choose the overall template
-     */
     const templateOption = $("#template");
     templateOption.click(() => {
-        const template = templateOption.data('template');
+        let template = templateOption.data('template');
+        if (!template) {
+            templateOption.data("template", "plotly_white");
+            template = "plotly_white";
+        }
         updateTemplate(template);
         if (template === "plotly_white") {
             templateOption.data('template', 'plotly_dark').text("Dark Background");
@@ -41,77 +41,56 @@ const activateOptions = (divPlotly) => {
         }
     });
 
-
     const updateTemplate = (template) => {
-        if (templates[template]) {
-            Plotly.relayout(divPlotly, {template: templates[template]});
-            return;
-        }
         $.ajax({
             url: '/static/plot-template/' + template + '.json',
             dataType: 'json',
             success: (data) => {
                 Plotly.relayout(divPlotly, {template: data});
-                templates[template] = data;
             },
             statusCode: {
                 404: () => alert('Plot not found')
             }
         });
-
     };
 
-
-    const addOptionsScatter = (divPlotly) => {
-        const selection_div = $("#selection-div");
-        const selected_button = $('<button class="my-2 mr-2 btn btn-primary" ' +
-            'id="button-selected">Export Selected Data Points</button>');
-        const trace_button = $('<button class="my-2 mr-2 btn btn-primary" ' +
-            'id="button-shown">Export Selected Clusters</button>');
-        selection_div.append(selected_button);
-        selection_div.append(trace_button);
-
-
-        const select_confirm = $("#select-confirm");
-
-        trace_button.click(() => {
+    if (type === "scatter") {
+        divPlotly.on('plotly_selected', (data) => {
             selected_points = [];
-            divPlotly.data.forEach((trace) => {
-                if (trace.visible === true) selected_points.push(...trace.text);
-            });
-            $('#selected-length').text(selected_points.length);
-            if (selected_points.length > 0) {
-                select_confirm.prop("disabled", false);
-            } else {
-                select_confirm.prop("disabled", true);
+            if (data) {
+                selected_points.push(...(data.points.map(p => p.text)));
             }
+            $("#select-points span").text(selected_points.length);
         });
-
-        selected_button.click(() => {
-            const selected_length = $('#selected-length');
-            if (!selected) {
-                selected_length.text(0);
-                select_confirm.prop("disabled", true);
-                return;
-            }
-            selected_points = [];
-            selected.points.forEach(p => selected_points.push(p.text));
-            selected_length.text(selected_points.length);
-            if (selected_points.length > 0) {
-                select_confirm.prop("disabled", false);
-            } else {
-                select_confirm.prop("disabled", true);
-            }
+        $("#select-points").click(() => {
+            $("#modal-data-wizard").data("type", "points").modal("show");
+            $("#selected-length").text(selected_points.length);
         });
-
-        select_confirm.click(() => {
-            if (selected_points.length === 0) {
+        $("#select-traces").click(() => {
+            $("#modal-data-wizard").data("type", "traces").modal("show");
+            const vis = divPlotly.data.filter(trace => trace.visible === true || trace.visible === undefined);
+            let sum = 0;
+            vis.forEach(trace => sum = sum + trace.text.length);
+            $("#selected-length").text(sum);
+        });
+        $("#select-confirm").prop("disabled", false).click(() => {
+            const modal_data_wizard = $("#modal-data-wizard");
+            const type = modal_data_wizard.data("type");
+            let indexes;
+            if (type === "points") {
+                indexes = selected_points;
+            } else if (type === "traces") {
+                indexes = [];
+                const vis = divPlotly.data.filter(trace => trace.visible === true || trace.visible === undefined);
+                vis.forEach(trace => indexes.push(...trace.text));
+            } else {
                 return;
             }
             const data = {
-                pid: $("#output").data("id"),
-                index: selected_points.join(",")
+                pid: $(".id").text(),
+                index: indexes.join(",")
             };
+
             const name = $("#name-input").val();
             if (name !== "") data.name = name;
             const description = $("#description-input").val();
@@ -120,35 +99,25 @@ const activateOptions = (divPlotly) => {
             $("#modal-warning .modal-title").text("Exporting");
             $("#modal-warning .modal-body p").text("The data is exporting, please keep this page open");
             $("#modal-warning").modal();
-            $("#modal-data-wizard").modal("hide");
-
-            $.ajax({
-                url: '/dataset/result-export',
-                type: "POST",
-                data: data,
-                success: (data) => {
+            modal_data_wizard.modal("hide");
+            console.log(data);
+            $.post('/dataset/result-export', data, (data) => {
+                    console.log(data);
                     $("#modal-warning .modal-title").text("Export");
-                    $("#modal-warning .modal-body p").text(data.info);
+                    $("#modal-warning .modal-body p").text("Success");
                     const href = "/process/new-process.html?dataset=" + String(data.id);
                     const further_button = $("<a class='btn btn-primary'>Start Further Analysis</a>");
                     further_button.attr("href", href);
                     $("#modal-warning .modal-footer").prepend(further_button);
                 }
-            });
-        });
-    };
-
-    const type = divPlotly.data[0].type;
-    if (type === "scattergl" || type === "scatter") {
-        addOptionsScatter(divPlotly);
-        templateOption.data("template", "plotly_white");
+            );
+        })
     }
-
-    $("#data-wizard").click(() => {
-        const wizard = $('#modal-data-wizard').modal("show");
-    });
-
 };
 
 
-
+const deactivateOptions = (type) => {
+    $("#orientation, #legend, #template, #select-points, #select-traces").off();
+    $("#select-confirm").off().prop("disabled", true);
+    selected_points = [];
+};

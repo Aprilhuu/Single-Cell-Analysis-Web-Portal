@@ -46,9 +46,9 @@ def render_plot_studio(request):
 
 
 def render_plot_studio_detail(request):
-    id_ = int(request.GET.get('id', -1))
-    call = request.GET.get('call', {})
-    param = request.GET.get('params', None)
+    id_ = int(request.POST.get('id', -1))
+    call = request.POST.get('call', {})
+    param = request.POST.get('params', None)
     param = json.loads(param) if param is not None else {}
     if id_ == -1 or call is None:
         return HttpResponseBadRequest
