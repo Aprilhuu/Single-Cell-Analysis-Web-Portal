@@ -3,44 +3,48 @@ from typing import Optional, Sequence
 import numpy as np
 import plotly.graph_objects as go
 from anndata import AnnData
-
+from .._utils import *
 
 def tsne(adata: AnnData,
          names: Optional[Sequence[str]] = None,
+         ret_type: Optional[str] = 'json',
          save: Optional[str] = None
          ):
     if names:
         clusterings = [n for n in names if n in adata.obs.columns]
         if clusterings:
-            return _scatter_cluster(adata, "tSNE", clusterings, save)
-    return _scatter(adata, "tSNE", names, save)
+            return _scatter_cluster(adata, "tSNE", clusterings, ret_type=ret_type, save=save)
+    return _scatter(adata, "tSNE", names, ret_type=ret_type, save=save)
 
 
 def umap(adata: AnnData,
          names: Optional[Sequence[str]] = None,
+         ret_type: Optional[str] = 'json',
          save: Optional[str] = None
          ):
     if names:
         clusterings = [n for n in names if n in adata.obs.columns]
         if clusterings:
-            return _scatter_cluster(adata, "UMAP", clusterings, save)
-    return _scatter(adata, "UMAP", names, save)
+            return _scatter_cluster(adata, "UMAP", clusterings, ret_type=ret_type, save=save)
+    return _scatter(adata, "UMAP", names, ret_type=ret_type, save=save)
 
 
 def pca(adata: AnnData,
         names: Optional[Sequence[str]] = None,
+        ret_type: Optional[str] = 'json',
         save: Optional[str] = None
         ):
     if names:
         clusterings = [n for n in names if n in adata.obs.columns]
         if clusterings:
-            return _scatter_cluster(adata, "PCA", clusterings, save)
-    return _scatter(adata, "PCA", names, save)
+            return _scatter_cluster(adata, "PCA", clusterings, ret_type=ret_type, save=save)
+    return _scatter(adata, "PCA", names, ret_type=ret_type, save=save)
 
 
 def _scatter_cluster(adata: AnnData,
                      basis: str,
                      clusterings: Sequence[str],
+                     ret_type: Optional[str] = 'json',
                      save: Optional[str] = None
                      ) -> str:
     fig = go.Figure()
@@ -65,20 +69,19 @@ def _scatter_cluster(adata: AnnData,
     buttons = []
     for method in clusterings:
         buttons.append({
-            'args': [{'visible': [x == method for x in visibility]}],
+            'args': [{'visible': [x == method for x in visibility]}, {'title': f'{basis} Plot - {method}'}],
             'label': method,
             'method': 'update'
         })
     _scatter_layout(fig, basis, buttons)
 
-    if save:
-        fig.write_image(save)
-    return fig.to_json()
+    return fig_write_return(fig, ret_type, save)
 
 
 def _scatter(adata: AnnData,
              basis: str,
              names: Optional[Sequence[str]] = None,
+             ret_type: Optional[str] = None,
              save: Optional[str] = None
              ) -> str:
     """
@@ -135,9 +138,7 @@ def _scatter(adata: AnnData,
 
     _scatter_layout(fig, basis, buttons)
 
-    if save:
-        fig.write_image(save)
-    return fig.to_json()
+    return fig_write_return(fig, ret_type, save)
 
 
 def _scatter_layout(fig, basis, buttons):
@@ -158,5 +159,5 @@ def _scatter_layout(fig, basis, buttons):
                'showticklabels': False,
                'showgrid': False,
                'zeroline': False},
-        title=f"{basis} Plot"
+        title=f"{basis} Plot - " + buttons[0]['label']
     )

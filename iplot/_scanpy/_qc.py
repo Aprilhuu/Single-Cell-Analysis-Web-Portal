@@ -5,6 +5,7 @@ import pandas as pd
 import plotly.graph_objects as go
 import scanpy as sc
 from anndata import AnnData
+from .._utils import *
 
 
 def highest_expr_genes(
@@ -13,7 +14,9 @@ def highest_expr_genes(
         gene_symbols: Optional[str] = None,
         log: bool = False,
         save: Optional[str] = None,
+        ret_type: Optional[str] = 'json',
         **kwds) -> None:
+
     from scipy.sparse import issparse
     norm_dict = sc.pp.normalize_total(adata, target_sum=100, inplace=False)
     # identify the genes with the highest mean
@@ -33,13 +36,11 @@ def highest_expr_genes(
     counts_top_genes = pd.DataFrame(
         counts_top_genes, index=adata.obs_names, columns=columns
     )
-    data = []
 
     fig = go.Figure()
     for col in counts_top_genes.columns:
         fig.add_trace(go.Box(y=counts_top_genes[col], name=col))
     fig.update_layout(yaxis={'type': 'log' if log else 'linear'}, title="Highest Expression Genes", showlegend=False)
 
-    if save:
-        fig.write_image(save)
-    return fig.to_json()
+    return fig_write_return(fig, ret_type, save)
+

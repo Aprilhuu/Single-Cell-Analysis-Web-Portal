@@ -5,11 +5,12 @@ from django.http import JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render, get_object_or_404
 from scanpy import read_h5ad
 
-import iplot
 from dataset.models import DataSet
 from process.models import WorkerRecord, Process
 from settings.settings import USER_PROCESS_FOLDER
+from process.worker import log_sync
 
+import importlib
 
 def render_plots(request):
     return render(request, "plot/plots.html",
@@ -47,13 +48,19 @@ def render_plot_studio(request):
 
 def render_plot_studio_detail(request):
     id_ = int(request.POST.get('id', -1))
-    call = request.POST.get('call', {})
+    call = request.POST.get('call', {}).split(".")
     param = request.POST.get('params', None)
     param = json.loads(param) if param is not None else {}
     if id_ == -1 or call is None:
         return HttpResponseBadRequest
-    adata = read_h5ad(os.path.join(USER_PROCESS_FOLDER, str(id_), "results.h5ad"))
-    module = iplot
-    for part in call.split("."):
+    path = os.path.join(USER_PROCESS_FOLDER, str(id_), "results.h5ad")
+    adata = read_h5ad(path)
+    module = importlib.import_module(call[0])
+    for part in call[1:]:
         module = getattr(module, part)
-    return JsonResponse(module(adata, **param), safe=False)
+    response = module(adata, **param)
+    if type(response) == dict and response.get("adata"):
+        adata = response['adata']
+        log_sync(adata, wrid=id_, call=response.get("call"))
+        response = response['plotly']
+    return JsonResponse(response, safe=False)

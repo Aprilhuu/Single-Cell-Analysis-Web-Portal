@@ -113,3 +113,24 @@ class Worker(Thread):
         )
         saved_file.save()
         return self.id
+
+
+def log_sync(adata, wrid, call, type="processing"):
+    wr = WorkerRecord.objects.get(id=wrid)
+    index = wr.total + 1
+    wr.total = index
+    wr.curr = index
+    wr.save()
+    process = Process(wrid=wrid,
+                      index=index,
+                      call=call,
+                      status=1,
+                      output=str(adata),
+                      type=type)
+    process.save()
+    saved_file = DataSet.objects.get(user="__RESULT", name=f'Worker_{wrid}')
+    saved_file.n_obs = adata.n_obs
+    saved_file.n_vars = adata.n_vars
+    saved_file.attrs = json.dumps(get_anndata_attrs(adata))
+    saved_file.save()
+    adata.write(saved_file.path)

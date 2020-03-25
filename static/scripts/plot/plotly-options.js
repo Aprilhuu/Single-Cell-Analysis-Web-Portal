@@ -1,9 +1,8 @@
 let selected_points = [];
-
+$(".scatter").hide();
 const divPlotly = $("#plotly")[0];
 
 const activateOptions = (type) => {
-
     $("#orientation").click(() => {
         const target = $(event.target);
         if (target.data('orientation') === 'v') {
@@ -55,12 +54,12 @@ const activateOptions = (type) => {
     };
 
     if (type === "scatter") {
+        $(".scatter").show();
         divPlotly.on('plotly_selected', (data) => {
             selected_points = [];
             if (data) {
                 selected_points.push(...(data.points.map(p => p.text)));
             }
-            $("#select-points span").text(selected_points.length);
         });
         $("#select-points").click(() => {
             $("#modal-data-wizard").data("type", "points").modal("show");
@@ -100,9 +99,7 @@ const activateOptions = (type) => {
             $("#modal-warning .modal-body p").text("The data is exporting, please keep this page open");
             $("#modal-warning").modal();
             modal_data_wizard.modal("hide");
-            console.log(data);
             $.post('/dataset/result-export', data, (data) => {
-                    console.log(data);
                     $("#modal-warning .modal-title").text("Export");
                     $("#modal-warning .modal-body p").text("Success");
                     const href = "/process/new-process.html?dataset=" + String(data.id);
@@ -111,13 +108,33 @@ const activateOptions = (type) => {
                     $("#modal-warning .modal-footer").prepend(further_button);
                 }
             );
+        });
+        $("#rank_marker_genes").click(() => {
+            const data = {
+                groupby: divPlotly.layout.title.text.split(" - "),
+                groups: divPlotly.data.filter(trace => trace.visible === true).map(trace => trace.name)
+            }
+            if (data.groupby.length === 2) {
+                data.groupby = data.groupby[1]
+            } else {
+                return;
+            }
+            $.post("/plot/plot-sync", {
+                id: id,
+                call: "studio.rank_marker_genes",
+                params: JSON.stringify(data)
+            }, data => {
+                Plotly.newPlot('plotly-sub', JSON.parse(data), {});
+                $("#modal-plotly").modal("show");
+            });
         })
     }
 };
 
 
 const deactivateOptions = (type) => {
-    $("#orientation, #legend, #template, #select-points, #select-traces").off();
+    $(".plotly-options").off();
     $("#select-confirm").off().prop("disabled", true);
     selected_points = [];
+    $(".scatter").hide();
 };

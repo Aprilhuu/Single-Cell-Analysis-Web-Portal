@@ -12,41 +12,26 @@ const resetStudio = () => {
 };
 
 if (attrs.obsm.includes("X_pca")) {
-    $(".basis").append($("<option value='scanpy.pca'>PCA</option>"))
+    $(".basis").append($("<option value='iplot.scanpy.pca'>PCA</option>"))
 }
 if (attrs.obsm.includes("X_tsne")) {
-    $(".basis").append($("<option value='scanpy.tsne'>tSNE</option>"))
+    $(".basis").append($("<option value='iplot.scanpy.tsne'>tSNE</option>"))
 }
 if (attrs.obsm.includes("X_umap")) {
-    $(".basis").append($("<option value='scanpy.umap'>UMAP</option>"))
+    $(".basis").append($("<option value='iplot.scanpy.umap'>UMAP</option>"))
 }
 
 attrs.obs.forEach(col => {
-    $("#scatter-names").append($("<option>" + col + "</option>"))
+    $(".groups").append($("<option>" + col + "</option>"))
 });
 
-if (attrs.var.includes("n_cells")) {
-    $.post('/plot/plot-sync', {
-        id: id,
-        call: "portal.get_rank_genes"
-    }, data => {
-        data.index.forEach(i => {
-            const markernames = $("#marker-names");
-            markernames.append($("<option>" + i + "</option>"));
-            markernames.selectpicker('refresh');
-        })
-    })
-}
 
-
-$(".scatter-button").click(() => {
-    const type = $(event.target).data("type");
-    const call = $("#" + type + "-basis").val();
-    const names = $("#" + type + "-names").selectpicker("val");
-    if (!call || !names) {
+$("#scatter-plot").click(() => {
+    const call = $("#scatter-basis").val();
+    const names = $("#scatter-names").selectpicker("val");
+    if (!call || !names || names.length === 0) {
         return;
     }
-
     $.post("/plot/plot-sync", {
         id: id,
         call: call,
@@ -55,6 +40,22 @@ $(".scatter-button").click(() => {
         $("#plotly").prop("hidden", false);
         Plotly.newPlot('plotly', JSON.parse(data), {});
         activateOptions("scatter");
+        $("#div-select").prop("hidden", true);
+        window.scrollTo(0, document.body.scrollHeight);
+    });
+});
+
+$("#rank-marker-genes-plot").click(() =>{
+    const call = $("#rank-marker-genes-method").val();
+    const groupby = $("#rank-marker-genes-names").val();
+    $.post("/plot/plot-sync", {
+        id: id,
+        call: call,
+        params: JSON.stringify({groupby: groupby})
+    }, data => {
+        $("#plotly").prop("hidden", false);
+        Plotly.newPlot('plotly', JSON.parse(data), {});
+        activateOptions("rank-marker-genes");
         $("#div-select").prop("hidden", true);
         window.scrollTo(0, document.body.scrollHeight);
     });
