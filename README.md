@@ -1,5 +1,8 @@
 # Single Cell Analysis Web Portal
 
+CSC494 Independent Research Project.  
+Under the supervision of Prof. Bo Wang
+
 ## Install
 
 ```
