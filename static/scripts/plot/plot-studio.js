@@ -5,6 +5,9 @@ const n_obs = shape[1];
 const attrs = JSON.parse($("#dataset-attrs").text());
 const id = Number($(".id").text());
 
+const cluster_methods = ['louvain', 'leiden'];
+
+
 const resetStudio = () => {
     $("#plotly").prop("hidden", true);
     $("#div-select").prop("hidden", false);
@@ -21,7 +24,7 @@ if (attrs.obsm.includes("X_umap")) {
     $(".basis").append($("<option value='iplot.scanpy.umap'>UMAP</option>"))
 }
 
-attrs.obs.forEach(col => {
+attrs.obs.filter(col => cluster_methods.includes(col)).forEach(col => {
     $(".groups").append($("<option>" + col + "</option>"))
 });
 
