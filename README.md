@@ -3,6 +3,11 @@
 CSC494 Independent Research Project.  
 Under the supervision of Prof. Bo Wang
 
+## Demo
+This video demo shows the basic workflow 
+
+https://www.youtube.com/watch?v=bbk_lKrU3No&t=12s
+
 ## Install
 
 ```
