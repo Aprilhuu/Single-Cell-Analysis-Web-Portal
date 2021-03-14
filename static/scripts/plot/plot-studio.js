@@ -5,7 +5,7 @@ const n_obs = shape[1];
 const attrs = JSON.parse($("#dataset-attrs").text());
 const id = Number($(".id").text());
 
-const cluster_methods = ['louvain', 'leiden'];
+const cluster_methods = ['louvain', 'leiden', 'csq_classifier', 'csq_binary_hash'];
 
 
 const resetStudio = () => {
@@ -31,7 +31,9 @@ attrs.obs.filter(col => cluster_methods.includes(col)).forEach(col => {
 
 $("#scatter-plot").click(() => {
     const call = $("#scatter-basis").val();
+    console.log(call);
     const names = $("#scatter-names").selectpicker("val");
+    console.log(names);
     if (!call || !names || names.length === 0) {
         return;
     }
@@ -40,6 +42,7 @@ $("#scatter-plot").click(() => {
         call: call,
         params: JSON.stringify({names: names})
     }, data => {
+        console.log(data);
         $("#plotly").prop("hidden", false);
         Plotly.newPlot('plotly', JSON.parse(data), {});
         activateOptions("scatter");
