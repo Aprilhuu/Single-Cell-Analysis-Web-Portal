@@ -38,7 +38,7 @@ const dataset_table_option = {
             attr: 'data-id'
         }
     ],
-    page: 10,
+    page: 11,
     pagination: true
 };
 
@@ -49,11 +49,30 @@ const active_processing = [];
 
 let installedMethods;
 
+const preinstalledMethods = [
+    {
+        "description": "Classification model trained using Baron Human datasets",
+        "id": -1,
+        "name": "BaronHuman",
+        "package":"classifier",
+        "params": [],
+        "type":"classification",
+    },
+    {
+        "description": "Run t-SNE processing on binary hash codes",
+        "id": -2,
+        "name": "tsne",
+        "package":"hashing",
+        "params": [],
+        "type":"csq",
+    },
+];
+
 $.get("/settings/installed-methods", {
     type: 'processing;plot;iplot',
     name: '_all',
 }, data => {
-    installedMethods = data;
+    installedMethods = data.concat(preinstalledMethods);
     new_steps_table.clear();
     new_steps_table.add(installedMethods);
 });

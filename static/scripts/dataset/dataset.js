@@ -33,6 +33,7 @@ $.get("/dataset/datasets", {
     offset: 0
 }, data => {
     datasets = data;
+    console.log(data);
     const display = datasets.map(d => {
         d.modified = (new Date(d.modified)).toLocaleString();
         return d;
@@ -96,6 +97,7 @@ const modalDataset = (id) => {
     $("#modal-dataset .n_vars").text(dataset.n_vars);
     $("#modal-dataset .modified").text("last modified: " + dataset.modified.toLocaleString());
     const attrs = JSON.parse(dataset.attrs);
+    console.log(attrs);
     for (let attr in attrs) {
         const tr_ = $("<tr></tr>");
         const td1_ = $("<td></td>").text(attr);

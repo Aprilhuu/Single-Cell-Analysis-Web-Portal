@@ -6,7 +6,7 @@ from dataset.models import DataSet
 from dataset.utils import get_anndata_attrs
 from settings.settings import USER_PROCESS_FOLDER
 from .models import Process, WorkerRecord
-from .worker_step import ReadStep, ProcessStep, PlotStep, IPlotStep
+from .worker_step import ReadStep, ProcessStep, PlotStep, IPlotStep, ClassificationStep, CSQStep
 
 
 class Worker(Thread):
@@ -82,6 +82,11 @@ class Worker(Thread):
                 worker_step = PlotStep(step, self.id, self.curr, "", self.annData)
             elif step['type'] == 'iplot':
                 worker_step = IPlotStep(step, self.id, self.curr, "", self.annData)
+            elif step['type'] == 'classification':
+                worker_step = ClassificationStep(step, self.id, self.curr, "", self.annData)
+            elif step['type'] == 'csq':
+                print(step)
+                worker_step = CSQStep(step, self.id, self.curr, "", self.annData)
             else:
                 wr.status = 2
                 wr.save()

@@ -155,3 +155,77 @@ class IPlotStep(WorkerStep):
         self.output = f"{components[-1]}plot_{self.index}.png"
         self.status = 1
         self.log()
+
+
+class ClassificationStep(WorkerStep):
+    def run(self):
+        import numpy as np
+        from .model_run import ModelRun
+        import torch
+
+        try:
+            prediction_process = ModelRun(model_name=self.context["name"])
+
+            # # TODO: Remove this after testing
+            # self.annData = self.annData[0:100]
+
+            query_data = self.annData.X
+            input_data = torch.from_numpy(query_data)
+            labels, full_hash_codes, hash_centers = prediction_process.predict(input_data)
+            full_labels = np.asarray(labels)
+
+            self.annData.obs["csq_classifier"] = full_labels
+            self.annData.obs["csq_classifier"] = self.annData.obs["csq_classifier"].astype('category')
+
+            self.annData.uns["csq_binary_hash"] = full_hash_codes
+            self.annData.uns["hash_centers"] = hash_centers
+
+        except Exception as e:
+            self.output = str(e)
+            self.status = 2
+            self.log()
+            return
+        self.output = str(self.annData)
+        self.status = 1
+        self.log()
+
+
+class CSQStep(WorkerStep):
+    def run(self):
+        import anndata
+        import scanpy
+        import numpy as np
+
+        try:
+            visualize_method = self.context["name"]
+            binary_hash = anndata.AnnData(X=self.annData.uns["csq_binary_hash"])
+            binary_hash.obs_names = self.annData.obs_names
+            print(self.annData.obs["csq_classifier"])
+            print(binary_hash)
+            binary_hash.obs["csq_binary_hash"] = self.annData.obs["csq_classifier"]
+
+            if visualize_method == "tsne":
+                scanpy.tl.tsne(binary_hash)
+            elif visualize_method == "pca":
+                scanpy.tl.pca(binary_hash)
+            elif visualize_method == "umap":
+                scanpy.tl.umap(binary_hash)
+            else:
+                raise RuntimeError("Unrecognized visualization method " + visualize_method)
+
+            #placeholders = np.ones((self.annData.shape[0], ))
+
+            #self.annData.obs["csq_binary_hash"] = placeholders
+            #self.annData.obs["csq_binary_hash"] = self.annData.obs["csq_binary_hash"].astype('category')
+
+            path = os.path.join(USER_PROCESS_FOLDER, str(self.wrID), "binary_hash.h5ad")
+            binary_hash.write(path)
+
+        except Exception as e:
+            self.output = str(e)
+            self.status = 2
+            self.log()
+            return
+        self.output = str(self.annData)
+        self.status = 1
+        self.log()

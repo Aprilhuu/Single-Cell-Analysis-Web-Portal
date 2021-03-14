@@ -1,43 +1,50 @@
+import os
 from typing import Optional, Sequence
 
+import anndata
 import numpy as np
 import plotly.graph_objects as go
-from anndata import AnnData
+from anndata import AnnData, read_h5ad
+
+from settings.settings import USER_PROCESS_FOLDER
 from .._utils import *
 
 def tsne(adata: AnnData,
          names: Optional[Sequence[str]] = None,
          ret_type: Optional[str] = 'json',
-         save: Optional[str] = None
+         save: Optional[str] = None,
+         id_: Optional[int] = None
          ):
     if names:
-        clusterings = [n for n in names if n in adata.obs.columns]
+        clusterings = [n for n in names if n in adata.obs.columns or n in adata.uns_keys()]
         if clusterings:
-            return _scatter_cluster(adata, "tSNE", clusterings, ret_type=ret_type, save=save)
+            return _scatter_cluster(adata, "tSNE", clusterings, ret_type=ret_type, save=save, id_=id_)
     return _scatter(adata, "tSNE", names, ret_type=ret_type, save=save)
 
 
 def umap(adata: AnnData,
          names: Optional[Sequence[str]] = None,
          ret_type: Optional[str] = 'json',
-         save: Optional[str] = None
+         save: Optional[str] = None,
+         id_: Optional[int] = None
          ):
     if names:
         clusterings = [n for n in names if n in adata.obs.columns]
         if clusterings:
-            return _scatter_cluster(adata, "UMAP", clusterings, ret_type=ret_type, save=save)
+            return _scatter_cluster(adata, "UMAP", clusterings, ret_type=ret_type, save=save, id_=id_)
     return _scatter(adata, "UMAP", names, ret_type=ret_type, save=save)
 
 
 def pca(adata: AnnData,
         names: Optional[Sequence[str]] = None,
         ret_type: Optional[str] = 'json',
-        save: Optional[str] = None
+        save: Optional[str] = None,
+        id_: Optional[int] = None
         ):
     if names:
         clusterings = [n for n in names if n in adata.obs.columns]
         if clusterings:
-            return _scatter_cluster(adata, "PCA", clusterings, ret_type=ret_type, save=save)
+            return _scatter_cluster(adata, "PCA", clusterings, ret_type=ret_type, save=save, id_=id_)
     return _scatter(adata, "PCA", names, ret_type=ret_type, save=save)
 
 
@@ -45,22 +52,30 @@ def _scatter_cluster(adata: AnnData,
                      basis: str,
                      clusterings: Sequence[str],
                      ret_type: Optional[str] = 'json',
-                     save: Optional[str] = None
+                     save: Optional[str] = None,
+                     id_: Optional[int] = None
                      ) -> str:
     fig = go.Figure()
     visibility = []
     visible = True
     for method in clusterings:
-        for cluster in adata.obs[method].cat.categories:
+        adata_t = adata
+        if method == "csq_binary_hash":
+            path = os.path.join(USER_PROCESS_FOLDER, str(id_), "binary_hash.h5ad")
+            adata_t = read_h5ad(path)
+            print(adata_t.obs)
+        else:
+            print(adata_t.obs)
+        for cluster in adata_t.obs[method].cat.categories:
             fig.add_trace(
                 go.Scattergl(
-                    x=adata.obsm[f'X_{basis.lower()}'][adata.obs[method] == cluster, 0],
-                    y=adata.obsm[f'X_{basis.lower()}'][adata.obs[method] == cluster, 1],
+                    x=adata_t.obsm[f'X_{basis.lower()}'][adata_t.obs[method] == cluster, 0],
+                    y=adata_t.obsm[f'X_{basis.lower()}'][adata_t.obs[method] == cluster, 1],
                     name=cluster,
                     mode='markers',
                     hoverinfo="text",
-                    hovertext=adata.obs[adata.obs[method] == cluster].index,
-                    text=np.where(adata.obs[method] == cluster)[0],
+                    hovertext=adata_t.obs[adata_t.obs[method] == cluster].index,
+                    text=np.where(adata_t.obs[method] == cluster)[0],
                     visible=visible
                 )
             )
@@ -146,7 +161,7 @@ def _scatter_layout(fig, basis, buttons):
         template='plotly_dark',
         updatemenus=[
             go.layout.Updatemenu(buttons=buttons,
-                                 showactive=True, active=0,
+                                 showactive=True, active=0, font={"color": "black"},
                                  direction="down", x=1, xanchor="right", y=1, yanchor="top"
                                  ),
         ],

@@ -51,6 +51,7 @@ def render_plot_studio_detail(request):
     call = request.POST.get('call', {}).split(".")
     param = request.POST.get('params', None)
     param = json.loads(param) if param is not None else {}
+    param["id_"] = id_
     if id_ == -1 or call is None:
         return HttpResponseBadRequest
     path = os.path.join(USER_PROCESS_FOLDER, str(id_), "results.h5ad")
