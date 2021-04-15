@@ -51,7 +51,7 @@ let installedMethods;
 
 const preinstalledMethods = [
     {
-        "description": "Classification model trained using Baron Human datasets",
+        "description": "scDeepHash classification model trained using Baron Human datasets",
         "id": -1,
         "name": "BaronHuman",
         "package":"classifier",
@@ -59,13 +59,46 @@ const preinstalledMethods = [
         "type":"classification",
     },
     {
-        "description": "Run t-SNE processing on binary hash codes",
+        "description": "scDeepHash classification model trained using Xin datasets",
         "id": -2,
+        "name": "Xin",
+        "package":"classifier",
+        "params": [],
+        "type":"classification",
+    },
+    {
+        "description": "scDeepHash classification model trained using TM datasets",
+        "id": -3,
+        "name": "TM",
+        "package":"classifier",
+        "params": [],
+        "type":"classification",
+    },
+    {
+        "description": "scDeepHash classification model trained using Zheng68K datasets",
+        "id": -4,
+        "name": "Zheng68K",
+        "package":"classifier",
+        "params": [],
+        "type":"classification",
+    },
+    {
+        "description": "scDeepHash classification model trained using AMB92 datasets",
+        "id": -5,
+        "name": "AMB",
+        "package":"classifier",
+        "params": [],
+        "type":"classification",
+    },
+    {
+        "description": "Run t-SNE processing on binary hash codes",
+        "id": -4,
         "name": "tsne",
         "package":"hashing",
         "params": [],
         "type":"csq",
     },
+
 ];
 
 $.get("/settings/installed-methods", {

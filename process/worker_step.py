@@ -164,6 +164,7 @@ class ClassificationStep(WorkerStep):
         import torch
 
         try:
+            print(self.context)
             prediction_process = ModelRun(model_name=self.context["name"])
 
             # # TODO: Remove this after testing
@@ -215,7 +216,7 @@ class CSQStep(WorkerStep):
 
             #placeholders = np.ones((self.annData.shape[0], ))
 
-            #self.annData.obs["csq_binary_hash"] = placeholders
+            self.annData.uns["display_csq_binary_hash"] = True
             #self.annData.obs["csq_binary_hash"] = self.annData.obs["csq_binary_hash"].astype('category')
 
             path = os.path.join(USER_PROCESS_FOLDER, str(self.wrID), "binary_hash.h5ad")

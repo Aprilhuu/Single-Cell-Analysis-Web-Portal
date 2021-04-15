@@ -71,7 +71,13 @@
             <div class="row">
                 <div class="col">
                     <div class="main-card mb-3 card">
-                        <div class="card-header">Observations</div>
+                        <div class="card-header">Observations
+                            <button onclick="window.location.href='/process/download-csv?id={{ worker.id }}'"
+                                    class="btn btn-primary btn-lg ml-3" id="download-csv-button"
+                                    style="float: right">
+                                Download csv
+                            </button>
+                        </div>
                         <div class="card-body">
                             <div class="row" id="table-obs">
                                 <div class="col">

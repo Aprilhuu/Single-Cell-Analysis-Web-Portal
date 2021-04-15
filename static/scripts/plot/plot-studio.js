@@ -5,7 +5,7 @@ const n_obs = shape[1];
 const attrs = JSON.parse($("#dataset-attrs").text());
 const id = Number($(".id").text());
 
-const cluster_methods = ['louvain', 'leiden', 'csq_classifier', 'csq_binary_hash'];
+const cluster_methods = ['louvain', 'leiden', 'csq_classifier'];
 
 
 const resetStudio = () => {
@@ -27,6 +27,10 @@ if (attrs.obsm.includes("X_umap")) {
 attrs.obs.filter(col => cluster_methods.includes(col)).forEach(col => {
     $(".groups").append($("<option>" + col + "</option>"))
 });
+
+if(attrs.uns.includes("display_csq_binary_hash")){
+    $(".groups").append($("<option>csq_binary_hash</option>"))
+}
 
 
 $("#scatter-plot").click(() => {

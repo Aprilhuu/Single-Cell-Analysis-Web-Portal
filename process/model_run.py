@@ -12,6 +12,22 @@ class ModelRun:
         self.check_pts_path = os.path.join(BASE_DIR, "pretrained_models", model_name, "checkpoint.ckpt")
         self.label_mapping = None
 
+        if model_name == "TM":
+            self.n_class = 55
+            self.n_features = 19791
+        elif model_name == "BaronHuman":
+            self.n_class =13
+            self.n_features = 17499
+        elif model_name == "Xin":
+            self.n_class = 4
+            self.n_features = 33889
+        elif model_name == "Zheng68K":
+            self.n_class = 11
+            self.n_features = 20387
+        elif model_name == "AMB":
+            self.n_class = 93
+            self.n_features = 42625
+
     # 计算hamming distance，B1是一组data，（一个vector），B2是一个matrix（所有database里的vector）
     @staticmethod
     def CalcHammingDist(B1, B2):
@@ -22,7 +38,8 @@ class ModelRun:
     ## Initialize existing model
     def load_model(self):
         model = CSQLightening.load_from_checkpoint(checkpoint_path=self.check_pts_path,
-                                                   n_class=13, n_features=17499, l_r=1.2e-5, lamb_da=0.001, beta=0.9999)
+                                                   n_class=self.n_class, n_features=self.n_features, l_r=1.2e-5,
+                                                   lamb_da=0.001, beta=0.9999, lr_decay=0.5, decay_every=25)
         with open(os.path.join(BASE_DIR, "pretrained_models", self.model_name, "label_mapping.json")) as f:
             self.label_mapping = json.load(f)
         return model
@@ -44,14 +61,3 @@ class ModelRun:
                                                                    model.hash_centers.numpy())
         string_labels = [self.label_mapping[str(int_label)] for int_label in labels_pred_CHC]
         return string_labels, binary_predict.detach().numpy(), model.hash_centers.numpy()
-
-if __name__ == '__main__':
-    import torch
-    new_model = ModelRun("BaronHuman")
-
-    DataPath = os.path.join(BASE_DIR, "pretrained_models", "BaronHuman", "Filtered_Baron_HumanPancreas_data.csv")
-    data = pd.read_csv(DataPath, index_col=0, sep=',', nrows=30)
-    full_data = np.asarray(data, dtype=np.float32)
-    input_data = torch.from_numpy(full_data)
-    labels = new_model.predict(input_data)
-    print(labels)

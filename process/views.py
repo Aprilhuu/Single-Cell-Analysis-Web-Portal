@@ -2,7 +2,7 @@ import json
 import os
 from shutil import rmtree
 
-from django.http import JsonResponse, HttpResponseBadRequest
+from django.http import JsonResponse, HttpResponseBadRequest, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from scanpy import read_h5ad
 
@@ -78,3 +78,23 @@ def post_new_process(request):
     if integrity['status']:
         worker.start()
     return JsonResponse(integrity)
+
+
+def download_csv(request):
+    print(request)
+    id_ = int(request.GET.get('id', None))
+    if id_ is None:
+        return HttpResponseBadRequest
+    worker = get_object_or_404(WorkerRecord, id=int(id_))
+
+    path = os.path.join(USER_PROCESS_FOLDER, str(worker.id), 'results.h5ad')
+    annData = read_h5ad(path)
+
+    csv_file_path = os.path.join(USER_PROCESS_FOLDER, str(worker.id), 'model_output'+ str(worker.id) + '.csv')
+    annData.obs.to_csv(csv_file_path)
+
+    with open(csv_file_path, 'rb') as model_excel:
+        result = model_excel.read()
+    response = HttpResponse(result)
+    response['Content-Disposition'] = 'attachment; filename=model_output_'+ str(worker.id) + '.csv'
+    return response
